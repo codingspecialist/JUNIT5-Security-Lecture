@@ -1,0 +1,22 @@
+server:
+  port: 5000
+  servlet:
+    encoding:
+      charset: utf-8
+
+spring:
+  datasource:
+    url: jdbc:mariadb://${rds.hostname}:${rds.port}/${rds.db.name} 
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: ${rds.username}
+    password: ${rds.password}
+
+  jpa:
+    open-in-view: true
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+logging:
+  level:
+    '[org.springframework.boot.web]': INFO
