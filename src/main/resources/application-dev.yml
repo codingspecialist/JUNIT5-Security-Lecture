@@ -26,7 +26,7 @@ spring:
 
   output:
     ansi:
-      enabled: always
+      enabled: always    
 
 logging:
   level:

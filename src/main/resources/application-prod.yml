@@ -3,7 +3,9 @@ server:
   servlet:
     encoding:
       charset: utf-8
-
+  error:
+    whitelabel:
+      enabled: false
 spring:
   datasource:
     url: jdbc:mariadb://${rds.hostname}:${rds.port}/${rds.db.name} 

@@ -26,7 +26,7 @@ public class LoginHandler implements AuthenticationSuccessHandler, Authenticatio
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException exception) throws IOException, ServletException {
         MyLog.info("로그인 실패");
-        makeResponseData(response, ResponseEnum.USER_LOGIN_FAIL);
+        makeResponseData(response, ResponseEnum.LOGIN_FAIL);
 
     }
 
@@ -34,7 +34,7 @@ public class LoginHandler implements AuthenticationSuccessHandler, Authenticatio
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
         MyLog.info("로그인 성공");
-        makeResponseData(response, ResponseEnum.USER_LOGIN_SUCCESS);
+        makeResponseData(response, ResponseEnum.LOGIN_SUCCESS);
     }
 
     private void makeResponseData(HttpServletResponse response, ResponseEnum responseEnum) throws IOException {

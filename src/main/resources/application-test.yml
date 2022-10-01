@@ -4,6 +4,9 @@ server:
     context-path: /
     encoding:
       charset: utf-8
+  error:
+    whitelabel:
+      enabled: false
 
 spring:
   datasource:

@@ -7,6 +7,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -21,6 +23,7 @@ import site.metacoding.market.enums.RoleEnum;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED) // JOINED 전략은 extends 한 자식들의 테이블을 정규화해서 생성해준다는 것이다.
 @Entity
 public class User extends AudingTime {
     @Id
