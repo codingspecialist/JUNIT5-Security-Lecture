@@ -31,7 +31,6 @@ public class DBInit {
                     .role(RoleEnum.ADMIN)
                     .build();
 
-            MyLog.info("나실행됨?");
             userRepository.save(principal);
         };
     }
