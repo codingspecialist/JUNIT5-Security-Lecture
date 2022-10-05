@@ -27,7 +27,7 @@ import site.metacoding.market.enums.RoleEnum;
 @Entity
 public class User extends AudingTime {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @Column(unique = true, nullable = false)
