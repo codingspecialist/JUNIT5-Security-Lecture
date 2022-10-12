@@ -1,5 +1,6 @@
 package site.metacoding.market.domain.product;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -17,8 +18,11 @@ public class Product extends AudingTime {
     @GeneratedValue
     private Long id;
 
+    @Column(nullable = false, length = 50)
     private String productName;
+    @Column(nullable = false)
     private Integer productPrice;
+    @Column(nullable = false)
     private Integer productQty;
 
     @ManyToOne(fetch = FetchType.LAZY)

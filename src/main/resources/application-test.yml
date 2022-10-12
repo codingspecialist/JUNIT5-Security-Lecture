@@ -26,10 +26,7 @@ spring:
     properties:
       '[hibernate.format_sql]': true
 
-
 logging:
-  pattern:
-    console: "[%d{HH:mm:ss.SSS}][%-5level][%logger.%method:line%line] - %msg%n"
   level:  
     root: DEBUG
     '[org.springframework.boot.autoconfigure]': ERROR

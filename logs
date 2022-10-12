@@ -1,0 +1,12 @@
+1226832 [HikariPool-13 connection closer] DEBUG com.zaxxer.hikari.pool.PoolBase - HikariPool-13 - Closing connection conn122: url=jdbc:h2:mem:test user=SA: (connection evicted)
+1226833 [HikariPool-13 connection closer] DEBUG com.zaxxer.hikari.pool.PoolBase - HikariPool-13 - Closing connection conn123: url=jdbc:h2:mem:test user=SA: (connection evicted)
+1226833 [HikariPool-13 connection closer] DEBUG com.zaxxer.hikari.pool.PoolBase - HikariPool-13 - Closing connection conn124: url=jdbc:h2:mem:test user=SA: (connection evicted)
+1226833 [HikariPool-13 connection closer] DEBUG com.zaxxer.hikari.pool.PoolBase - HikariPool-13 - Closing connection conn125: url=jdbc:h2:mem:test user=SA: (connection evicted)
+1226834 [HikariPool-13 connection closer] DEBUG com.zaxxer.hikari.pool.PoolBase - HikariPool-13 - Closing connection conn126: url=jdbc:h2:mem:test user=SA: (connection evicted)
+1226834 [HikariPool-13 connection closer] DEBUG com.zaxxer.hikari.pool.PoolBase - HikariPool-13 - Closing connection conn127: url=jdbc:h2:mem:test user=SA: (connection evicted)
+1226834 [HikariPool-13 connection closer] DEBUG com.zaxxer.hikari.pool.PoolBase - HikariPool-13 - Closing connection conn128: url=jdbc:h2:mem:test user=SA: (connection evicted)
+1226834 [HikariPool-13 connection closer] DEBUG com.zaxxer.hikari.pool.PoolBase - HikariPool-13 - Closing connection conn129: url=jdbc:h2:mem:test user=SA: (connection evicted)
+1226835 [Thread-52] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-13 - After shutdown stats (total=0, active=0, idle=0, waiting=0)
+1226835 [Thread-52] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-13 - Shutdown completed.
+1226887 [Thread-52] DEBUG o.s.b.d.r.c.RestartClassLoader - Created RestartClassLoader org.springframework.boot.devtools.restart.classloader.RestartClassLoader@176f73ad
+1226887 [Thread-52] DEBUG o.s.boot.devtools.restart.Restarter - Starting application site.metacoding.market.MarketApplication with URLs [file:/C:/workspace/youtube/market/bin/main/]
