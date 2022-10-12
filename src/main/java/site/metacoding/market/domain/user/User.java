@@ -5,26 +5,22 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import site.metacoding.market.domain.AudingTime;
 import site.metacoding.market.enums.RoleEnum;
 
-@Table(name = "users")
-@Getter
-@Builder
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Inheritance(strategy = InheritanceType.JOINED) // JOINED 전략은 extends 한 자식들의 테이블을 정규화해서 생성해준다는 것이다.
+@Getter
+@Table(name = "users")
 @Entity
+
 public class User extends AudingTime {
     @Id
     @GeneratedValue
@@ -41,4 +37,13 @@ public class User extends AudingTime {
 
     @Enumerated(EnumType.STRING)
     private RoleEnum role;
+
+    public static User create(String username, String password, String email, RoleEnum role) {
+        User user = new User();
+        user.username = username;
+        user.password = password;
+        user.email = email;
+        user.role = role;
+        return user;
+    }
 }

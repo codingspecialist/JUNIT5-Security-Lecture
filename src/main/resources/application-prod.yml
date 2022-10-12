@@ -14,11 +14,14 @@ spring:
     password: ${rds.password}
 
   jpa:
-    open-in-view: true
+    open-in-view: false
     hibernate:
       ddl-auto: none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
 logging:
-  level:
-    '[org.springframework.boot.web]': INFO
+  pattern:
+    console: "[%d{HH:mm:ss.SSS}][%-5level][%logger.%method:line%line] - %msg%n"
+  level:  
+    root: INFO
+    '[org.springframework.boot.autoconfigure]': ERROR

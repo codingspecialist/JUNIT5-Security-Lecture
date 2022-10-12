@@ -18,3 +18,7 @@
 - User 테스트
 - Product 테스트
 - Purchase 테스트
+
+### EntityManager와 JpaRepository 통합
+- 동적쿼리 작성
+- 코드 일관성 유지

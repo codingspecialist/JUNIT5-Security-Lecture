@@ -4,10 +4,10 @@ import javax.persistence.EntityManager;
 
 import lombok.RequiredArgsConstructor;
 
-interface Dao {
+interface ProductDao {
 }
 
 @RequiredArgsConstructor
-public class ProductDao implements Dao {
+public class ProductDaoImpl implements ProductDao {
     private final EntityManager em;
 }

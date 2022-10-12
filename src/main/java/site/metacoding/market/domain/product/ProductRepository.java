@@ -2,6 +2,6 @@ package site.metacoding.market.domain.product;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProductRepository extends JpaRepository<Product, Long>, Dao {
+public interface ProductRepository extends JpaRepository<Product, Long>, ProductDao {
 
 }

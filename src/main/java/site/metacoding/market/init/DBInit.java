@@ -24,14 +24,8 @@ public class DBInit {
         String encPassword = encoder.encode(rawPassword);
 
         return (args) -> {
-            User principal = User.builder()
-                    .username("ssar")
-                    .password(encPassword)
-                    .email("getinthere@naver.com")
-                    .role(RoleEnum.ADMIN)
-                    .build();
-
-            userRepository.save(principal);
+            User user = User.create("ssar", encPassword, "getinthere@naver.com", RoleEnum.ADMIN);
+            userRepository.save(user);
         };
     }
 }

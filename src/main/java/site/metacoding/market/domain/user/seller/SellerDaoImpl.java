@@ -1,13 +1,14 @@
-package site.metacoding.market.domain.purchase;
+package site.metacoding.market.domain.user.seller;
 
 import javax.persistence.EntityManager;
 
 import lombok.RequiredArgsConstructor;
 
-interface Dao {
+interface SellerDao {
+
 }
 
 @RequiredArgsConstructor
-public class PurchaseDao implements Dao {
+public class SellerDaoImpl implements SellerDao {
     private final EntityManager em;
 }
