@@ -21,4 +21,17 @@
 
 ### EntityManager와 JpaRepository 통합
 - 동적쿼리 작성
-- 코드 일관성 유지
+- 코드 일관성 유지]
+
+### 시나리오
+- Seller 회원가입
+- 로그인(Seller)
+- Product 등록
+- Product 수정
+- Product 삭제
+
+
+- User 회원가입
+- 로그인(User)
+- Purchase 등록 (Product 구매)
+- Purchase 업데이트(상태변경) (Product 취소)
