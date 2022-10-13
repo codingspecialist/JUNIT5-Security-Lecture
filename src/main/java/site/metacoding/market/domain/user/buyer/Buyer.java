@@ -1,5 +1,6 @@
 package site.metacoding.market.domain.user.buyer;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -23,6 +24,6 @@ public class Buyer {
     @Column(nullable = false)
     private String buyerAddress;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
 }

@@ -11,4 +11,5 @@ interface SellerDao {
 @RequiredArgsConstructor
 public class SellerDaoImpl implements SellerDao {
     private final EntityManager em;
+
 }

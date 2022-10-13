@@ -1,5 +1,6 @@
 package site.metacoding.market.domain.user.seller;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,6 +10,7 @@ import javax.persistence.OneToOne;
 
 import lombok.Getter;
 import site.metacoding.market.domain.user.User;
+import site.metacoding.market.web.dto.seller.SellerPost;
 
 @Getter
 @Entity
@@ -17,10 +19,19 @@ public class Seller {
     @GeneratedValue
     private Long id;
     @Column(nullable = false)
-    private String SellerName;
+    private String sellerName;
     @Column(nullable = false)
-    private String SellerTel;
+    private String sellerTel;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
+
+    public static Seller create(SellerPost sellerPost) {
+        Seller seller = new Seller();
+        seller.sellerName = sellerPost.getSellerName();
+        seller.sellerTel = sellerPost.getSellerTel();
+        seller.user = User.create(sellerPost.getUsername(), sellerPost.getPassword(), sellerPost.getEmail(),
+                sellerPost.getRole());
+        return seller;
+    }
 }

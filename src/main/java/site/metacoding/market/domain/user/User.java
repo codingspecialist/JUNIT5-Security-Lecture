@@ -40,12 +40,17 @@ public class User extends AudingTime {
     @Enumerated(EnumType.STRING)
     private RoleEnum role;
 
-    public static User create(String username, String password, String email, RoleEnum role) {
+    public static User create(String username, String password, String email, String role) {
         User user = new User();
         user.username = username;
         user.password = password;
         user.email = email;
-        user.role = role;
+
+        for (RoleEnum roleValue : RoleEnum.values()) {
+            if (roleValue.name().equals(role)) {
+                user.role = roleValue;
+            }
+        }
         return user;
     }
 }

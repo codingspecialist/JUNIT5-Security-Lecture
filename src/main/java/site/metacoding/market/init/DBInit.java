@@ -9,7 +9,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import site.metacoding.market.domain.user.User;
 import site.metacoding.market.domain.user.UserRepository;
-import site.metacoding.market.enums.RoleEnum;
 
 @RequiredArgsConstructor
 @Configuration
@@ -24,7 +23,7 @@ public class DBInit {
         String encPassword = encoder.encode(rawPassword);
 
         return (args) -> {
-            User user = User.create("ssar", encPassword, "getinthere@naver.com", RoleEnum.ADMIN);
+            User user = User.create("ssar", encPassword, "getinthere@naver.com", "ADMIN");
             userRepository.save(user);
         };
     }
