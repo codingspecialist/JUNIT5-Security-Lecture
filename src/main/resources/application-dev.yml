@@ -15,7 +15,7 @@ spring:
     console:
       enabled: true
   jpa:
-    open-in-view: false
+    open-in-view: true
     hibernate:
       ddl-auto: create
       naming:
@@ -23,8 +23,8 @@ spring:
     properties:
       '[hibernate.format_sql]': true
 
+
 logging:
   level:  
     root: DEBUG
     '[org.springframework.boot.autoconfigure]': ERROR
-

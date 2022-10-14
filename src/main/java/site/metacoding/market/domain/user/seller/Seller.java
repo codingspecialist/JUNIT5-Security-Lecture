@@ -10,7 +10,7 @@ import javax.persistence.OneToOne;
 
 import lombok.Getter;
 import site.metacoding.market.domain.user.User;
-import site.metacoding.market.web.dto.seller.SellerPost;
+import site.metacoding.market.web.dto.SellerBaseDto.SellerReqPost;
 
 @Getter
 @Entity
@@ -26,12 +26,12 @@ public class Seller {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
 
-    public static Seller create(SellerPost sellerPost) {
+    public static Seller create(SellerReqPost SellerReqPost) {
         Seller seller = new Seller();
-        seller.sellerName = sellerPost.getSellerName();
-        seller.sellerTel = sellerPost.getSellerTel();
-        seller.user = User.create(sellerPost.getUsername(), sellerPost.getPassword(), sellerPost.getEmail(),
-                sellerPost.getRole());
+        seller.sellerName = SellerReqPost.getSellerName();
+        seller.sellerTel = SellerReqPost.getSellerTel();
+        seller.user = User.create(SellerReqPost.getUsername(), SellerReqPost.getPassword(), SellerReqPost.getEmail(),
+                SellerReqPost.getRole());
         return seller;
     }
 }

@@ -10,17 +10,17 @@ public class CMResponse<T> {
 
     private final Integer code;
     private final String message;
-    private final T content;
+    private final T body;
 
-    public CMResponse(ResponseEnum respEnum, T content) {
+    public CMResponse(ResponseEnum respEnum, T body) {
         this.code = respEnum.getCode();
         this.message = respEnum.getMessage();
-        this.content = content;
+        this.body = body;
     }
 
     public CMResponse(ResponseEnum respEnum) {
         this.code = respEnum.getCode();
         this.message = respEnum.getMessage();
-        this.content = null;
+        this.body = null;
     }
 }

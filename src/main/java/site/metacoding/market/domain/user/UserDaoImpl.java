@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.metacoding.market.util.LogPrefix;
@@ -17,6 +19,7 @@ interface UserDao {
 public class UserDaoImpl implements UserDao {
     private final EntityManager em;
 
+    @Transactional(readOnly = true)
     public Optional<User> findByUsername(String username) {
 
         log.debug(LogPrefix.TAG + "findByUsername()");

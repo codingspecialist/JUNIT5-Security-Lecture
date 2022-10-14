@@ -3,16 +3,9 @@ package site.metacoding.market.domain.user.seller;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Profile;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.context.ContextConfiguration;
 
-import site.metacoding.market.domain.user.seller.Seller;
-import site.metacoding.market.domain.user.seller.SellerRepository;
-import site.metacoding.market.web.dto.seller.SellerPost;
+import site.metacoding.market.web.dto.SellerBaseDto.SellerReqPost;
 
 @DataJpaTest
 public class SellerRepositoryTest {
@@ -23,7 +16,7 @@ public class SellerRepositoryTest {
     @Test
     public void save_test() {
         // given
-        SellerPost sellerPost = new SellerPost();
+        SellerReqPost sellerPost = new SellerReqPost();
         sellerPost.setUsername("cos");
 
         sellerPost.setEmail("cos@nate.com");
