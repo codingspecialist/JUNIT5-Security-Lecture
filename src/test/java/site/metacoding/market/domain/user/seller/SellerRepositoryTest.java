@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import site.metacoding.market.enums.RoleEnum;
 import site.metacoding.market.web.dto.SellerBaseDto.SellerReqPost;
 
 @DataJpaTest
@@ -20,7 +21,7 @@ public class SellerRepositoryTest {
         sellerPost.setUsername("cos");
 
         sellerPost.setEmail("cos@nate.com");
-        sellerPost.setRole("SELLER");
+        sellerPost.setRole(RoleEnum.SELLER.name());
         sellerPost.setSellerName("코스");
         sellerPost.setSellerTel("01022227777");
 

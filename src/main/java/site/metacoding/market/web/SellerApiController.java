@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.market.service.SellerService;
-import site.metacoding.market.web.dto.SellerBaseDto;
+import site.metacoding.market.web.dto.SellerBaseDto.*;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @RestController
-public class SellerApiController extends SellerBaseDto {
+public class SellerApiController {
 
     private final SellerService sellerService;
 
