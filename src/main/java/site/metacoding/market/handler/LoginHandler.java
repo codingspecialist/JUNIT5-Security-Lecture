@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import site.metacoding.market.dto.ResponseDto;
 import site.metacoding.market.enums.ResponseEnum;
-import site.metacoding.market.web.dto.CMResponse;
 
 @Component
 public class LoginHandler implements AuthenticationSuccessHandler, AuthenticationFailureHandler {
@@ -35,7 +35,7 @@ public class LoginHandler implements AuthenticationSuccessHandler, Authenticatio
 
     private void makeResponseData(HttpServletResponse response, ResponseEnum responseEnum) throws IOException {
         ObjectMapper om = new ObjectMapper();
-        CMResponse<?> responseDto = new CMResponse<>(responseEnum);
+        ResponseDto<?> responseDto = new ResponseDto<>(responseEnum);
         String responseBody = om.writer().writeValueAsString(responseDto);
         response.setContentType("application/json; charset=utf-8");
         response.getWriter().println(responseBody);

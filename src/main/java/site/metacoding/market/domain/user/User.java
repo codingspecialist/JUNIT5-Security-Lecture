@@ -5,26 +5,23 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import site.metacoding.market.domain.AudingTime;
-import site.metacoding.market.enums.RoleEnum;
+import site.metacoding.market.enums.UserEnum;
 
-@Setter
 @NoArgsConstructor
 @Getter
 @Table(name = "users")
 @Entity
-
 public class User extends AudingTime {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)
@@ -38,19 +35,21 @@ public class User extends AudingTime {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private RoleEnum role;
+    private UserEnum role; // ADMIN, CUSTOMER
 
-    public static User create(String username, String password, String email, String role) {
-        User user = new User();
-        user.username = username;
-        user.password = password;
-        user.email = email;
-
-        for (RoleEnum roleValue : RoleEnum.values()) {
-            if (roleValue.name().equals(role)) {
-                user.role = roleValue;
-            }
-        }
-        return user;
+    @Builder
+    public User(Long id, String username, String password, String email, UserEnum role) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
     }
+
 }
+
+// for (RoleEnum roleValue : RoleEnum.values()) {
+// if (roleValue.name().equals(role)) {
+// user.role = roleValue;
+// }
+// }

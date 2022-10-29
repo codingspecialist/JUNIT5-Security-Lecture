@@ -5,8 +5,8 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum PurchaseEnum {
-    PURCHASE("구매"), CANCEL("취소");
+public enum TransactionEnum {
+    TRANSFER("이체"), ATM("자동화기기");
 
-    private final String state;
+    private final String gubun;
 }

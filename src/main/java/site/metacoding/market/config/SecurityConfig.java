@@ -22,8 +22,6 @@ public class SecurityConfig {
 
         http.authorizeRequests()
                 .antMatchers("/api/secure/**").authenticated()
-                .antMatchers("/api/buyer/**").access("hasRole('ROLE_BUYER') or hasRole('ROLE_ADMIN')")
-                .antMatchers("/api/seller/**").access("hasRole('ROLE_SELLER') or hasRole('ROLE_ADMIN')")
                 .antMatchers("/api/admin/**").access("hasRole('ROLE_ADMIN')")
                 .anyRequest().permitAll()
                 .and()

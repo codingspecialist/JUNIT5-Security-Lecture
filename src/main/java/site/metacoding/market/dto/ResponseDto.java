@@ -1,4 +1,4 @@
-package site.metacoding.market.web.dto;
+package site.metacoding.market.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,21 +6,20 @@ import site.metacoding.market.enums.ResponseEnum;
 
 @AllArgsConstructor
 @Getter
-public class CMResponse<T> {
+public class ResponseDto<T> {
 
-    private final Integer code;
-    private final String message;
-    private final T body;
+    private Integer code;
+    private String message;
+    private T data;
 
-    public CMResponse(ResponseEnum respEnum, T body) {
+    public ResponseDto(ResponseEnum respEnum, T data) {
         this.code = respEnum.getCode();
         this.message = respEnum.getMessage();
-        this.body = body;
+        this.data = data;
     }
 
-    public CMResponse(ResponseEnum respEnum) {
+    public ResponseDto(ResponseEnum respEnum) {
         this.code = respEnum.getCode();
         this.message = respEnum.getMessage();
-        this.body = null;
     }
 }

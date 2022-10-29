@@ -3,24 +3,19 @@ server:
   servlet:
     encoding:
       charset: utf-8
-  error:
-    whitelabel:
-      enabled: false
+      force: true
 spring:
   datasource:
     url: jdbc:mariadb://${rds.hostname}:${rds.port}/${rds.db.name} 
     driver-class-name: org.mariadb.jdbc.Driver
     username: ${rds.username}
     password: ${rds.password}
-
   jpa:
     open-in-view: false
     hibernate:
       ddl-auto: none
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
 
 logging:
-  level:  
-    root: INFO
-    '[org.springframework.boot.autoconfigure]': ERROR
+  level:
+    '[site.metacoding.market]': WARN
+    '[org.hibernate.SQL]': off
