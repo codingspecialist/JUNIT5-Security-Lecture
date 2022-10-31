@@ -7,27 +7,21 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import site.metacoding.market.domain.AudingTime;
-import site.metacoding.market.enums.RoleEnum;
+import site.metacoding.market.enums.UserEnum;
 
-@Table(name = "users")
-@Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
-@Inheritance(strategy = InheritanceType.JOINED) // JOINED 전략은 extends 한 자식들의 테이블을 정규화해서 생성해준다는 것이다.
+@Getter
+@Table(name = "users")
 @Entity
 public class User extends AudingTime {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)
@@ -39,6 +33,23 @@ public class User extends AudingTime {
     @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private RoleEnum role;
+    private UserEnum role; // ADMIN, CUSTOMER
+
+    @Builder
+    public User(Long id, String username, String password, String email, UserEnum role) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+    }
+
 }
+
+// for (RoleEnum roleValue : RoleEnum.values()) {
+// if (roleValue.name().equals(role)) {
+// user.role = roleValue;
+// }
+// }

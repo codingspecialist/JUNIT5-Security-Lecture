@@ -14,9 +14,8 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import site.metacoding.market.dto.ResponseDto;
 import site.metacoding.market.enums.ResponseEnum;
-import site.metacoding.market.init.MyLog;
-import site.metacoding.market.web.dto.ResponseDto;
 
 @Component
 public class LoginHandler implements AuthenticationSuccessHandler, AuthenticationFailureHandler {
@@ -24,7 +23,6 @@ public class LoginHandler implements AuthenticationSuccessHandler, Authenticatio
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException exception) throws IOException, ServletException {
-        MyLog.info("로그인 실패");
         makeResponseData(response, ResponseEnum.LOGIN_FAIL);
 
     }
@@ -32,7 +30,6 @@ public class LoginHandler implements AuthenticationSuccessHandler, Authenticatio
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
-        MyLog.info("로그인 성공");
         makeResponseData(response, ResponseEnum.LOGIN_SUCCESS);
     }
 

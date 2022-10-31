@@ -21,10 +21,8 @@ public class SecurityConfig {
         http.csrf().disable();
 
         http.authorizeRequests()
-                .antMatchers("/secure/**").authenticated()
-                .antMatchers("/buyer/**").access("hasRole('ROLE_BUYER') or hasRole('ROLE_ADMIN')")
-                .antMatchers("/seller/**").access("hasRole('ROLE_SELLER') or hasRole('ROLE_ADMIN')")
-                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/api/secure/**").authenticated()
+                .antMatchers("/api/admin/**").access("hasRole('ROLE_ADMIN')")
                 .anyRequest().permitAll()
                 .and()
                 .formLogin()

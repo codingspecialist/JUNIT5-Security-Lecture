@@ -52,7 +52,7 @@ public class LoginUser implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(() -> "ROLE_" + user.getRole().name()); // ex) ROLE_BUYER
+        authorities.add(() -> "ROLE_" + user.getRole().name());
         return authorities;
     }
 }

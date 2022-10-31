@@ -9,7 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import site.metacoding.market.domain.user.User;
 import site.metacoding.market.domain.user.UserRepository;
-import site.metacoding.market.enums.RoleEnum;
+import site.metacoding.market.enums.UserEnum;
 
 @RequiredArgsConstructor
 @Configuration
@@ -17,21 +17,16 @@ public class DBInit {
 
     private final BCryptPasswordEncoder encoder;
 
+    // ADMIN 유저 하나 생성해두기
     @Profile("dev")
     @Bean
     public CommandLineRunner demo(UserRepository userRepository) {
-        String rawPassword = "1234";
-        String encPassword = encoder.encode(rawPassword);
+        String password = encoder.encode("1234");
 
         return (args) -> {
-            User principal = User.builder()
-                    .username("ssar")
-                    .password(encPassword)
-                    .email("getinthere@naver.com")
-                    .role(RoleEnum.ADMIN)
+            User user = User.builder().username("admin").password(password).email("admin@nate.com").role(UserEnum.ADMIN)
                     .build();
-
-            userRepository.save(principal);
+            userRepository.save(user);
         };
     }
 }
