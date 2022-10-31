@@ -1,29 +1,43 @@
-package site.metacoding.market.web;
+package site.metacoding.bank.web;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+import site.metacoding.bank.config.WithAuthUser;
 import site.metacoding.bank.domain.user.User;
+import site.metacoding.bank.domain.user.UserRepository;
+import site.metacoding.bank.dto.AccountReqDto.AccountSaveReqDto;
+import site.metacoding.bank.enums.UserEnum;
 
+@Slf4j
 @ActiveProfiles("test")
-@Sql("classpath:teardown.sql")
+@Sql("classpath:db/teardown.sql")
 @Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 public class AccountApiControllerTest {
-
     private static final String APPLICATION_JSON_UTF8 = "application/json; charset=utf-8";
+    private static final String APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded; charset=utf-8";
+
     private MockHttpSession session;
 
     // DI
@@ -33,12 +47,40 @@ public class AccountApiControllerTest {
     private MockMvc mvc;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private UserRepository userRepository;
 
     @BeforeEach
-    public void sessionInit() {
-        session = new MockHttpSession();
-        User principal = User.builder().id(1L).username("ssar").build();
-        session.setAttribute("principal", principal);
+    public void dataInit() {
+        log.debug("디버그 : dataInit");
+        String encPassword = passwordEncoder.encode("1234");
+        User user = User.builder().username("ssar").password(encPassword).email("ssar@nate.com").role(UserEnum.CUSTOMER)
+                .build();
+        userRepository.save(user);
+    }
+
+    // @WithMockUser // username=user, password=password role=ROLE_USER
+    // @WithMockUser(username = "ssar", password = "1234", roles = {
+    // "ROLE_CUSTOMER"})
+    @WithAuthUser
+    @Test
+    public void save_test() throws Exception {
+        // given
+        AccountSaveReqDto accountSaveReqDto = new AccountSaveReqDto();
+        accountSaveReqDto.setNumber(1112222L);
+        accountSaveReqDto.setPassword("1234");
+
+        String body = om.writeValueAsString(accountSaveReqDto);
+        log.debug("디버그 : " + body);
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(post("/api/account").content(body).contentType(APPLICATION_JSON_UTF8));
+        log.debug("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
+
+        // then
+        // resultActions.andExpect(jsonPath("$.code").value(201));
+
     }
 
 }

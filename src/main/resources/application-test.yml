@@ -19,5 +19,5 @@ spring:
 
 logging:
   level:
-    '[site.metacoding.market]': DEBUG
+    '[site.metacoding.bank]': DEBUG
     '[org.hibernate.SQL]': DEBUG

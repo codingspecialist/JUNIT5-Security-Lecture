@@ -24,9 +24,15 @@ public class DBInit {
         String password = encoder.encode("1234");
 
         return (args) -> {
-            User user = User.builder().username("admin").password(password).email("admin@nate.com").role(UserEnum.ADMIN)
+            User admin = User.builder().username("admin").password(password).email("admin@nate.com")
+                    .role(UserEnum.ADMIN)
                     .build();
-            userRepository.save(user);
+            userRepository.save(admin);
+            // User ssar =
+            // User.builder().username("ssar").password(password).email("ssar@nate.com")
+            // .role(UserEnum.CUSTOMER)
+            // .build();
+            // userRepository.save(ssar);
         };
     }
 }

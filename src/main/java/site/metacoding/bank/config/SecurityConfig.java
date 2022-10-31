@@ -21,7 +21,8 @@ public class SecurityConfig {
         http.csrf().disable();
 
         http.authorizeRequests()
-                .antMatchers("/api/secure/**").authenticated()
+                .antMatchers("/api/transaction/**").authenticated()
+                .antMatchers("/api/account/**").authenticated()
                 .antMatchers("/api/admin/**").access("hasRole('ROLE_ADMIN')")
                 .anyRequest().permitAll()
                 .and()

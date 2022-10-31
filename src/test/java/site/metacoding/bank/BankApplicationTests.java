@@ -1,10 +1,10 @@
-package site.metacoding.market;
+package site.metacoding.bank;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class MarketApplicationTests {
+public class BankApplicationTests {
 
     @Test
     void contextLoads() {

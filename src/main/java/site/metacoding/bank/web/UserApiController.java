@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.metacoding.bank.dto.ResponseDto;
 import site.metacoding.bank.dto.UserReqDto.UserJoinReqDto;
+import site.metacoding.bank.dto.UserRespDto.UserJoinRespDto;
 import site.metacoding.bank.enums.ResponseEnum;
 import site.metacoding.bank.service.UserService;
 
@@ -21,9 +22,10 @@ import site.metacoding.bank.service.UserService;
 public class UserApiController {
     private final UserService userService;
 
-    @PostMapping("/v1/join")
+    @PostMapping("/join")
     public ResponseEntity<?> join(@RequestBody UserJoinReqDto userJoinReqDto) {
-        return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.JOIN_SUCCESS, userService.회원가입(userJoinReqDto)),
+        UserJoinRespDto userJoinRespDto = userService.회원가입(userJoinReqDto);
+        return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.JOIN_SUCCESS, userJoinRespDto),
                 HttpStatus.CREATED);
     }
 

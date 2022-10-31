@@ -15,7 +15,7 @@ public enum ResponseEnum {
     JOIN_FAIL(500, "회원가입 실패"),
     GET_SUCCESS(200, "조회 성공"),
     GET_FAIL(400, "조회 실패"),
-    POST_SUCCESS(200, "등록 성공"),
+    POST_SUCCESS(201, "등록 성공"),
     POST_FAIL(404, "등록 실패"),
     PUT_SUCCESS(200, "수정 성공"),
     PUT_FAIL(400, "수정 실패"),

@@ -17,5 +17,5 @@ spring:
 
 logging:
   level:
-    '[site.metacoding.market]': WARN
+    '[site.metacoding.bank]': WARN
     '[org.hibernate.SQL]': off
