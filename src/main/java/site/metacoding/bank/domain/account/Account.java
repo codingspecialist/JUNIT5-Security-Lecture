@@ -19,6 +19,8 @@ import lombok.NoArgsConstructor;
 import site.metacoding.bank.domain.AudingTime;
 import site.metacoding.bank.domain.transaction.Transaction;
 import site.metacoding.bank.domain.user.User;
+import site.metacoding.bank.enums.ResponseEnum;
+import site.metacoding.bank.handler.exception.CustomApiException;
 
 /**
  * 계좌
@@ -56,6 +58,16 @@ public class Account extends AudingTime {
         this.password = password;
         this.balance = balance;
         this.user = user;
+    }
+
+    /*
+     * 출금
+     */
+    public void withdraw(Long amount) {
+        if (amount > balance) {
+            throw new CustomApiException(ResponseEnum.LACK_BALANCE);
+        }
+        balance = balance - amount;
     }
 
 }

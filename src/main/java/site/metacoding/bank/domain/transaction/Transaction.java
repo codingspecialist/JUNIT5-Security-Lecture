@@ -37,16 +37,16 @@ public class Transaction extends AudingTime {
 
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     @ManyToOne(fetch = FetchType.LAZY)
-    private Account withdrawAccount; // 출금 계좌
+    private Account withdrawAccount; // 출금 계좌 (보내는 분)
 
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     @ManyToOne(fetch = FetchType.LAZY)
-    private Account depositAccount; // 입금 계좌
+    private Account depositAccount; // 입금 계좌 (받는 분)
 
-    private Long amount; // 입금액, 출금액
+    private Long amount; // 금액
 
     @Enumerated(EnumType.STRING)
-    private TransactionEnum gubun; // 이체, 자동화기기
+    private TransactionEnum gubun; // 입금, 출금, 이체
 
     @Builder
     public Transaction(Long id, Account withdrawAccount, Account depositAccount, Long amount, TransactionEnum gubun) {

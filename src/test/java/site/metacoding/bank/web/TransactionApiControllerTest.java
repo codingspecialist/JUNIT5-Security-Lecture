@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.naming.TransactionRef;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ import site.metacoding.bank.domain.transaction.TransactionRepository;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.domain.user.UserRepository;
 import site.metacoding.bank.dto.AccountReqDto.AccountSaveReqDto;
+import site.metacoding.bank.dto.TransactionReqDto.TransactionWithdrawReqDto;
 import site.metacoding.bank.enums.TransactionEnum;
 import site.metacoding.bank.enums.UserEnum;
 
@@ -42,8 +44,8 @@ import site.metacoding.bank.enums.UserEnum;
 @Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-public class AccountApiControllerTest {
-        private static final String TAG = "AccountApiControllerTest";
+public class TransactionApiControllerTest {
+        private static final String TAG = "TransactionApiControllerTest";
         private static final String APPLICATION_JSON_UTF8 = "application/json; charset=utf-8";
         private static final String APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded; charset=utf-8";
 
@@ -138,23 +140,22 @@ public class AccountApiControllerTest {
                 log.debug("디버그-" + TAG + " : 입출금이체 3개 insert");
         }
 
-        /**
-         * 계좌등록
-         */
         @WithUserDetails(value = "ssar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
         @Test
-        public void save_test() throws Exception {
+        public void withdraw_test() throws Exception {
                 // given
-                AccountSaveReqDto accountSaveReqDto = new AccountSaveReqDto();
-                accountSaveReqDto.setNumber(55556666L);
-                accountSaveReqDto.setPassword("1234");
-
-                String requestBody = om.writeValueAsString(accountSaveReqDto);
+                Long userId = 1L;
+                TransactionWithdrawReqDto transactionWithdrawReqDto = new TransactionWithdrawReqDto();
+                transactionWithdrawReqDto.setWithdrawAccountId(1L);
+                transactionWithdrawReqDto.setAmount(1000L);
+                transactionWithdrawReqDto.setGubun("WITHDRAW");
+                String requestBody = om.writeValueAsString(transactionWithdrawReqDto);
                 log.debug("디버그-" + TAG + " : " + requestBody);
 
                 // when
                 ResultActions resultActions = mvc
-                                .perform(post("/api/account").content(requestBody).contentType(APPLICATION_JSON_UTF8));
+                                .perform(post("/api/user/" + userId + "/transaction").content(requestBody)
+                                                .contentType(APPLICATION_JSON_UTF8));
                 String responseBody = resultActions.andReturn().getResponse().getContentAsString();
                 log.debug("디버그-" + TAG + " : " + responseBody);
 
@@ -163,58 +164,29 @@ public class AccountApiControllerTest {
         }
 
         /**
-         * 본인 계좌목록
+         * 계좌등록
          */
-        @WithUserDetails(value = "ssar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
-        @Test
-        public void list_test() throws Exception {
-                // given
+        // @WithUserDetails(value = "ssar", setupBefore
+        // =TestExecutionEvent.TEST_EXECUTION)
+        // @Test
+        // public void withdraw_test() throws Exception {
+        // // given
+        // AccountSaveReqDto accountSaveReqDto = new AccountSaveReqDto();
+        // accountSaveReqDto.setNumber(55556666L);
+        // accountSaveReqDto.setPassword("1234");
 
-                // when
-                ResultActions resultActions = mvc
-                                .perform(get("/api/user/1/account"));
-                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-                log.debug("디버그-" + TAG + " : " + responseBody);
+        // String requestBody = om.writeValueAsString(accountSaveReqDto);
+        // log.debug("디버그-" + TAG + " : " + requestBody);
 
-                // then
-                resultActions.andExpect(jsonPath("$.code").value(200));
-        }
+        // // when
+        // ResultActions resultActions = mvc
+        // .perform(post("/api/account").content(requestBody).contentType(APPLICATION_JSON_UTF8));
+        // String responseBody =
+        // resultActions.andReturn().getResponse().getContentAsString();
+        // log.debug("디버그-" + TAG + " : " + responseBody);
 
-        /**
-         * 본인 계좌 상세보기
-         */
-        @WithUserDetails(value = "ssar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
-        @Test
-        public void detail_test() throws Exception {
-                // given
-                Long accountId = 1L;
-                Long userId = 1L;
+        // // then
+        // resultActions.andExpect(jsonPath("$.code").value(201));
+        // }
 
-                // when
-                ResultActions resultActions = mvc
-                                .perform(get("/api/user/" + userId + "/account/" + accountId));
-                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-                log.debug("디버그-" + TAG + " : " + responseBody);
-
-                // then
-                resultActions.andExpect(jsonPath("$.code").value(200));
-        }
-
-        @WithUserDetails(value = "ssar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
-        @Test
-        public void delete_test() throws Exception {
-                // given
-                Long accountId = 1L;
-                Long userId = 1L;
-
-                // when
-                ResultActions resultActions = mvc
-                                .perform(delete("/api/user/" + userId + "/account/" + accountId));
-                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-                log.debug("디버그-" + TAG + " : " + responseBody);
-
-                // then
-                resultActions.andExpect(jsonPath("$.code").value(200));
-
-        }
 }

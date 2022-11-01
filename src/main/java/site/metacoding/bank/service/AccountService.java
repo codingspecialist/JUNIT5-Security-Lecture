@@ -39,17 +39,17 @@ public class AccountService {
 
     public AccountDetailRespDto 계좌상세보기(Long accountId, Long userId) {
         // 계좌확인
-        Account account = accountRepository.findById(accountId).orElseThrow(
+        Account accountPS = accountRepository.findById(accountId).orElseThrow(
                 () -> new CustomApiException(ResponseEnum.BAD_REQUEST));
 
         // DTO
-        return new AccountDetailRespDto(account);
+        return new AccountDetailRespDto(accountPS);
     }
 
     @Transactional
     public void 계좌삭제(Long accountId) {
         // 계좌확인
-        Account account = accountRepository.findById(accountId).orElseThrow(
+        Account accountPS = accountRepository.findById(accountId).orElseThrow(
                 () -> new CustomApiException(ResponseEnum.BAD_REQUEST));
 
         // 계좌삭제

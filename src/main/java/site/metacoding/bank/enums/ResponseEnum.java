@@ -20,7 +20,8 @@ public enum ResponseEnum {
     PUT_SUCCESS(200, "수정 성공"),
     PUT_FAIL(400, "수정 실패"),
     DELETE_SUCCESS(200, "삭제 성공"),
-    DELETE_FAIL(200, "삭제 실패");
+    DELETE_FAIL(200, "삭제 실패"),
+    LACK_BALANCE(400, "잔액 부족");
 
     private final int code;
     private final String message;
