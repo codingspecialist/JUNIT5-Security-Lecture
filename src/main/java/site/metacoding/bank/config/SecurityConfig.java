@@ -22,6 +22,7 @@ public class SecurityConfig {
 
         http.authorizeRequests()
                 .antMatchers("/api/transaction/**").authenticated()
+                .antMatchers("/api/user/**").authenticated()
                 .antMatchers("/api/account/**").authenticated()
                 .antMatchers("/api/admin/**").access("hasRole('ROLE_ADMIN')")
                 .anyRequest().permitAll()

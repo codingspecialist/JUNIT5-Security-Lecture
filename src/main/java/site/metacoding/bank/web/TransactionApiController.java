@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import site.metacoding.bank.config.auth.LoginUser;
 import site.metacoding.bank.dto.ResponseDto;
+import site.metacoding.bank.dto.TransactionReqDto.TransactionDepositReqDto;
 import site.metacoding.bank.dto.TransactionReqDto.TransactionWithdrawReqDto;
+import site.metacoding.bank.dto.TransactionRespDto.TransactionDepositRespDto;
 import site.metacoding.bank.dto.TransactionRespDto.TransactionWithdrawRespDto;
 import site.metacoding.bank.enums.ResponseEnum;
 import site.metacoding.bank.enums.UserEnum;
@@ -26,7 +28,7 @@ public class TransactionApiController {
     /*
      * 출금
      */
-    @PostMapping("/user/{userId}/transaction")
+    @PostMapping("/user/{userId}/withdraw")
     public ResponseDto<?> withdraw(@PathVariable Long userId,
             @RequestBody TransactionWithdrawReqDto transactionWithdrawReqDto,
             @AuthenticationPrincipal LoginUser loginUser) {
@@ -38,6 +40,18 @@ public class TransactionApiController {
         TransactionWithdrawRespDto transactionWithdrawRespDto = transactionService.출금하기(transactionWithdrawReqDto);
 
         return new ResponseDto<>(ResponseEnum.POST_SUCCESS, transactionWithdrawRespDto);
+    }
+
+    /*
+     * 입금
+     * ATM에서 계좌로 입금하는 것이기 때문에 인증이 필요없다.
+     */
+    @PostMapping("/deposit")
+    public ResponseDto<?> deposit(@RequestBody TransactionDepositReqDto transactionDepositReqDto) {
+
+        TransactionDepositRespDto transactionDepositRespDto = transactionService.입금하기(transactionDepositReqDto);
+
+        return new ResponseDto<>(ResponseEnum.POST_SUCCESS, transactionDepositRespDto);
     }
 
 }

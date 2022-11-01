@@ -1,14 +1,11 @@
 package site.metacoding.bank.web;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.naming.TransactionRef;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +30,7 @@ import site.metacoding.bank.domain.transaction.Transaction;
 import site.metacoding.bank.domain.transaction.TransactionRepository;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.domain.user.UserRepository;
-import site.metacoding.bank.dto.AccountReqDto.AccountSaveReqDto;
+import site.metacoding.bank.dto.TransactionReqDto.TransactionDepositReqDto;
 import site.metacoding.bank.dto.TransactionReqDto.TransactionWithdrawReqDto;
 import site.metacoding.bank.enums.TransactionEnum;
 import site.metacoding.bank.enums.UserEnum;
@@ -154,7 +151,7 @@ public class TransactionApiControllerTest {
 
                 // when
                 ResultActions resultActions = mvc
-                                .perform(post("/api/user/" + userId + "/transaction").content(requestBody)
+                                .perform(post("/api/user/" + userId + "/withdraw").content(requestBody)
                                                 .contentType(APPLICATION_JSON_UTF8));
                 String responseBody = resultActions.andReturn().getResponse().getContentAsString();
                 log.debug("디버그-" + TAG + " : " + responseBody);
@@ -163,30 +160,26 @@ public class TransactionApiControllerTest {
                 resultActions.andExpect(jsonPath("$.code").value(201));
         }
 
-        /**
-         * 계좌등록
-         */
-        // @WithUserDetails(value = "ssar", setupBefore
-        // =TestExecutionEvent.TEST_EXECUTION)
-        // @Test
-        // public void withdraw_test() throws Exception {
-        // // given
-        // AccountSaveReqDto accountSaveReqDto = new AccountSaveReqDto();
-        // accountSaveReqDto.setNumber(55556666L);
-        // accountSaveReqDto.setPassword("1234");
+        @Test
+        public void deposit_test() throws Exception {
+                // given
 
-        // String requestBody = om.writeValueAsString(accountSaveReqDto);
-        // log.debug("디버그-" + TAG + " : " + requestBody);
+                TransactionDepositReqDto transactionDepositReqDto = new TransactionDepositReqDto();
+                transactionDepositReqDto.setDepositAccountId(1L);
+                transactionDepositReqDto.setAmount(1000L);
+                transactionDepositReqDto.setGubun("DEPOSIT");
+                String requestBody = om.writeValueAsString(transactionDepositReqDto);
+                log.debug("디버그-" + TAG + " : " + requestBody);
 
-        // // when
-        // ResultActions resultActions = mvc
-        // .perform(post("/api/account").content(requestBody).contentType(APPLICATION_JSON_UTF8));
-        // String responseBody =
-        // resultActions.andReturn().getResponse().getContentAsString();
-        // log.debug("디버그-" + TAG + " : " + responseBody);
+                // when
+                ResultActions resultActions = mvc
+                                .perform(post("/api/deposit").content(requestBody)
+                                                .contentType(APPLICATION_JSON_UTF8));
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                log.debug("디버그-" + TAG + " : " + responseBody);
 
-        // // then
-        // resultActions.andExpect(jsonPath("$.code").value(201));
-        // }
+                // then
+                resultActions.andExpect(jsonPath("$.code").value(201));
+        }
 
 }

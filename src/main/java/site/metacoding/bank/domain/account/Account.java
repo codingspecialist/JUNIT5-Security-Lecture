@@ -70,4 +70,11 @@ public class Account extends AudingTime {
         balance = balance - amount;
     }
 
+    /*
+     * 입금
+     */
+    public void deposit(Long amount) {
+        balance = balance + amount;
+    }
+
 }
