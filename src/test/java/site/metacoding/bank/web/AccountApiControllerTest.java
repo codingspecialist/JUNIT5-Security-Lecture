@@ -3,7 +3,6 @@ package site.metacoding.bank.web;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -22,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
-import site.metacoding.bank.config.WithAuthUser;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.domain.user.UserRepository;
 import site.metacoding.bank.dto.AccountReqDto.AccountSaveReqDto;
@@ -59,10 +57,13 @@ public class AccountApiControllerTest {
         userRepository.save(user);
     }
 
-    // @WithMockUser // username=user, password=password role=ROLE_USER
-    // @WithMockUser(username = "ssar", password = "1234", roles = {
-    // "ROLE_CUSTOMER"})
-    @WithAuthUser
+    // @WithMockUser // 기본값 username=user, password=password role=ROLE_USER
+    // @WithMockUser(username = "ssar", password = "1234", roles = "CUSTOMER")
+    // https://velog.io/@rmswjdtn/Spring-SecuritywithUserDetails-%EC%95%8C%EC%95%84%EB%B3%B4%EA%B8%B0
+    // SecurityContext는 default로 TestExecutionListener.beforeTestMethod로 설정이 되어있습니다.
+    // 따라서 @BeforeAll, @BeforeEach 실행전에 WithUserDetails가 실행되어서, DB에 User가 생기기전에 실행됨
+    // setupBefore = TestExecutionEvent.TEST_EXECUTION 이것을 사용하자
+    @WithUserDetails(value = "ssar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     public void save_test() throws Exception {
         // given
