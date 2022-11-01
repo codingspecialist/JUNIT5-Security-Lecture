@@ -16,9 +16,6 @@ public class AccountReqDto {
         private LoginUser loginUser; // 서비스 로직
 
         public Account toEntity() {
-            log.debug("디버그 : 여기서 터지겠다. getUser 없어서");
-            log.debug("디버그 : " + loginUser.getUsername());
-            log.debug("디버그 : " + loginUser.getUser().getId());
             return Account.builder()
                     .number(number)
                     .password(password)

@@ -31,6 +31,7 @@ import site.metacoding.bank.enums.UserEnum;
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 public class UserApiControllerTest {
+    private static final String TAG = "UserApiControllerTest";
     private static final String APPLICATION_JSON_UTF8 = "application/json; charset=utf-8";
     private static final String APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded; charset=utf-8";
 
@@ -50,9 +51,12 @@ public class UserApiControllerTest {
         User user = User.builder().username("ssar").password(encPassword).email("ssar@nate.com").role(UserEnum.CUSTOMER)
                 .build();
         userRepository.save(user);
-        log.debug("디버그 : 회원가입 완료");
+        log.debug("디버그-" + TAG + " : ssar 유저 insert");
     }
 
+    /**
+     * 회원가입
+     */
     @Test
     public void join_test() throws Exception {
         // given
@@ -61,29 +65,34 @@ public class UserApiControllerTest {
         userJoinReqDto.setPassword("1234");
         userJoinReqDto.setEmail("cos@nate.com");
 
-        String body = om.writeValueAsString(userJoinReqDto);
-        log.debug("디버그 : " + body);
+        String requestBody = om.writeValueAsString(userJoinReqDto);
+        log.debug("디버그-" + TAG + " : " + requestBody);
 
         // when
         ResultActions resultActions = mvc
-                .perform(post("/api/join").content(body).contentType(APPLICATION_JSON_UTF8));
-        log.debug("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
+                .perform(post("/api/join").content(requestBody).contentType(APPLICATION_JSON_UTF8));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        log.debug("디버그-" + TAG + " : " + responseBody);
 
         // then
         resultActions.andExpect(jsonPath("$.code").value(201));
     }
 
+    /**
+     * 로그인
+     */
     @Test
     public void login_test() throws Exception {
         // given
-        String body = "username=ssar&password=1234";
-        log.debug("디버그 : " + body);
+        String requestBody = "username=ssar&password=1234";
+        log.debug("디버그-" + TAG + " : " + requestBody);
 
         // when
         ResultActions resultActions = mvc
-                .perform(post("/api/login").content(body)
+                .perform(post("/api/login").content(requestBody)
                         .contentType(APPLICATION_FORM_URLENCODED));
-        log.debug("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        log.debug("디버그-" + TAG + " : " + responseBody);
 
         // then
         resultActions.andExpect(jsonPath("$.code").value(200));

@@ -1,6 +1,11 @@
 package site.metacoding.bank.web;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -21,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import site.metacoding.bank.domain.account.Account;
+import site.metacoding.bank.domain.account.AccountRepository;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.domain.user.UserRepository;
 import site.metacoding.bank.dto.AccountReqDto.AccountSaveReqDto;
@@ -33,10 +39,9 @@ import site.metacoding.bank.enums.UserEnum;
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 public class AccountApiControllerTest {
+    private static final String TAG = "AccountApiControllerTest";
     private static final String APPLICATION_JSON_UTF8 = "application/json; charset=utf-8";
     private static final String APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded; charset=utf-8";
-
-    private MockHttpSession session;
 
     // DI
     @Autowired
@@ -47,91 +52,87 @@ public class AccountApiControllerTest {
     private BCryptPasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private AccountRepository accountRepository;
 
     @BeforeEach
     public void dataInit() {
-        log.debug("디버그 : dataInit");
         String encPassword = passwordEncoder.encode("1234");
         User user = User.builder().username("ssar").password(encPassword).email("ssar@nate.com").role(UserEnum.CUSTOMER)
                 .build();
-        userRepository.save(user);
+        User userPS = userRepository.save(user);
+        log.debug("디버그-" + TAG + " : ssar 유저 insert");
+
+        Account account1 = Account.builder()
+                .number(111222L)
+                .password("1234")
+                .balance(0L)
+                .user(userPS)
+                .build();
+
+        Account account2 = Account.builder()
+                .number(333444L)
+                .password("1234")
+                .balance(0L)
+                .user(userPS)
+                .build();
+        List<Account> accounts = Arrays.asList(account1, account2);
+        accountRepository.saveAll(accounts);
+        log.debug("디버그-" + TAG + " : 계좌 두개 insert");
     }
 
-    // @WithMockUser // 기본값 username=user, password=password role=ROLE_USER
-    // @WithMockUser(username = "ssar", password = "1234", roles = "CUSTOMER")
-    // https://velog.io/@rmswjdtn/Spring-SecuritywithUserDetails-%EC%95%8C%EC%95%84%EB%B3%B4%EA%B8%B0
-    // SecurityContext는 default로 TestExecutionListener.beforeTestMethod로 설정이 되어있습니다.
-    // 따라서 @BeforeAll, @BeforeEach 실행전에 WithUserDetails가 실행되어서, DB에 User가 생기기전에 실행됨
-    // setupBefore = TestExecutionEvent.TEST_EXECUTION 이것을 사용하자
+    /**
+     * 계좌등록
+     */
     @WithUserDetails(value = "ssar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     public void save_test() throws Exception {
         // given
         AccountSaveReqDto accountSaveReqDto = new AccountSaveReqDto();
-        accountSaveReqDto.setNumber(1112222L);
+        accountSaveReqDto.setNumber(55556666L);
         accountSaveReqDto.setPassword("1234");
 
-        String body = om.writeValueAsString(accountSaveReqDto);
-        log.debug("디버그 : " + body);
+        String requestBody = om.writeValueAsString(accountSaveReqDto);
+        log.debug("디버그-" + TAG + " : " + requestBody);
 
         // when
         ResultActions resultActions = mvc
-                .perform(post("/api/account").content(body).contentType(APPLICATION_JSON_UTF8));
-        log.debug("디버그 : " + resultActions.andReturn().getResponse().getContentAsString());
+                .perform(post("/api/account").content(requestBody).contentType(APPLICATION_JSON_UTF8));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        log.debug("디버그-" + TAG + " : " + responseBody);
 
         // then
-        // resultActions.andExpect(jsonPath("$.code").value(201));
-
+        resultActions.andExpect(jsonPath("$.code").value(201));
     }
 
+    /**
+     * 본인 계좌목록
+     */
+    @WithUserDetails(value = "ssar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void list_test() throws Exception {
+        // given
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(get("/api/account"));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        log.debug("디버그-" + TAG + " : " + responseBody);
+
+        // then
+        resultActions.andExpect(jsonPath("$.code").value(200));
+    }
+
+    /**
+     * 본인 계좌 상세보기
+     */
+    @Test
+    public void detail_test() {
+        // given
+
+        // when
+
+        // then
+
+    }
 }
-
-// @BeforeEach
-// public void dataInit() {
-// String encPassword = sha256.encrypt("1234");
-// User user = User.builder().username("ssar").password(encPassword).build();
-// User userPS = userRepository.save(user);
-
-// Board board = Board.builder()
-// .title("스프링1강")
-// .content("트랜잭션관리")
-// .user(userPS)
-// .build();
-// Board boardPS = boardRepository.save(board);
-
-// Comment comment1 = Comment.builder()
-// .content("내용좋아요")
-// .board(boardPS)
-// .user(userPS)
-// .build();
-
-// Comment comment2 = Comment.builder()
-// .content("내용싫어요")
-// .board(boardPS)
-// .user(userPS)
-// .build();
-
-// commentRepository.save(comment1);
-// commentRepository.save(comment2);
-// }
-
-// @Test
-// public void save_test() throws Exception {
-// // given
-// BoardSaveReqDto boardSaveReqDto = new BoardSaveReqDto();
-// boardSaveReqDto.setTitle("스프링1강");
-// boardSaveReqDto.setContent("트랜잭션관리");
-
-// String body = om.writeValueAsString(boardSaveReqDto);
-
-// // when
-// ResultActions resultActions = mvc
-// .perform(MockMvcRequestBuilders.post("/board").content(body)
-// .contentType(APPLICATION_JSON).accept(APPLICATION_JSON)
-// .session(session));
-
-// // then
-// MvcResult mvcResult = resultActions.andReturn();
-// System.out.println("디버그 : " + mvcResult.getResponse().getContentAsString());
-// resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.code").value(1L));
-// }
