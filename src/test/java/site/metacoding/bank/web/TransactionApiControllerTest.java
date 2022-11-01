@@ -163,7 +163,6 @@ public class TransactionApiControllerTest {
         @Test
         public void deposit_test() throws Exception {
                 // given
-
                 TransactionDepositReqDto transactionDepositReqDto = new TransactionDepositReqDto();
                 transactionDepositReqDto.setDepositAccountId(1L);
                 transactionDepositReqDto.setAmount(1000L);
@@ -181,5 +180,13 @@ public class TransactionApiControllerTest {
                 // then
                 resultActions.andExpect(jsonPath("$.code").value(201));
         }
+
+        // 이체 테스트
+
+        // 입금 내역 보기
+
+        // 출금 내역 보기
+
+        // 입출금 내역 보기
 
 }
