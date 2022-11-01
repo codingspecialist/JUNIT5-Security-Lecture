@@ -11,6 +11,7 @@ import site.metacoding.bank.dto.UserReqDto.UserJoinReqDto;
 import site.metacoding.bank.dto.UserRespDto.UserJoinRespDto;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @Service
 public class UserService {
     private final UserRepository userRepository;
