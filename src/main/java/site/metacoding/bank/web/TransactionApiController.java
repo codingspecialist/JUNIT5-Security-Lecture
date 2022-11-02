@@ -90,7 +90,7 @@ public class TransactionApiController {
                 throw new CustomApiException(ResponseEnum.FORBIDDEN);
             }
         }
-        transactionService.출금목록보기(null);
+        transactionService.출금목록보기(userId, accountId);
         return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, null), HttpStatus.OK);
     }
 }

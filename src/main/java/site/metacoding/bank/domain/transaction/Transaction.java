@@ -44,17 +44,21 @@ public class Transaction extends AudingTime {
     private Account depositAccount; // 입금 계좌 (받는 분)
 
     private Long amount; // 입출금, 이체 금액
-    private Long currentBalance; // 현재 잔액
+    private Long withdrawAccountBalance; // 출금계좌 현재 잔액
+    private Long depositAccountBalance; // 입금계좌 현재 잔액
 
     @Enumerated(EnumType.STRING)
     private TransactionEnum gubun; // 입금(자동화기기로부터), 출금(자동화기기로), 이체(다른계좌)
 
     @Builder
-    public Transaction(Long id, Account withdrawAccount, Account depositAccount, Long amount, TransactionEnum gubun) {
+    public Transaction(Long id, Account withdrawAccount, Account depositAccount, Long amount,
+            Long withdrawAccountBalance, Long depositAccountBalance, TransactionEnum gubun) {
         this.id = id;
         this.withdrawAccount = withdrawAccount;
         this.depositAccount = depositAccount;
         this.amount = amount;
+        this.withdrawAccountBalance = withdrawAccountBalance;
+        this.depositAccountBalance = depositAccountBalance;
         this.gubun = gubun;
     }
 

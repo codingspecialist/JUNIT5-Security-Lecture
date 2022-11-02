@@ -19,6 +19,8 @@ public class TransactionReqDto {
                     .withdrawAccount(withdrawAccount)
                     .depositAccount(null)
                     .amount(amount)
+                    .withdrawAccountBalance(withdrawAccount.getBalance())
+                    .depositAccountBalance(null)
                     .gubun(TransactionEnum.valueOf(gubun))
                     .build();
         }
@@ -36,6 +38,8 @@ public class TransactionReqDto {
                     .withdrawAccount(null)
                     .depositAccount(depositAccount)
                     .amount(amount)
+                    .withdrawAccountBalance(null)
+                    .depositAccountBalance(depositAccount.getBalance())
                     .gubun(TransactionEnum.valueOf(gubun))
                     .build();
         }
@@ -47,13 +51,15 @@ public class TransactionReqDto {
         private Long withdrawAccountId; // 출금 계좌
         private Long depositAccountId; // 입금 계좌
         private Long amount; // 금액
-        private String gubun; // 고정값 (계좌에서 계좌로 이체)
+        private String gubun; // 고정값 (내계좌에서 다른계좌로 이체)
 
         public Transaction toEntity(Account withdrawAccount, Account depositAccount) {
             return Transaction.builder()
                     .withdrawAccount(withdrawAccount)
                     .depositAccount(depositAccount)
                     .amount(amount)
+                    .withdrawAccountBalance(withdrawAccount.getBalance())
+                    .depositAccountBalance(depositAccount.getBalance())
                     .gubun(TransactionEnum.valueOf(gubun))
                     .build();
         }

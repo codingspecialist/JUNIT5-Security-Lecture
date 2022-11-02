@@ -3,11 +3,14 @@ package site.metacoding.bank.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.account.AccountRepository;
 import site.metacoding.bank.domain.transaction.Transaction;
 import site.metacoding.bank.domain.transaction.TransactionRepository;
+import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.DepositReqDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.TransperReqDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.WithdrawReqDto;
@@ -33,12 +36,12 @@ public class TransactionService {
                 // 출금계좌 소유자 확인
                 withdrawAccountPS.isAccountOwner(userId);
 
-                // 출금하기
+                // 출금 계좌잔액 수정
+                withdrawAccountPS.withdraw(withdrawReqDto.getAmount());
+
+                // 출금 이력 남기기
                 Transaction withdrawPS = transactionRepository
                                 .save(withdrawReqDto.toEntity(withdrawAccountPS));
-
-                // 계좌잔액 수정
-                withdrawAccountPS.withdraw(withdrawReqDto.getAmount());
 
                 // DTO
                 return new WithdrawRespDto(withdrawPS);
@@ -51,12 +54,12 @@ public class TransactionService {
                                 .orElseThrow(
                                                 () -> new CustomApiException(ResponseEnum.BAD_REQUEST));
 
-                // 입금하기
+                // 입금 계좌잔액 수정
+                depositAccountPS.deposit(depositReqDto.getAmount());
+
+                // 입금 이력 남기기
                 Transaction depositPS = transactionRepository
                                 .save(depositReqDto.toEntity(depositAccountPS));
-
-                // 입금 계좌잔액 수정
-                depositAccountPS.deposit(depositPS.getAmount());
 
                 // DTO
                 return new DepositRespDto(depositPS);
@@ -86,7 +89,7 @@ public class TransactionService {
                 // 입급 계좌잔액 수정
                 depositAccountPS.deposit(transperReqDto.getAmount());
 
-                // 이체하기
+                // 이체 이력 남기기
                 Transaction transperPS = transactionRepository
                                 .save(transperReqDto.toEntity(withdrawAccountPS, depositAccountPS));
 
@@ -94,7 +97,61 @@ public class TransactionService {
                 return new TransperRespDto(transperPS);
         }
 
-        public void 출금목록보기(Long withdrawAccountId) {
+        public void 출금목록보기(Long userId, Long accountId) {
+                // 계좌 확인
+                Account accountPS = accountRepository.findById(accountId)
+                                .orElseThrow(() -> new CustomApiException(ResponseEnum.BAD_REQUEST));
+
+                // 계좌 소유자 확인
+                accountPS.isAccountOwner(userId);
+
+                // WithDrawAccount (Lazy Loading)
+
+        }
+
+        @Getter
+        @Setter
+        public static class WithdrawAllRespDto {
+                private Long id;
+                private Long amount;
+                private String gubun;
+                private WithdrawAccountDto withdrawAccount;
+
+                public WithdrawAllRespDto(Transaction transaction) {
+                        this.id = transaction.getId();
+                        this.amount = transaction.getAmount();
+                        this.gubun = transaction.getGubun().name();
+                        this.withdrawAccount = new WithdrawAccountDto(transaction.getWithdrawAccount());
+                }
+
+                @Getter
+                @Setter
+                public class WithdrawAccountDto {
+                        private Long id;
+                        private Long number;
+                        private Long balance;
+                        private UserDto user;
+
+                        public WithdrawAccountDto(Account account) {
+                                this.id = account.getId();
+                                this.number = account.getNumber();
+                                this.balance = account.getBalance();
+                                this.user = new UserDto(account.getUser());
+                        }
+
+                        @Getter
+                        @Setter
+                        public class UserDto {
+                                private Long id;
+                                private String username;
+
+                                public UserDto(User user) {
+                                        this.id = user.getId();
+                                        this.username = user.getUsername();
+                                }
+
+                        }
+                }
         }
 
 }
