@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.domain.user.UserRepository;
-import site.metacoding.bank.dto.UserReqDto.UserJoinReqDto;
-import site.metacoding.bank.dto.UserRespDto.UserJoinRespDto;
+import site.metacoding.bank.dto.user.UserReqDto.UserJoinReqDto;
+import site.metacoding.bank.dto.user.UserRespDto.UserJoinRespDto;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)

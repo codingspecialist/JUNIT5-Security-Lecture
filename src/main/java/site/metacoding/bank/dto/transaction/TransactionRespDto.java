@@ -1,4 +1,4 @@
-package site.metacoding.bank.dto;
+package site.metacoding.bank.dto.transaction;
 
 import lombok.Getter;
 import lombok.Setter;

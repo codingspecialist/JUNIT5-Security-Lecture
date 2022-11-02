@@ -1,4 +1,4 @@
-package site.metacoding.bank.dto;
+package site.metacoding.bank.dto.user;
 
 import lombok.Getter;
 import lombok.Setter;

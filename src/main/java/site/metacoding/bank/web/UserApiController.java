@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import site.metacoding.bank.dto.ResponseDto;
-import site.metacoding.bank.dto.UserReqDto.UserJoinReqDto;
-import site.metacoding.bank.dto.UserRespDto.UserJoinRespDto;
+import site.metacoding.bank.dto.user.UserReqDto.UserJoinReqDto;
+import site.metacoding.bank.dto.user.UserRespDto.UserJoinRespDto;
 import site.metacoding.bank.enums.ResponseEnum;
 import site.metacoding.bank.service.UserService;
 

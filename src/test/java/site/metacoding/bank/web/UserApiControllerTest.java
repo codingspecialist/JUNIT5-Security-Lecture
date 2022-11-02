@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.domain.user.UserRepository;
-import site.metacoding.bank.dto.UserReqDto.UserJoinReqDto;
+import site.metacoding.bank.dto.user.UserReqDto.UserJoinReqDto;
 import site.metacoding.bank.enums.UserEnum;
 
 @Slf4j

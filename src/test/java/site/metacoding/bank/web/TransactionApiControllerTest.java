@@ -30,8 +30,8 @@ import site.metacoding.bank.domain.transaction.Transaction;
 import site.metacoding.bank.domain.transaction.TransactionRepository;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.domain.user.UserRepository;
-import site.metacoding.bank.dto.TransactionReqDto.TransactionDepositReqDto;
-import site.metacoding.bank.dto.TransactionReqDto.TransactionWithdrawReqDto;
+import site.metacoding.bank.dto.transaction.TransactionReqDto.TransactionDepositReqDto;
+import site.metacoding.bank.dto.transaction.TransactionReqDto.TransactionWithdrawReqDto;
 import site.metacoding.bank.enums.TransactionEnum;
 import site.metacoding.bank.enums.UserEnum;
 
@@ -181,7 +181,7 @@ public class TransactionApiControllerTest {
                 resultActions.andExpect(jsonPath("$.code").value(201));
         }
 
-        // 이체 테스트
+        // 이체
 
         // 입금 내역 보기
 
