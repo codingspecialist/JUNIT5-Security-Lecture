@@ -30,8 +30,8 @@ import site.metacoding.bank.domain.transaction.Transaction;
 import site.metacoding.bank.domain.transaction.TransactionRepository;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.domain.user.UserRepository;
-import site.metacoding.bank.dto.transaction.TransactionReqDto.TransactionDepositReqDto;
-import site.metacoding.bank.dto.transaction.TransactionReqDto.TransactionWithdrawReqDto;
+import site.metacoding.bank.dto.transaction.TransactionReqDto.DepositReqDto;
+import site.metacoding.bank.dto.transaction.TransactionReqDto.WithdrawReqDto;
 import site.metacoding.bank.enums.TransactionEnum;
 import site.metacoding.bank.enums.UserEnum;
 
@@ -142,11 +142,11 @@ public class TransactionApiControllerTest {
         public void withdraw_test() throws Exception {
                 // given
                 Long userId = 1L;
-                TransactionWithdrawReqDto transactionWithdrawReqDto = new TransactionWithdrawReqDto();
-                transactionWithdrawReqDto.setWithdrawAccountId(1L);
-                transactionWithdrawReqDto.setAmount(1000L);
-                transactionWithdrawReqDto.setGubun("WITHDRAW");
-                String requestBody = om.writeValueAsString(transactionWithdrawReqDto);
+                WithdrawReqDto withdrawReqDto = new WithdrawReqDto();
+                withdrawReqDto.setWithdrawAccountId(1L);
+                withdrawReqDto.setAmount(1000L);
+                withdrawReqDto.setGubun("WITHDRAW");
+                String requestBody = om.writeValueAsString(withdrawReqDto);
                 log.debug("디버그-" + TAG + " : " + requestBody);
 
                 // when
@@ -163,11 +163,11 @@ public class TransactionApiControllerTest {
         @Test
         public void deposit_test() throws Exception {
                 // given
-                TransactionDepositReqDto transactionDepositReqDto = new TransactionDepositReqDto();
-                transactionDepositReqDto.setDepositAccountId(1L);
-                transactionDepositReqDto.setAmount(1000L);
-                transactionDepositReqDto.setGubun("DEPOSIT");
-                String requestBody = om.writeValueAsString(transactionDepositReqDto);
+                DepositReqDto depositReqDto = new DepositReqDto();
+                depositReqDto.setDepositAccountId(1L);
+                depositReqDto.setAmount(1000L);
+                depositReqDto.setGubun("DEPOSIT");
+                String requestBody = om.writeValueAsString(depositReqDto);
                 log.debug("디버그-" + TAG + " : " + requestBody);
 
                 // when

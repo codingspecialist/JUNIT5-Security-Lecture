@@ -7,19 +7,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import site.metacoding.bank.config.auth.LoginUser;
-import site.metacoding.bank.domain.account.Account;
-import site.metacoding.bank.domain.transaction.Transaction;
 import site.metacoding.bank.dto.ResponseDto;
-import site.metacoding.bank.dto.transaction.TransactionReqDto.TransactionDepositReqDto;
-import site.metacoding.bank.dto.transaction.TransactionReqDto.TransactionWithdrawReqDto;
-import site.metacoding.bank.dto.transaction.TransactionRespDto.TransactionDepositRespDto;
-import site.metacoding.bank.dto.transaction.TransactionRespDto.TransactionWithdrawRespDto;
+import site.metacoding.bank.dto.transaction.TransactionReqDto.DepositReqDto;
+import site.metacoding.bank.dto.transaction.TransactionReqDto.TransperReqDto;
+import site.metacoding.bank.dto.transaction.TransactionReqDto.WithdrawReqDto;
+import site.metacoding.bank.dto.transaction.TransactionRespDto.DepositRespDto;
+import site.metacoding.bank.dto.transaction.TransactionRespDto.TransperRespDto;
+import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawRespDto;
 import site.metacoding.bank.enums.ResponseEnum;
-import site.metacoding.bank.enums.TransactionEnum;
 import site.metacoding.bank.enums.UserEnum;
 import site.metacoding.bank.handler.exception.CustomApiException;
 import site.metacoding.bank.service.TransactionService;
@@ -35,16 +32,16 @@ public class TransactionApiController {
      */
     @PostMapping("/user/{userId}/withdraw")
     public ResponseDto<?> withdraw(@PathVariable Long userId,
-            @RequestBody TransactionWithdrawReqDto transactionWithdrawReqDto,
+            @RequestBody WithdrawReqDto withdrawReqDto,
             @AuthenticationPrincipal LoginUser loginUser) {
         if (userId != loginUser.getUser().getId()) {
             if (loginUser.getUser().getRole() != UserEnum.ADMIN) {
                 throw new CustomApiException(ResponseEnum.FORBIDDEN);
             }
         }
-        TransactionWithdrawRespDto transactionWithdrawRespDto = transactionService.출금하기(transactionWithdrawReqDto);
+        WithdrawRespDto withdrawRespDto = transactionService.출금하기(withdrawReqDto);
 
-        return new ResponseDto<>(ResponseEnum.POST_SUCCESS, transactionWithdrawRespDto);
+        return new ResponseDto<>(ResponseEnum.POST_SUCCESS, withdrawRespDto);
     }
 
     /*
@@ -52,9 +49,9 @@ public class TransactionApiController {
      * ATM에서 계좌로 입금하는 것이기 때문에 인증이 필요없다.
      */
     @PostMapping("/deposit")
-    public ResponseDto<?> deposit(@RequestBody TransactionDepositReqDto transactionDepositReqDto) {
-        TransactionDepositRespDto transactionDepositRespDto = transactionService.입금하기(transactionDepositReqDto);
-        return new ResponseDto<>(ResponseEnum.POST_SUCCESS, transactionDepositRespDto);
+    public ResponseDto<?> deposit(@RequestBody DepositReqDto depositReqDto) {
+        DepositRespDto depositRespDto = transactionService.입금하기(depositReqDto);
+        return new ResponseDto<>(ResponseEnum.POST_SUCCESS, depositRespDto);
     }
 
     /*
@@ -62,32 +59,15 @@ public class TransactionApiController {
      */
     @PostMapping("/user/{userId}/transper")
     public ResponseDto<?> transper(@PathVariable Long userId,
-            @RequestBody TransactionTransperReqDto transactionTransperReqDto,
+            @RequestBody TransperReqDto transperReqDto,
             @AuthenticationPrincipal LoginUser loginUser) {
         if (userId != loginUser.getUser().getId()) {
             if (loginUser.getUser().getRole() != UserEnum.ADMIN) {
                 throw new CustomApiException(ResponseEnum.FORBIDDEN);
             }
         }
-        transactionService.이체하기(transactionTransperReqDto);
-        return new ResponseDto<>(ResponseEnum.POST_SUCCESS, null);
+        TransperRespDto transperRespDto = transactionService.이체하기(transperReqDto);
+        return new ResponseDto<>(ResponseEnum.POST_SUCCESS, transperRespDto);
     }
 
-    @Getter
-    @Setter
-    public static class TransactionTransperReqDto {
-        private Long withdrawAccountId; // 출금 계좌
-        private Long depositAccountId; // 입금 계좌
-        private Long amount; // 금액
-        private String gubun; // 고정값 (계좌에서 계좌로 이체)
-
-        public Transaction toEntity(Account withdrawAccount, Account depositAccount) {
-            return Transaction.builder()
-                    .withdrawAccount(withdrawAccount)
-                    .depositAccount(depositAccount)
-                    .amount(amount)
-                    .gubun(TransactionEnum.valueOf(gubun))
-                    .build();
-        }
-    }
 }
