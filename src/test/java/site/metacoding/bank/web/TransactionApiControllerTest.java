@@ -1,10 +1,8 @@
 package site.metacoding.bank.web;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-
-import java.util.Arrays;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -102,39 +100,55 @@ public class TransactionApiControllerTest {
                                 .balance(100000L)
                                 .user(customer2PS)
                                 .build();
-                List<Account> accounts = Arrays.asList(account1, account2, account3);
-                accountRepository.saveAll(accounts);
+
+                Account account1PS = accountRepository.save(account1);
+                Account account2PS = accountRepository.save(account2);
+                Account account3PS = accountRepository.save(account3);
+
                 log.debug("디버그-" + TAG + " : 계좌 3개 insert");
 
                 // ATM -> 계좌 (입금)
                 Transaction transaction1 = Transaction.builder()
                                 .withdrawAccount(null) // ATM -> 계좌
-                                .depositAccount(account1)
+                                .depositAccount(account1PS)
                                 .amount(10000L)
+                                .depositAccountBalance(110000L)
                                 .gubun(TransactionEnum.DEPOSIT)
                                 .build();
+                account1PS.addDepositTransaction(transaction1); // 트랜잭션 종료전 영속화 되기전 데이터 동기화
+                account1PS.deposit(10000L); // 트랜잭션 종료전 영속화 되기전 데이터 동기화
 
                 // 계좌 -> ATM (출금)
                 Transaction transaction2 = Transaction.builder()
-                                .withdrawAccount(account1) // 계좌 -> ATM
+                                .withdrawAccount(account1PS) // 계좌 -> ATM
                                 .depositAccount(null)
-                                .amount(10000L)
+                                .amount(5000L)
+                                .withdrawAccountBalance(105000L)
                                 .gubun(TransactionEnum.WITHDRAW)
                                 .build();
+                account1PS.addWithdrawTransaction(transaction2); // 트랜잭션 종료전 영속화 되기전 데이터 동기화
+                account1PS.withdraw(5000L);
 
                 // 계좌1 -> 계좌2
                 // 계좌1 입장에서 출금
                 // 계좌2 입장에서 입금
                 // 이체 (이체는 보는 관점에 따라 다름)
                 Transaction transaction3 = Transaction.builder()
-                                .withdrawAccount(account1) // 계좌 -> 계좌
-                                .depositAccount(account3)
-                                .amount(10000L)
+                                .withdrawAccount(account1PS) // 계좌 -> 계좌
+                                .depositAccount(account3PS)
+                                .amount(40000L)
+                                .withdrawAccountBalance(65000L)
+                                .depositAccountBalance(140000L)
                                 .gubun(TransactionEnum.TRANSPER)
                                 .build();
+                account1PS.addWithdrawTransaction(transaction3); // 트랜잭션 종료전 영속화 되기전 데이터 동기화
+                account1PS.withdraw(40000L);
+                account3PS.addDepositTransaction(transaction3); // 트랜잭션 종료전 영속화 되기전 데이터 동기화
+                account3PS.deposit(40000L);
 
-                List<Transaction> transactions = Arrays.asList(transaction1, transaction2, transaction3);
-                transactionRepository.saveAll(transactions);
+                transactionRepository.save(transaction1);
+                transactionRepository.save(transaction2);
+                transactionRepository.save(transaction3);
                 log.debug("디버그-" + TAG + " : 입출금이체 3개 insert");
         }
 
@@ -209,18 +223,27 @@ public class TransactionApiControllerTest {
                 resultActions.andExpect(jsonPath("$.code").value(201));
         }
 
-        // 입금 내역 보기
+        /*
+         * 출금 내역 보기 (입금, 출금은 ATM, 이체는 상대방 유저네임 필요)
+         */
+        @WithUserDetails(value = "ssar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
         @Test
-        public void withdrawList_test() throws Exception {
+        public void withdrawHistory_test() throws Exception {
                 // given
+                Long userId = 1L;
+                Long accountId = 1L;
 
                 // when
+                ResultActions resultActions = mvc
+                                .perform(get("/api/user/" + userId + "/account/" + accountId + "/withdraw"));
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                log.debug("디버그-" + TAG + " : " + responseBody);
 
                 // then
 
         }
 
-        // 출금 내역 보기
+        // 입금 내역 보기
 
         // 입출금 내역 보기
 

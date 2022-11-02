@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import site.metacoding.bank.config.auth.LoginUser;
 import site.metacoding.bank.dto.ResponseDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.DepositReqDto;
@@ -23,11 +24,15 @@ import site.metacoding.bank.enums.ResponseEnum;
 import site.metacoding.bank.enums.UserEnum;
 import site.metacoding.bank.handler.exception.CustomApiException;
 import site.metacoding.bank.service.TransactionService;
+import site.metacoding.bank.service.TransactionService.WithdrawHistoryRespDto;
 
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api")
 @RestController
 public class TransactionApiController {
+
+    private static final String TAG = "TransactionApiController";
     private final TransactionService transactionService;
 
     /*
@@ -79,10 +84,10 @@ public class TransactionApiController {
     }
 
     /*
-     * 유저 1번의 계좌 조회 ?gubun=WITHDRAW
+     * 특정 유저(1)의 특정 계좌(N)의 출금 내역 보기
      */
     @GetMapping("/user/{userId}/account/{accountId}/withdraw")
-    public ResponseEntity<?> withdrawList(@PathVariable Long userId, @PathVariable Long accountId, String gubun,
+    public ResponseEntity<?> withdrawHistory(@PathVariable Long userId, @PathVariable Long accountId,
             @AuthenticationPrincipal LoginUser loginUser) {
         // 권한 확인
         if (userId != loginUser.getUser().getId()) {
@@ -90,7 +95,9 @@ public class TransactionApiController {
                 throw new CustomApiException(ResponseEnum.FORBIDDEN);
             }
         }
-        transactionService.출금목록보기(userId, accountId);
-        return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, null), HttpStatus.OK);
+        log.debug("디버그-" + TAG + " : 1");
+        WithdrawHistoryRespDto withdrawHistoryRespDto = transactionService.출금목록보기(userId, accountId);
+        return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, withdrawHistoryRespDto), HttpStatus.OK);
     }
+
 }

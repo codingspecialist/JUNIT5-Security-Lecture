@@ -1,5 +1,6 @@
 package site.metacoding.bank.domain.account;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -46,10 +47,18 @@ public class Account extends AudingTime {
     private User user;
 
     @OneToMany(mappedBy = "withdrawAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Transaction> withdrawTransactions;
+    private List<Transaction> withdrawTransactions = new ArrayList<>();
 
     @OneToMany(mappedBy = "depositAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Transaction> depositTransactions;
+    private List<Transaction> depositTransactions = new ArrayList<>();
+
+    public void addWithdrawTransaction(Transaction transaction) {
+        this.withdrawTransactions.add(transaction);
+    }
+
+    public void addDepositTransaction(Transaction transaction) {
+        this.depositTransactions.add(transaction);
+    }
 
     @Builder
     public Account(Long id, Long number, String password, Long balance, User user) {

@@ -1,11 +1,16 @@
 package site.metacoding.bank.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.account.AccountRepository;
 import site.metacoding.bank.domain.transaction.Transaction;
@@ -20,10 +25,12 @@ import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawRespDto;
 import site.metacoding.bank.enums.ResponseEnum;
 import site.metacoding.bank.handler.exception.CustomApiException;
 
+@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
 public class TransactionService {
+        private static final String TAG = "TransactionService";
         private final TransactionRepository transactionRepository;
         private final AccountRepository accountRepository;
 
@@ -43,6 +50,9 @@ public class TransactionService {
                 Transaction withdrawPS = transactionRepository
                                 .save(withdrawReqDto.toEntity(withdrawAccountPS));
 
+                // 양방향 관계 동기화 (검증전)
+                withdrawAccountPS.addDepositTransaction(withdrawPS);
+
                 // DTO
                 return new WithdrawRespDto(withdrawPS);
         }
@@ -60,6 +70,9 @@ public class TransactionService {
                 // 입금 이력 남기기
                 Transaction depositPS = transactionRepository
                                 .save(depositReqDto.toEntity(depositAccountPS));
+
+                // 양방향 관계 동기화 (검증전)
+                depositAccountPS.addDepositTransaction(depositPS);
 
                 // DTO
                 return new DepositRespDto(depositPS);
@@ -93,11 +106,15 @@ public class TransactionService {
                 Transaction transperPS = transactionRepository
                                 .save(transperReqDto.toEntity(withdrawAccountPS, depositAccountPS));
 
+                // 양방향 관계 동기화 (검증전)
+                withdrawAccountPS.addWithdrawTransaction(transperPS);
+                depositAccountPS.addDepositTransaction(transperPS);
+
                 // DTO
                 return new TransperRespDto(transperPS);
         }
 
-        public void 출금목록보기(Long userId, Long accountId) {
+        public WithdrawHistoryRespDto 출금목록보기(Long userId, Long accountId) {
                 // 계좌 확인
                 Account accountPS = accountRepository.findById(accountId)
                                 .orElseThrow(() -> new CustomApiException(ResponseEnum.BAD_REQUEST));
@@ -105,52 +122,59 @@ public class TransactionService {
                 // 계좌 소유자 확인
                 accountPS.isAccountOwner(userId);
 
-                // WithDrawAccount (Lazy Loading)
-
+                // DTO (Collection Lazy Loading)
+                WithdrawHistoryRespDto withdrawHistoryRespDto = new WithdrawHistoryRespDto(accountPS);
+                return withdrawHistoryRespDto;
         }
 
         @Getter
         @Setter
-        public static class WithdrawAllRespDto {
+        public static class WithdrawHistoryRespDto {
                 private Long id;
-                private Long amount;
-                private String gubun;
-                private WithdrawAccountDto withdrawAccount;
+                private Long number;
+                private Long balance;
+                private UserDto user;
 
-                public WithdrawAllRespDto(Transaction transaction) {
-                        this.id = transaction.getId();
-                        this.amount = transaction.getAmount();
-                        this.gubun = transaction.getGubun().name();
-                        this.withdrawAccount = new WithdrawAccountDto(transaction.getWithdrawAccount());
+                private List<WithdrawTransactionDto> withdrawTransactions = new ArrayList<>();
+
+                public WithdrawHistoryRespDto(Account account) {
+                        this.id = account.getId();
+                        this.number = account.getNumber();
+                        this.balance = account.getBalance();
+                        this.user = new UserDto(account.getUser());
+                        this.withdrawTransactions = account.getWithdrawTransactions()
+                                        .stream().map(WithdrawTransactionDto::new).collect(Collectors.toList());
                 }
 
                 @Getter
                 @Setter
-                public class WithdrawAccountDto {
+                public class UserDto {
                         private Long id;
-                        private Long number;
-                        private Long balance;
-                        private UserDto user;
+                        private String username;
 
-                        public WithdrawAccountDto(Account account) {
-                                this.id = account.getId();
-                                this.number = account.getNumber();
-                                this.balance = account.getBalance();
-                                this.user = new UserDto(account.getUser());
+                        public UserDto(User user) {
+                                this.id = user.getId();
+                                this.username = user.getUsername();
+                        }
+                }
+
+                @Getter
+                @Setter
+                public class WithdrawTransactionDto {
+                        private Long id;
+                        private Long amount;
+                        private Long withdrawAccountBalance;
+                        private Long depositAccountBalance;
+                        private String gubun;
+
+                        public WithdrawTransactionDto(Transaction transaction) {
+                                this.id = transaction.getId(); // Lazy Loading
+                                this.amount = transaction.getAmount();
+                                this.withdrawAccountBalance = transaction.getWithdrawAccountBalance();
+                                this.depositAccountBalance = transaction.getDepositAccountBalance();
+                                this.gubun = transaction.getGubun().name();
                         }
 
-                        @Getter
-                        @Setter
-                        public class UserDto {
-                                private Long id;
-                                private String username;
-
-                                public UserDto(User user) {
-                                        this.id = user.getId();
-                                        this.username = user.getUsername();
-                                }
-
-                        }
                 }
         }
 
