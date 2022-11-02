@@ -43,7 +43,7 @@ public class AccountApiController {
     }
 
     @GetMapping("user/{userId}/account")
-    public ResponseDto<?> list(@PathVariable Long userId, @AuthenticationPrincipal LoginUser loginUser) {
+    public ResponseEntity<?> list(@PathVariable Long userId, @AuthenticationPrincipal LoginUser loginUser) {
         if (userId != loginUser.getUser().getId()) {
             if (loginUser.getUser().getRole() != UserEnum.ADMIN) {
                 throw new CustomApiException(ResponseEnum.FORBIDDEN);
@@ -51,11 +51,12 @@ public class AccountApiController {
         }
 
         List<AccountAllRespDto> accountAllRespDtos = accountService.계좌목록보기_유저별(userId);
-        return new ResponseDto<>(ResponseEnum.GET_SUCCESS, accountAllRespDtos);
+        return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, accountAllRespDtos),
+                HttpStatus.OK);
     }
 
     @GetMapping("user/{userId}/account/{accountId}")
-    public ResponseDto<?> detail(@PathVariable Long userId, @PathVariable Long accountId,
+    public ResponseEntity<?> detail(@PathVariable Long userId, @PathVariable Long accountId,
             @AuthenticationPrincipal LoginUser loginUser) {
         if (userId != loginUser.getUser().getId()) {
             if (loginUser.getUser().getRole() != UserEnum.ADMIN) {
@@ -63,11 +64,12 @@ public class AccountApiController {
             }
         }
         AccountDetailRespDto accountDetailRespDtos = accountService.계좌상세보기(accountId, loginUser.getUser().getId());
-        return new ResponseDto<>(ResponseEnum.GET_SUCCESS, accountDetailRespDtos);
+        return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, accountDetailRespDtos),
+                HttpStatus.OK);
     }
 
     @DeleteMapping("/user/{userId}/account/{accountId}")
-    public ResponseDto<?> delete(@PathVariable Long userId, @PathVariable Long accountId,
+    public ResponseEntity<?> delete(@PathVariable Long userId, @PathVariable Long accountId,
             @AuthenticationPrincipal LoginUser loginUser) {
         if (userId != loginUser.getUser().getId()) {
             if (loginUser.getUser().getRole() != UserEnum.ADMIN) {
@@ -75,7 +77,8 @@ public class AccountApiController {
             }
         }
         accountService.계좌삭제(accountId);
-        return new ResponseDto<>(ResponseEnum.DELETE_SUCCESS, null);
+        return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.DELETE_SUCCESS, null),
+                HttpStatus.OK);
     }
 
 }

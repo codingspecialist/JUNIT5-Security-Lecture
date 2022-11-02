@@ -43,10 +43,11 @@ public class Transaction extends AudingTime {
     @ManyToOne(fetch = FetchType.LAZY)
     private Account depositAccount; // 입금 계좌 (받는 분)
 
-    private Long amount; // 금액
+    private Long amount; // 입출금, 이체 금액
+    private Long currentBalance; // 현재 잔액
 
     @Enumerated(EnumType.STRING)
-    private TransactionEnum gubun; // 입금, 출금, 이체
+    private TransactionEnum gubun; // 입금(자동화기기로부터), 출금(자동화기기로), 이체(다른계좌)
 
     @Builder
     public Transaction(Long id, Account withdrawAccount, Account depositAccount, Long amount, TransactionEnum gubun) {

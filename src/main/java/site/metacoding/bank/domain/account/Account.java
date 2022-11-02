@@ -46,10 +46,10 @@ public class Account extends AudingTime {
     private User user;
 
     @OneToMany(mappedBy = "withdrawAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Transaction> withdrawAccounts;
+    private List<Transaction> withdrawTransactions;
 
     @OneToMany(mappedBy = "depositAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Transaction> depositAccounts;
+    private List<Transaction> depositTransactions;
 
     @Builder
     public Account(Long id, Long number, String password, Long balance, User user) {
@@ -75,6 +75,15 @@ public class Account extends AudingTime {
      */
     public void deposit(Long amount) {
         balance = balance + amount;
+    }
+
+    /*
+     * 계좌 소유자 확인
+     */
+    public void isAccountOwner(Long userId) {
+        if (user.getId() != userId) {
+            throw new CustomApiException(ResponseEnum.ISNOT_ACCOUNT_OWNER);
+        }
     }
 
 }

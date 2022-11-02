@@ -9,10 +9,6 @@ public enum ResponseEnum {
     BAD_REQUEST(400, "잘못된 요청"),
     UNAUTHORIZED(401, "인증안됨"),
     FORBIDDEN(403, "권한없음"),
-    LOGIN_SUCCESS(200, "로그인 성공"),
-    LOGIN_FAIL(500, "로그인 실패"),
-    JOIN_SUCCESS(201, "회원가입 성공"),
-    JOIN_FAIL(500, "회원가입 실패"),
     GET_SUCCESS(200, "조회 성공"),
     GET_FAIL(400, "조회 실패"),
     POST_SUCCESS(201, "등록 성공"),
@@ -21,8 +17,14 @@ public enum ResponseEnum {
     PUT_FAIL(400, "수정 실패"),
     DELETE_SUCCESS(200, "삭제 성공"),
     DELETE_FAIL(200, "삭제 실패"),
+
+    LOGIN_SUCCESS(200, "로그인 성공"),
+    LOGIN_FAIL(500, "로그인 실패"),
+    JOIN_SUCCESS(201, "회원가입 성공"),
+    JOIN_FAIL(500, "회원가입 실패"),
     LACK_BALANCE(400, "잔액 부족"),
-    SAME_ACCOUNT(400, "입출금 계좌 동일");
+    SAME_ACCOUNT(400, "입출금 계좌 동일"),
+    ISNOT_ACCOUNT_OWNER(400, "계좌 소유자가 아님");
 
     private final int code;
     private final String message;

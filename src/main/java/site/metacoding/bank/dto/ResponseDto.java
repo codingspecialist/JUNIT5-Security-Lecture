@@ -22,4 +22,5 @@ public class ResponseDto<T> {
         this.code = respEnum.getCode();
         this.message = respEnum.getMessage();
     }
+
 }

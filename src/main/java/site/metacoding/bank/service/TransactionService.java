@@ -25,10 +25,14 @@ public class TransactionService {
         private final AccountRepository accountRepository;
 
         @Transactional
-        public WithdrawRespDto 출금하기(WithdrawReqDto withdrawReqDto) {
+        public WithdrawRespDto 출금하기(WithdrawReqDto withdrawReqDto, Long userId) {
                 // 출금계좌 확인
                 Account withdrawAccountPS = accountRepository.findById(withdrawReqDto.getWithdrawAccountId())
                                 .orElseThrow(() -> new CustomApiException(ResponseEnum.BAD_REQUEST));
+
+                // 출금계좌 소유자 확인
+                withdrawAccountPS.isAccountOwner(userId);
+
                 // 출금하기
                 Transaction withdrawPS = transactionRepository
                                 .save(withdrawReqDto.toEntity(withdrawAccountPS));
@@ -51,7 +55,7 @@ public class TransactionService {
                 Transaction depositPS = transactionRepository
                                 .save(depositReqDto.toEntity(depositAccountPS));
 
-                // 계좌잔액 수정
+                // 입금 계좌잔액 수정
                 depositAccountPS.deposit(depositPS.getAmount());
 
                 // DTO
@@ -59,8 +63,8 @@ public class TransactionService {
         }
 
         @Transactional
-        public TransperRespDto 이체하기(TransperReqDto transperReqDto) {
-                // 입금 계좌와 출금 계좌가 동일한지 확인
+        public TransperRespDto 이체하기(TransperReqDto transperReqDto, Long userId) {
+                // 입금 계좌와 출금 계좌가 동일하면 거부
                 if (transperReqDto.getWithdrawAccountId() == transperReqDto.getDepositAccountId()) {
                         throw new CustomApiException(ResponseEnum.SAME_ACCOUNT);
                 }
@@ -68,6 +72,9 @@ public class TransactionService {
                 // 출금계좌 확인
                 Account withdrawAccountPS = accountRepository.findById(transperReqDto.getWithdrawAccountId())
                                 .orElseThrow(() -> new CustomApiException(ResponseEnum.BAD_REQUEST));
+
+                // 출금계좌 소유자 확인
+                withdrawAccountPS.isAccountOwner(userId);
 
                 // 입금계좌 확인
                 Account depositAccountPS = accountRepository.findById(transperReqDto.getDepositAccountId())
@@ -85,6 +92,9 @@ public class TransactionService {
 
                 // DTO
                 return new TransperRespDto(transperPS);
+        }
+
+        public void 출금목록보기(Long withdrawAccountId) {
         }
 
 }

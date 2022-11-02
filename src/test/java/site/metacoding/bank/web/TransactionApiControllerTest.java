@@ -144,7 +144,7 @@ public class TransactionApiControllerTest {
                 // given
                 Long userId = 1L;
                 WithdrawReqDto withdrawReqDto = new WithdrawReqDto();
-                withdrawReqDto.setWithdrawAccountId(1L);
+                withdrawReqDto.setWithdrawAccountId(2L);
                 withdrawReqDto.setAmount(1000L);
                 withdrawReqDto.setGubun("WITHDRAW");
                 String requestBody = om.writeValueAsString(withdrawReqDto);
@@ -191,8 +191,8 @@ public class TransactionApiControllerTest {
                 // given
                 Long userId = 1L;
                 TransperReqDto transperReqDto = new TransperReqDto();
-                transperReqDto.setWithdrawAccountId(1L);
-                transperReqDto.setDepositAccountId(3L);
+                transperReqDto.setWithdrawAccountId(2L);
+                transperReqDto.setDepositAccountId(1L);
                 transperReqDto.setAmount(5000L);
                 transperReqDto.setGubun("TRANSPER");
                 String requestBody = om.writeValueAsString(transperReqDto);
@@ -206,12 +206,12 @@ public class TransactionApiControllerTest {
                 log.debug("디버그-" + TAG + " : " + responseBody);
 
                 // then
-                // resultActions.andExpect(jsonPath("$.code").value(201));
+                resultActions.andExpect(jsonPath("$.code").value(201));
         }
 
         // 입금 내역 보기
         @Test
-        public void depositList_test() throws Exception {
+        public void withdrawList_test() throws Exception {
                 // given
 
                 // when
