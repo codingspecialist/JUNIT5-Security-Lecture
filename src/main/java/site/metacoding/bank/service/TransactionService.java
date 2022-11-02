@@ -23,6 +23,7 @@ import site.metacoding.bank.dto.transaction.TransactionRespDto.DepositRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.TransperRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawRespDto;
 import site.metacoding.bank.enums.ResponseEnum;
+import site.metacoding.bank.enums.TransactionEnum;
 import site.metacoding.bank.handler.exception.CustomApiException;
 
 @Slf4j
@@ -166,6 +167,8 @@ public class TransactionService {
                         private Long withdrawAccountBalance;
                         private Long depositAccountBalance;
                         private String gubun;
+                        private String from;
+                        private String to;
 
                         public WithdrawTransactionDto(Transaction transaction) {
                                 this.id = transaction.getId(); // Lazy Loading
@@ -173,6 +176,18 @@ public class TransactionService {
                                 this.withdrawAccountBalance = transaction.getWithdrawAccountBalance();
                                 this.depositAccountBalance = transaction.getDepositAccountBalance();
                                 this.gubun = transaction.getGubun().name();
+                                if (transaction.getGubun() == TransactionEnum.WITHDRAW) {
+                                        this.from = transaction.getWithdrawAccount().getUser().getUsername();
+                                        this.to = "ATM";
+                                }
+                                if(transaction.getGubun() == TransactionEnum.DEPOSIT){
+                                        this.from = "ATM";
+                                        this.to = transaction.getDepositAccount().getUser().getUsername();
+                                }
+                                if(transaction.getGubun() == TransactionEnum.TRANSPER){
+                                        this.from = transaction.getWithdrawAccount().getUser().getUsername();
+                                        this.to = transaction.getDepositAccount().getUser().getUsername();
+                                }
                         }
 
                 }

@@ -5,9 +5,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +30,7 @@ import site.metacoding.bank.domain.transaction.TransactionRepository;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.domain.user.UserRepository;
 import site.metacoding.bank.dto.account.AccountReqDto.AccountSaveReqDto;
+import site.metacoding.bank.dto.transaction.TransactionReqDto.WithdrawReqDto;
 import site.metacoding.bank.enums.TransactionEnum;
 import site.metacoding.bank.enums.UserEnum;
 
@@ -110,6 +108,7 @@ public class AccountApiControllerTest {
                 log.debug("디버그-" + TAG + " : 계좌 3개 insert");
 
                 // ATM -> 계좌 (입금)
+                account1PS.deposit(10000L);
                 Transaction transaction1 = Transaction.builder()
                                 .withdrawAccount(null) // ATM -> 계좌
                                 .depositAccount(account1PS)
@@ -118,9 +117,9 @@ public class AccountApiControllerTest {
                                 .gubun(TransactionEnum.DEPOSIT)
                                 .build();
                 account1PS.addDepositTransaction(transaction1); // 트랜잭션 종료전 영속화 되기전 데이터 동기화
-                account1PS.deposit(10000L); // 트랜잭션 종료전 영속화 되기전 데이터 동기화
 
                 // 계좌 -> ATM (출금)
+                account1PS.withdraw(5000L);
                 Transaction transaction2 = Transaction.builder()
                                 .withdrawAccount(account1PS) // 계좌 -> ATM
                                 .depositAccount(null)
@@ -129,29 +128,51 @@ public class AccountApiControllerTest {
                                 .gubun(TransactionEnum.WITHDRAW)
                                 .build();
                 account1PS.addWithdrawTransaction(transaction2); // 트랜잭션 종료전 영속화 되기전 데이터 동기화
-                account1PS.withdraw(5000L);
 
                 // 계좌1 -> 계좌2
                 // 계좌1 입장에서 출금
                 // 계좌2 입장에서 입금
                 // 이체 (이체는 보는 관점에 따라 다름)
+                account1PS.withdraw(60000L);
+                account3PS.deposit(60000L);
                 Transaction transaction3 = Transaction.builder()
                                 .withdrawAccount(account1PS) // 계좌 -> 계좌
                                 .depositAccount(account3PS)
-                                .amount(40000L)
-                                .withdrawAccountBalance(65000L)
-                                .depositAccountBalance(140000L)
+                                .amount(60000L)
+                                .withdrawAccountBalance(45000L)
+                                .depositAccountBalance(160000L)
                                 .gubun(TransactionEnum.TRANSPER)
                                 .build();
                 account1PS.addWithdrawTransaction(transaction3); // 트랜잭션 종료전 영속화 되기전 데이터 동기화
-                account1PS.withdraw(40000L);
                 account3PS.addDepositTransaction(transaction3); // 트랜잭션 종료전 영속화 되기전 데이터 동기화
-                account3PS.deposit(40000L);
 
                 transactionRepository.save(transaction1);
                 transactionRepository.save(transaction2);
                 transactionRepository.save(transaction3);
                 log.debug("디버그-" + TAG + " : 입출금이체 3개 insert");
+        }
+
+        @WithUserDetails(value = "ssar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+        @Test
+        public void withdraw_test() throws Exception {
+                // given
+                Long userId = 1L;
+                WithdrawReqDto withdrawReqDto = new WithdrawReqDto();
+                withdrawReqDto.setWithdrawAccountId(2L);
+                withdrawReqDto.setAmount(1000L);
+                withdrawReqDto.setGubun("WITHDRAW");
+                String requestBody = om.writeValueAsString(withdrawReqDto);
+                log.debug("디버그-" + TAG + " : " + requestBody);
+
+                // when
+                ResultActions resultActions = mvc
+                                .perform(post("/api/user/" + userId + "/withdraw").content(requestBody)
+                                                .contentType(APPLICATION_JSON_UTF8));
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                log.debug("디버그-" + TAG + " : " + responseBody);
+
+                // then
+                resultActions.andExpect(jsonPath("$.code").value(201));
         }
 
         /**

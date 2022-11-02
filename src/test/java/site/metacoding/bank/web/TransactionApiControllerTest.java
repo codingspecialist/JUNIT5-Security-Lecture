@@ -108,6 +108,7 @@ public class TransactionApiControllerTest {
                 log.debug("디버그-" + TAG + " : 계좌 3개 insert");
 
                 // ATM -> 계좌 (입금)
+                account1PS.deposit(10000L);
                 Transaction transaction1 = Transaction.builder()
                                 .withdrawAccount(null) // ATM -> 계좌
                                 .depositAccount(account1PS)
@@ -116,9 +117,9 @@ public class TransactionApiControllerTest {
                                 .gubun(TransactionEnum.DEPOSIT)
                                 .build();
                 account1PS.addDepositTransaction(transaction1); // 트랜잭션 종료전 영속화 되기전 데이터 동기화
-                account1PS.deposit(10000L); // 트랜잭션 종료전 영속화 되기전 데이터 동기화
 
                 // 계좌 -> ATM (출금)
+                account1PS.withdraw(5000L);
                 Transaction transaction2 = Transaction.builder()
                                 .withdrawAccount(account1PS) // 계좌 -> ATM
                                 .depositAccount(null)
@@ -127,24 +128,23 @@ public class TransactionApiControllerTest {
                                 .gubun(TransactionEnum.WITHDRAW)
                                 .build();
                 account1PS.addWithdrawTransaction(transaction2); // 트랜잭션 종료전 영속화 되기전 데이터 동기화
-                account1PS.withdraw(5000L);
 
                 // 계좌1 -> 계좌2
                 // 계좌1 입장에서 출금
                 // 계좌2 입장에서 입금
                 // 이체 (이체는 보는 관점에 따라 다름)
+                account1PS.withdraw(60000L);
+                account3PS.deposit(60000L);
                 Transaction transaction3 = Transaction.builder()
                                 .withdrawAccount(account1PS) // 계좌 -> 계좌
                                 .depositAccount(account3PS)
-                                .amount(40000L)
-                                .withdrawAccountBalance(65000L)
-                                .depositAccountBalance(140000L)
+                                .amount(60000L)
+                                .withdrawAccountBalance(45000L)
+                                .depositAccountBalance(160000L)
                                 .gubun(TransactionEnum.TRANSPER)
                                 .build();
                 account1PS.addWithdrawTransaction(transaction3); // 트랜잭션 종료전 영속화 되기전 데이터 동기화
-                account1PS.withdraw(40000L);
                 account3PS.addDepositTransaction(transaction3); // 트랜잭션 종료전 영속화 되기전 데이터 동기화
-                account3PS.deposit(40000L);
 
                 transactionRepository.save(transaction1);
                 transactionRepository.save(transaction2);
