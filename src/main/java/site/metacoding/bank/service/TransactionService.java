@@ -60,6 +60,11 @@ public class TransactionService {
 
         @Transactional
         public TransperRespDto 이체하기(TransperReqDto transperReqDto) {
+                // 입금 계좌와 출금 계좌가 동일한지 확인
+                if (transperReqDto.getWithdrawAccountId() == transperReqDto.getDepositAccountId()) {
+                        throw new CustomApiException(ResponseEnum.SAME_ACCOUNT);
+                }
+
                 // 출금계좌 확인
                 Account withdrawAccountPS = accountRepository.findById(transperReqDto.getWithdrawAccountId())
                                 .orElseThrow(() -> new CustomApiException(ResponseEnum.BAD_REQUEST));
@@ -67,6 +72,12 @@ public class TransactionService {
                 // 입금계좌 확인
                 Account depositAccountPS = accountRepository.findById(transperReqDto.getDepositAccountId())
                                 .orElseThrow(() -> new CustomApiException(ResponseEnum.BAD_REQUEST));
+
+                // 출금 계좌잔액 수정
+                withdrawAccountPS.withdraw(transperReqDto.getAmount());
+
+                // 입급 계좌잔액 수정
+                depositAccountPS.deposit(transperReqDto.getAmount());
 
                 // 이체하기
                 Transaction transperPS = transactionRepository

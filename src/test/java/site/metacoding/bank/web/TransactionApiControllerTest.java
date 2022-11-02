@@ -31,6 +31,7 @@ import site.metacoding.bank.domain.transaction.TransactionRepository;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.domain.user.UserRepository;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.DepositReqDto;
+import site.metacoding.bank.dto.transaction.TransactionReqDto.TransperReqDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.WithdrawReqDto;
 import site.metacoding.bank.enums.TransactionEnum;
 import site.metacoding.bank.enums.UserEnum;
@@ -181,9 +182,43 @@ public class TransactionApiControllerTest {
                 resultActions.andExpect(jsonPath("$.code").value(201));
         }
 
-        // 이체
+        /*
+         * 이체 (계좌 -> 계좌)
+         */
+        @WithUserDetails(value = "ssar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+        @Test
+        public void transper_test() throws Exception {
+                // given
+                Long userId = 1L;
+                TransperReqDto transperReqDto = new TransperReqDto();
+                transperReqDto.setWithdrawAccountId(1L);
+                transperReqDto.setDepositAccountId(3L);
+                transperReqDto.setAmount(5000L);
+                transperReqDto.setGubun("TRANSPER");
+                String requestBody = om.writeValueAsString(transperReqDto);
+                log.debug("디버그-" + TAG + " : " + requestBody);
+
+                // when
+                ResultActions resultActions = mvc
+                                .perform(post("/api/user/" + userId + "/transper").content(requestBody)
+                                                .contentType(APPLICATION_JSON_UTF8));
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                log.debug("디버그-" + TAG + " : " + responseBody);
+
+                // then
+                // resultActions.andExpect(jsonPath("$.code").value(201));
+        }
 
         // 입금 내역 보기
+        @Test
+        public void depositList_test() throws Exception {
+                // given
+
+                // when
+
+                // then
+
+        }
 
         // 출금 내역 보기
 

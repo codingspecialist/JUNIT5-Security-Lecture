@@ -21,7 +21,8 @@ public enum ResponseEnum {
     PUT_FAIL(400, "수정 실패"),
     DELETE_SUCCESS(200, "삭제 성공"),
     DELETE_FAIL(200, "삭제 실패"),
-    LACK_BALANCE(400, "잔액 부족");
+    LACK_BALANCE(400, "잔액 부족"),
+    SAME_ACCOUNT(400, "입출금 계좌 동일");
 
     private final int code;
     private final String message;
