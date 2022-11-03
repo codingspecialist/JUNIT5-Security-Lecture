@@ -1,5 +1,6 @@
 package site.metacoding.bank.domain.transaction;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -60,6 +61,7 @@ public class Transaction extends AudingTime {
         this.withdrawAccountBalance = withdrawAccountBalance;
         this.depositAccountBalance = depositAccountBalance;
         this.gubun = gubun;
+
     }
 
 }

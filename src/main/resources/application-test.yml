@@ -15,8 +15,12 @@ spring:
     hibernate:
       ddl-auto: create
     properties:
+      '[hibernate.default_batch_fetch_size]': 100
       '[hibernate.format_sql]': true
-
+  output: 
+    ansi:
+      enabled: always
+      
 logging:
   level:
     '[site.metacoding.bank]': DEBUG

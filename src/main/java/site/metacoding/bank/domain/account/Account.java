@@ -72,20 +72,22 @@ public class Account extends AudingTime {
     }
 
     /*
-     * 출금
+     * 입금
      */
-    public void withdraw(Long amount) {
-        if (amount > balance) {
-            throw new CustomApiException(ResponseEnum.LACK_BALANCE);
-        }
-        balance = balance - amount;
+    public void deposit(Transaction transaction) {
+        balance = balance + transaction.getAmount();
+        addDepositTransaction(transaction);
     }
 
     /*
-     * 입금
+     * 출금
      */
-    public void deposit(Long amount) {
-        balance = balance + amount;
+    public void withdraw(Transaction transaction) {
+        if (transaction.getAmount() > balance) {
+            throw new CustomApiException(ResponseEnum.LACK_BALANCE);
+        }
+        balance = balance - transaction.getAmount();
+        addWithdrawTransaction(transaction);
     }
 
     /*

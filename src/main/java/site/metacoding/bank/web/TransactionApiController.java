@@ -17,7 +17,9 @@ import site.metacoding.bank.dto.ResponseDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.DepositReqDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.TransperReqDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.WithdrawReqDto;
+import site.metacoding.bank.dto.transaction.TransactionRespDto.DepositHistoryRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.DepositRespDto;
+import site.metacoding.bank.dto.transaction.TransactionRespDto.TransactionHistoryRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.TransperRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawHistoryRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawRespDto;
@@ -25,7 +27,6 @@ import site.metacoding.bank.enums.ResponseEnum;
 import site.metacoding.bank.enums.UserEnum;
 import site.metacoding.bank.handler.exception.CustomApiException;
 import site.metacoding.bank.service.TransactionService;
-import site.metacoding.bank.service.TransactionService.DepositHistoryRespDto;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -114,6 +115,23 @@ public class TransactionApiController {
         }
         DepositHistoryRespDto depositHistoryRespDto = transactionService.입금목록보기(userId, accountId);
         return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, depositHistoryRespDto), HttpStatus.OK);
+    }
+
+    /*
+     * 입출금 내역 보기
+     */
+    @GetMapping("/user/{userId}/account/{accountId}/transaction")
+    public ResponseEntity<?> withdrawHistory(String gubun, @PathVariable Long userId, @PathVariable Long accountId,
+            @AuthenticationPrincipal LoginUser loginUser) {
+        // 권한 확인
+        if (userId != loginUser.getUser().getId()) {
+            if (loginUser.getUser().getRole() != UserEnum.ADMIN) {
+                throw new CustomApiException(ResponseEnum.FORBIDDEN);
+            }
+        }
+        TransactionHistoryRespDto transactionHistoryRespDto = transactionService.입출금목록보기(userId, accountId);
+        return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, transactionHistoryRespDto),
+                HttpStatus.OK);
     }
 
 }

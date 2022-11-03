@@ -49,7 +49,7 @@ public class AccountService {
     @Transactional
     public void 계좌삭제(Long accountId) {
         // 계좌확인
-        Account accountPS = accountRepository.findById(accountId).orElseThrow(
+        accountRepository.findById(accountId).orElseThrow(
                 () -> new CustomApiException(ResponseEnum.BAD_REQUEST));
 
         // 계좌삭제
