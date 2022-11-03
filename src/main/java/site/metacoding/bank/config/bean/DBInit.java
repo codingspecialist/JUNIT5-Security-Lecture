@@ -28,11 +28,10 @@ public class DBInit {
                     .role(UserEnum.ADMIN)
                     .build();
             userRepository.save(admin);
-            // User ssar =
-            // User.builder().username("ssar").password(password).email("ssar@nate.com")
-            // .role(UserEnum.CUSTOMER)
-            // .build();
-            // userRepository.save(ssar);
+            User ssar = User.builder().username("ssar").password(password).email("ssar@nate.com")
+                    .role(UserEnum.CUSTOMER)
+                    .build();
+            userRepository.save(ssar);
         };
     }
 }

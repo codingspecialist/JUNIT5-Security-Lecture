@@ -37,7 +37,38 @@ public class TransactionService {
         private final AccountRepository accountRepository;
 
         @Transactional
+        public DepositRespDto 입금하기(DepositReqDto depositReqDto) {
+                // GUBUN값 검증
+                if (TransactionEnum.valueOf(depositReqDto.getGubun()) != TransactionEnum.DEPOSIT) {
+                        throw new CustomApiException(ResponseEnum.BAD_REQUEST);
+                }
+
+                // 입금계좌 확인
+                Account depositAccountPS = accountRepository.findById(depositReqDto.getDepositAccountId())
+                                .orElseThrow(
+                                                () -> new CustomApiException(ResponseEnum.BAD_REQUEST));
+
+                // 입금 계좌잔액 수정
+                depositAccountPS.deposit(depositReqDto.getAmount());
+
+                // 입금 이력 남기기
+                Transaction depositPS = transactionRepository
+                                .save(depositReqDto.toEntity(depositAccountPS));
+
+                // 양방향 관계 동기화 (검증전)
+                depositAccountPS.addDepositTransaction(depositPS);
+
+                // DTO
+                return new DepositRespDto(depositPS);
+        }
+
+        @Transactional
         public WithdrawRespDto 출금하기(WithdrawReqDto withdrawReqDto, Long userId) {
+                // GUBUN값 검증
+                if (TransactionEnum.valueOf(withdrawReqDto.getGubun()) != TransactionEnum.WITHDRAW) {
+                        throw new CustomApiException(ResponseEnum.BAD_REQUEST);
+                }
+
                 // 출금계좌 확인
                 Account withdrawAccountPS = accountRepository.findById(withdrawReqDto.getWithdrawAccountId())
                                 .orElseThrow(() -> new CustomApiException(ResponseEnum.BAD_REQUEST));
@@ -60,28 +91,12 @@ public class TransactionService {
         }
 
         @Transactional
-        public DepositRespDto 입금하기(DepositReqDto depositReqDto) {
-                // 입금계좌 확인
-                Account depositAccountPS = accountRepository.findById(depositReqDto.getDepositAccountId())
-                                .orElseThrow(
-                                                () -> new CustomApiException(ResponseEnum.BAD_REQUEST));
-
-                // 입금 계좌잔액 수정
-                depositAccountPS.deposit(depositReqDto.getAmount());
-
-                // 입금 이력 남기기
-                Transaction depositPS = transactionRepository
-                                .save(depositReqDto.toEntity(depositAccountPS));
-
-                // 양방향 관계 동기화 (검증전)
-                depositAccountPS.addDepositTransaction(depositPS);
-
-                // DTO
-                return new DepositRespDto(depositPS);
-        }
-
-        @Transactional
         public TransperRespDto 이체하기(TransperReqDto transperReqDto, Long userId) {
+                // GUBUN값 검증
+                if (TransactionEnum.valueOf(transperReqDto.getGubun()) != TransactionEnum.TRANSPER) {
+                        throw new CustomApiException(ResponseEnum.BAD_REQUEST);
+                }
+
                 // 입금 계좌와 출금 계좌가 동일하면 거부
                 if (transperReqDto.getWithdrawAccountId() == transperReqDto.getDepositAccountId()) {
                         throw new CustomApiException(ResponseEnum.SAME_ACCOUNT);

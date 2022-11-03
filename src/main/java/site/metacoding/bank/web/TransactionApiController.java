@@ -37,6 +37,17 @@ public class TransactionApiController {
     private final TransactionService transactionService;
 
     /*
+     * 입금
+     * ATM에서 계좌로 입금하는 것이기 때문에 인증이 필요없다.
+     */
+    @PostMapping("/deposit")
+    public ResponseEntity<?> deposit(@RequestBody DepositReqDto depositReqDto) {
+        DepositRespDto depositRespDto = transactionService.입금하기(depositReqDto);
+        return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.POST_SUCCESS, depositRespDto),
+                HttpStatus.CREATED);
+    }
+
+    /*
      * 출금
      */
     @PostMapping("/user/{userId}/withdraw")
@@ -53,17 +64,6 @@ public class TransactionApiController {
         return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.POST_SUCCESS, withdrawRespDto),
                 HttpStatus.CREATED);
 
-    }
-
-    /*
-     * 입금
-     * ATM에서 계좌로 입금하는 것이기 때문에 인증이 필요없다.
-     */
-    @PostMapping("/deposit")
-    public ResponseEntity<?> deposit(@RequestBody DepositReqDto depositReqDto) {
-        DepositRespDto depositRespDto = transactionService.입금하기(depositReqDto);
-        return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.POST_SUCCESS, depositRespDto),
-                HttpStatus.CREATED);
     }
 
     /*

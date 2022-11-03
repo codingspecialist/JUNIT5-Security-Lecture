@@ -1,5 +1,6 @@
 package site.metacoding.bank.dto.transaction;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -224,19 +225,20 @@ public class TransactionRespDto {
                 this.id = transaction.getId(); // Lazy Loading
                 this.amount = transaction.getAmount();
                 this.balance = transaction.getWithdrawAccountBalance();
-                this.createdAt = transaction.getWithdrawAccount().getCreatedAt().toString();
+                this.createdAt = transaction.getWithdrawAccount().getCreatedAt()
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 this.gubun = transaction.getGubun().name();
                 if (transaction.getGubun() == TransactionEnum.WITHDRAW) {
-                    this.from = transaction.getWithdrawAccount().getUser().getUsername();
+                    this.from = transaction.getWithdrawAccount().getNumber().toString();
                     this.to = "ATM";
                 }
                 if (transaction.getGubun() == TransactionEnum.DEPOSIT) {
                     this.from = "ATM";
-                    this.to = transaction.getDepositAccount().getUser().getUsername();
+                    this.to = transaction.getDepositAccount().getNumber().toString();
                 }
                 if (transaction.getGubun() == TransactionEnum.TRANSPER) {
-                    this.from = transaction.getWithdrawAccount().getUser().getUsername();
-                    this.to = transaction.getDepositAccount().getUser().getUsername();
+                    this.from = transaction.getWithdrawAccount().getNumber().toString();
+                    this.to = transaction.getDepositAccount().getNumber().toString();
                 }
             }
 
