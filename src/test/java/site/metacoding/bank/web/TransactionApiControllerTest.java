@@ -240,10 +240,28 @@ public class TransactionApiControllerTest {
                 log.debug("디버그-" + TAG + " : " + responseBody);
 
                 // then
-
+                resultActions.andExpect(jsonPath("$.code").value(200));
         }
 
-        // 입금 내역 보기
+        /*
+         * 입금 내역 보기 (입금, 출금은 ATM, 이체는 상대방 유저네임 필요)
+         */
+        @WithUserDetails(value = "ssar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+        @Test
+        public void depositHistory_test() throws Exception {
+                // given
+                Long userId = 1L;
+                Long accountId = 1L;
+
+                // when
+                ResultActions resultActions = mvc
+                                .perform(get("/api/user/" + userId + "/account/" + accountId + "/deposit"));
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                log.debug("디버그-" + TAG + " : " + responseBody);
+
+                // then
+                resultActions.andExpect(jsonPath("$.code").value(200));
+        }
 
         // 입출금 내역 보기
 

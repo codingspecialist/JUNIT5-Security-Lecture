@@ -21,6 +21,7 @@ import site.metacoding.bank.dto.transaction.TransactionReqDto.TransperReqDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.WithdrawReqDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.DepositRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.TransperRespDto;
+import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawHistoryRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawRespDto;
 import site.metacoding.bank.enums.ResponseEnum;
 import site.metacoding.bank.enums.TransactionEnum;
@@ -128,23 +129,34 @@ public class TransactionService {
                 return withdrawHistoryRespDto;
         }
 
+        public DepositHistoryRespDto 입금목록보기(Long userId, Long accountId) {
+                // 계좌 확인
+                Account accountPS = accountRepository.findById(accountId)
+                                .orElseThrow(() -> new CustomApiException(ResponseEnum.BAD_REQUEST));
+
+                // 계좌 소유자 확인
+                accountPS.isAccountOwner(userId);
+                DepositHistoryRespDto depositHistoryRespDto = new DepositHistoryRespDto(accountPS);
+                return depositHistoryRespDto;
+        }
+
         @Getter
         @Setter
-        public static class WithdrawHistoryRespDto {
+        public static class DepositHistoryRespDto {
                 private Long id;
                 private Long number;
                 private Long balance;
                 private UserDto user;
 
-                private List<WithdrawTransactionDto> withdrawTransactions = new ArrayList<>();
+                private List<DepositTransactionDto> depositTransactions = new ArrayList<>();
 
-                public WithdrawHistoryRespDto(Account account) {
+                public DepositHistoryRespDto(Account account) {
                         this.id = account.getId();
                         this.number = account.getNumber();
                         this.balance = account.getBalance();
                         this.user = new UserDto(account.getUser());
-                        this.withdrawTransactions = account.getWithdrawTransactions()
-                                        .stream().map(WithdrawTransactionDto::new).collect(Collectors.toList());
+                        this.depositTransactions = account.getDepositTransactions()
+                                        .stream().map(DepositTransactionDto::new).collect(Collectors.toList());
                 }
 
                 @Getter
@@ -161,30 +173,30 @@ public class TransactionService {
 
                 @Getter
                 @Setter
-                public class WithdrawTransactionDto {
+                public class DepositTransactionDto {
                         private Long id;
                         private Long amount;
-                        private Long withdrawAccountBalance;
-                        private Long depositAccountBalance;
+                        private Long balance;
                         private String gubun;
+                        private String createdAt;
                         private String from;
                         private String to;
 
-                        public WithdrawTransactionDto(Transaction transaction) {
+                        public DepositTransactionDto(Transaction transaction) {
                                 this.id = transaction.getId(); // Lazy Loading
                                 this.amount = transaction.getAmount();
-                                this.withdrawAccountBalance = transaction.getWithdrawAccountBalance();
-                                this.depositAccountBalance = transaction.getDepositAccountBalance();
+                                this.balance = transaction.getDepositAccountBalance();
+                                this.createdAt = transaction.getDepositAccount().getCreatedAt().toString();
                                 this.gubun = transaction.getGubun().name();
                                 if (transaction.getGubun() == TransactionEnum.WITHDRAW) {
                                         this.from = transaction.getWithdrawAccount().getUser().getUsername();
                                         this.to = "ATM";
                                 }
-                                if(transaction.getGubun() == TransactionEnum.DEPOSIT){
+                                if (transaction.getGubun() == TransactionEnum.DEPOSIT) {
                                         this.from = "ATM";
                                         this.to = transaction.getDepositAccount().getUser().getUsername();
                                 }
-                                if(transaction.getGubun() == TransactionEnum.TRANSPER){
+                                if (transaction.getGubun() == TransactionEnum.TRANSPER) {
                                         this.from = transaction.getWithdrawAccount().getUser().getUsername();
                                         this.to = transaction.getDepositAccount().getUser().getUsername();
                                 }

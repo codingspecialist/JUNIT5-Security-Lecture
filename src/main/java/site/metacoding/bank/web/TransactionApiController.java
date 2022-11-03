@@ -19,12 +19,13 @@ import site.metacoding.bank.dto.transaction.TransactionReqDto.TransperReqDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.WithdrawReqDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.DepositRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.TransperRespDto;
+import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawHistoryRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawRespDto;
 import site.metacoding.bank.enums.ResponseEnum;
 import site.metacoding.bank.enums.UserEnum;
 import site.metacoding.bank.handler.exception.CustomApiException;
 import site.metacoding.bank.service.TransactionService;
-import site.metacoding.bank.service.TransactionService.WithdrawHistoryRespDto;
+import site.metacoding.bank.service.TransactionService.DepositHistoryRespDto;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -84,7 +85,7 @@ public class TransactionApiController {
     }
 
     /*
-     * 특정 유저(1)의 특정 계좌(N)의 출금 내역 보기
+     * 출금 내역 보기
      */
     @GetMapping("/user/{userId}/account/{accountId}/withdraw")
     public ResponseEntity<?> withdrawHistory(@PathVariable Long userId, @PathVariable Long accountId,
@@ -95,9 +96,24 @@ public class TransactionApiController {
                 throw new CustomApiException(ResponseEnum.FORBIDDEN);
             }
         }
-        log.debug("디버그-" + TAG + " : 1");
         WithdrawHistoryRespDto withdrawHistoryRespDto = transactionService.출금목록보기(userId, accountId);
         return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, withdrawHistoryRespDto), HttpStatus.OK);
+    }
+
+    /*
+     * 입금 내역 보기
+     */
+    @GetMapping("/user/{userId}/account/{accountId}/deposit")
+    public ResponseEntity<?> depositHistory(@PathVariable Long userId, @PathVariable Long accountId,
+            @AuthenticationPrincipal LoginUser loginUser) {
+        // 권한 확인
+        if (userId != loginUser.getUser().getId()) {
+            if (loginUser.getUser().getRole() != UserEnum.ADMIN) {
+                throw new CustomApiException(ResponseEnum.FORBIDDEN);
+            }
+        }
+        DepositHistoryRespDto depositHistoryRespDto = transactionService.입금목록보기(userId, accountId);
+        return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, depositHistoryRespDto), HttpStatus.OK);
     }
 
 }
