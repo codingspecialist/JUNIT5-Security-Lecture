@@ -1,20 +1,27 @@
 package site.metacoding.bank.service;
 
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.account.AccountRepository;
 import site.metacoding.bank.domain.transaction.Transaction;
 import site.metacoding.bank.domain.transaction.TransactionRepository;
+import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.DepositReqDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.TransperReqDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.WithdrawReqDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.DepositHistoryRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.DepositRespDto;
-import site.metacoding.bank.dto.transaction.TransactionRespDto.TransactionHistoryRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.TransperRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawHistoryRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawRespDto;
@@ -140,9 +147,92 @@ public class TransactionService {
                 // 계좌 소유자 확인
                 accountPS.isAccountOwner(userId);
 
+                log.debug("디버그 : 22222222222222222222222222222222");
+                // 입출금 내역 조회
+                List<Transaction> transactionListPS = transactionRepository
+                                .findByTransactionHistory(accountId, accountId);
+                log.debug("디버그 : 33333333333333333333333333333");
+
                 // DTO (Collection Lazy Loading)
-                TransactionHistoryRespDto transactionHistoryRespDto = new TransactionHistoryRespDto(accountPS);
+                TransactionHistoryRespDto transactionHistoryRespDto = new TransactionHistoryRespDto(accountPS,
+                                transactionListPS);
                 return transactionHistoryRespDto;
+        }
+
+        @Getter
+        @Setter
+        public static class TransactionHistoryRespDto {
+                private Long id;
+                private Long number;
+                private Long balance;
+                private UserDto user;
+
+                private List<TransactionDto> transactions = new ArrayList<>();
+
+                public TransactionHistoryRespDto(Account account, List<Transaction> transactions) {
+                        this.id = account.getId();
+                        this.number = account.getNumber();
+                        this.balance = account.getBalance();
+                        this.user = new UserDto(account.getUser());
+                        this.transactions = transactions.stream().map(TransactionDto::new).collect(Collectors.toList());
+                }
+
+                @Getter
+                @Setter
+                public class UserDto {
+                        private Long id;
+                        private String username;
+
+                        public UserDto(User user) {
+                                this.id = user.getId();
+                                this.username = user.getUsername();
+                        }
+                }
+
+                @Getter
+                @Setter
+                public class TransactionDto {
+                        private Long id;
+                        private Long amount;
+                        private Long balance;
+                        private String gubun;
+                        private String createdAt;
+                        private String from;
+                        private String to;
+
+                        public TransactionDto(Transaction transaction) {
+                                log.debug("디버그 : 1");
+                                this.id = transaction.getId(); // Lazy Loading
+                                this.amount = transaction.getAmount();
+                                this.gubun = transaction.getGubun().name();
+                                log.debug("디버그 : 2");
+                                if (transaction.getGubun() == TransactionEnum.WITHDRAW) {
+                                        this.createdAt = transaction.getWithdrawAccount().getCreatedAt()
+                                                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                                        this.balance = transaction.getWithdrawAccountBalance();
+                                        this.from = transaction.getWithdrawAccount().getNumber().toString();
+                                        this.to = "ATM";
+                                }
+                                log.debug("디버그 : 3");
+                                if (transaction.getGubun() == TransactionEnum.DEPOSIT) {
+                                        this.createdAt = transaction.getDepositAccount().getCreatedAt()
+                                                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                                        this.balance = transaction.getDepositAccountBalance();
+                                        this.from = "ATM";
+                                        this.to = transaction.getDepositAccount().getNumber().toString();
+                                }
+                                log.debug("디버그 : 4");
+                                if (transaction.getGubun() == TransactionEnum.TRANSPER) {
+                                        this.createdAt = transaction.getWithdrawAccount().getCreatedAt()
+                                                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                                        this.balance = transaction.getWithdrawAccountBalance();
+                                        this.from = transaction.getWithdrawAccount().getNumber().toString();
+                                        this.to = transaction.getDepositAccount().getNumber().toString();
+                                }
+                                log.debug("디버그 : 5");
+                        }
+
+                }
         }
 
 }

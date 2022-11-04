@@ -19,7 +19,6 @@ import site.metacoding.bank.dto.transaction.TransactionReqDto.TransperReqDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.WithdrawReqDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.DepositHistoryRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.DepositRespDto;
-import site.metacoding.bank.dto.transaction.TransactionRespDto.TransactionHistoryRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.TransperRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawHistoryRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawRespDto;
@@ -27,6 +26,7 @@ import site.metacoding.bank.enums.ResponseEnum;
 import site.metacoding.bank.enums.UserEnum;
 import site.metacoding.bank.handler.exception.CustomApiException;
 import site.metacoding.bank.service.TransactionService;
+import site.metacoding.bank.service.TransactionService.TransactionHistoryRespDto;
 
 @Slf4j
 @RequiredArgsConstructor
