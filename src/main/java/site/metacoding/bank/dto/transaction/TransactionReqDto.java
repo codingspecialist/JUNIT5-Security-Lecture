@@ -35,10 +35,8 @@ public class TransactionReqDto {
 
         public Transaction toEntity(Account depositAccount) {
             return Transaction.builder()
-                    .withdrawAccount(null)
                     .depositAccount(depositAccount)
                     .amount(amount)
-                    .withdrawAccountBalance(null)
                     .depositAccountBalance(depositAccount.getBalance())
                     .gubun(TransactionEnum.valueOf(gubun))
                     .build();
