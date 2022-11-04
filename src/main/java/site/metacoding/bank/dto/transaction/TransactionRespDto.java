@@ -181,21 +181,20 @@ public class TransactionRespDto {
 
     @Getter
     @Setter
-    public static class DepositHistoryRespDto {
+    public static class TransactionHistoryRespDto {
         private Long id;
         private Long number;
         private Long balance;
         private UserDto user;
 
-        private List<DepositTransactionDto> depositTransactions = new ArrayList<>();
+        private List<TransactionDto> transactions = new ArrayList<>();
 
-        public DepositHistoryRespDto(Account account) {
+        public TransactionHistoryRespDto(Account account, List<Transaction> transactions) {
             this.id = account.getId();
             this.number = account.getNumber();
             this.balance = account.getBalance();
             this.user = new UserDto(account.getUser());
-            this.depositTransactions = account.getDepositTransactions()
-                    .stream().map(DepositTransactionDto::new).collect(Collectors.toList());
+            this.transactions = transactions.stream().map(TransactionDto::new).collect(Collectors.toList());
         }
 
         @Getter
@@ -212,7 +211,7 @@ public class TransactionRespDto {
 
         @Getter
         @Setter
-        public class DepositTransactionDto {
+        public class TransactionDto {
             private Long id;
             private Long amount;
             private Long balance;
@@ -221,22 +220,28 @@ public class TransactionRespDto {
             private String from;
             private String to;
 
-            public DepositTransactionDto(Transaction transaction) {
-                this.id = transaction.getId(); // Lazy Loading
+            public TransactionDto(Transaction transaction) {
+                this.id = transaction.getId();
                 this.amount = transaction.getAmount();
-                this.balance = transaction.getDepositAccountBalance();
-                this.createdAt = transaction.getDepositAccount().getCreatedAt()
-                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 this.gubun = transaction.getGubun().name();
                 if (transaction.getGubun() == TransactionEnum.WITHDRAW) {
+                    this.createdAt = transaction.getWithdrawAccount().getCreatedAt()
+                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                    this.balance = transaction.getWithdrawAccountBalance();
                     this.from = transaction.getWithdrawAccount().getNumber().toString();
                     this.to = "ATM";
                 }
                 if (transaction.getGubun() == TransactionEnum.DEPOSIT) {
+                    this.createdAt = transaction.getDepositAccount().getCreatedAt()
+                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                    this.balance = transaction.getDepositAccountBalance();
                     this.from = "ATM";
                     this.to = transaction.getDepositAccount().getNumber().toString();
                 }
                 if (transaction.getGubun() == TransactionEnum.TRANSPER) {
+                    this.createdAt = transaction.getWithdrawAccount().getCreatedAt()
+                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                    this.balance = transaction.getWithdrawAccountBalance();
                     this.from = transaction.getWithdrawAccount().getNumber().toString();
                     this.to = transaction.getDepositAccount().getNumber().toString();
                 }
@@ -245,69 +250,136 @@ public class TransactionRespDto {
         }
     }
 
-    @Getter
-    @Setter
-    public static class WithdrawHistoryRespDto {
-        private Long id;
-        private Long number;
-        private Long balance;
-        private UserDto user;
+    // @Getter
+    // @Setter
+    // public static class DepositHistoryRespDto {
+    // private Long id;
+    // private Long number;
+    // private Long balance;
+    // private UserDto user;
 
-        private List<WithdrawTransactionDto> withdrawTransactions = new ArrayList<>();
+    // private List<DepositTransactionDto> depositTransactions = new ArrayList<>();
 
-        public WithdrawHistoryRespDto(Account account) {
-            this.id = account.getId();
-            this.number = account.getNumber();
-            this.balance = account.getBalance();
-            this.user = new UserDto(account.getUser());
-            this.withdrawTransactions = account.getWithdrawTransactions()
-                    .stream().map(WithdrawTransactionDto::new).collect(Collectors.toList());
-        }
+    // public DepositHistoryRespDto(Account account) {
+    // this.id = account.getId();
+    // this.number = account.getNumber();
+    // this.balance = account.getBalance();
+    // this.user = new UserDto(account.getUser());
+    // this.depositTransactions = account.getDepositTransactions()
+    // .stream().map(DepositTransactionDto::new).collect(Collectors.toList());
+    // }
 
-        @Getter
-        @Setter
-        public class UserDto {
-            private Long id;
-            private String username;
+    // @Getter
+    // @Setter
+    // public class UserDto {
+    // private Long id;
+    // private String username;
 
-            public UserDto(User user) {
-                this.id = user.getId();
-                this.username = user.getUsername();
-            }
-        }
+    // public UserDto(User user) {
+    // this.id = user.getId();
+    // this.username = user.getUsername();
+    // }
+    // }
 
-        @Getter
-        @Setter
-        public class WithdrawTransactionDto {
-            private Long id;
-            private Long amount;
-            private Long balance;
-            private String gubun;
-            private String createdAt;
-            private String from;
-            private String to;
+    // @Getter
+    // @Setter
+    // public class DepositTransactionDto {
+    // private Long id;
+    // private Long amount;
+    // private Long balance;
+    // private String gubun;
+    // private String createdAt;
+    // private String from;
+    // private String to;
 
-            public WithdrawTransactionDto(Transaction transaction) {
-                this.id = transaction.getId(); // Lazy Loading
-                this.amount = transaction.getAmount();
-                this.balance = transaction.getWithdrawAccountBalance();
-                this.createdAt = transaction.getWithdrawAccount().getCreatedAt()
-                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                this.gubun = transaction.getGubun().name();
-                if (transaction.getGubun() == TransactionEnum.WITHDRAW) {
-                    this.from = transaction.getWithdrawAccount().getNumber().toString();
-                    this.to = "ATM";
-                }
-                if (transaction.getGubun() == TransactionEnum.DEPOSIT) {
-                    this.from = "ATM";
-                    this.to = transaction.getDepositAccount().getNumber().toString();
-                }
-                if (transaction.getGubun() == TransactionEnum.TRANSPER) {
-                    this.from = transaction.getWithdrawAccount().getNumber().toString();
-                    this.to = transaction.getDepositAccount().getNumber().toString();
-                }
-            }
+    // public DepositTransactionDto(Transaction transaction) {
+    // this.id = transaction.getId(); // Lazy Loading
+    // this.amount = transaction.getAmount();
+    // this.balance = transaction.getDepositAccountBalance();
+    // this.createdAt = transaction.getDepositAccount().getCreatedAt()
+    // .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    // this.gubun = transaction.getGubun().name();
+    // if (transaction.getGubun() == TransactionEnum.WITHDRAW) {
+    // this.from = transaction.getWithdrawAccount().getNumber().toString();
+    // this.to = "ATM";
+    // }
+    // if (transaction.getGubun() == TransactionEnum.DEPOSIT) {
+    // this.from = "ATM";
+    // this.to = transaction.getDepositAccount().getNumber().toString();
+    // }
+    // if (transaction.getGubun() == TransactionEnum.TRANSPER) {
+    // this.from = transaction.getWithdrawAccount().getNumber().toString();
+    // this.to = transaction.getDepositAccount().getNumber().toString();
+    // }
+    // }
 
-        }
-    }
+    // }
+    // }
+
+    // @Getter
+    // @Setter
+    // public static class WithdrawHistoryRespDto {
+    // private Long id;
+    // private Long number;
+    // private Long balance;
+    // private UserDto user;
+
+    // private List<WithdrawTransactionDto> withdrawTransactions = new
+    // ArrayList<>();
+
+    // public WithdrawHistoryRespDto(Account account) {
+    // this.id = account.getId();
+    // this.number = account.getNumber();
+    // this.balance = account.getBalance();
+    // this.user = new UserDto(account.getUser());
+    // this.withdrawTransactions = account.getWithdrawTransactions()
+    // .stream().map(WithdrawTransactionDto::new).collect(Collectors.toList());
+    // }
+
+    // @Getter
+    // @Setter
+    // public class UserDto {
+    // private Long id;
+    // private String username;
+
+    // public UserDto(User user) {
+    // this.id = user.getId();
+    // this.username = user.getUsername();
+    // }
+    // }
+
+    // @Getter
+    // @Setter
+    // public class WithdrawTransactionDto {
+    // private Long id;
+    // private Long amount;
+    // private Long balance;
+    // private String gubun;
+    // private String createdAt;
+    // private String from;
+    // private String to;
+
+    // public WithdrawTransactionDto(Transaction transaction) {
+    // this.id = transaction.getId(); // Lazy Loading
+    // this.amount = transaction.getAmount();
+    // this.balance = transaction.getWithdrawAccountBalance();
+    // this.createdAt = transaction.getWithdrawAccount().getCreatedAt()
+    // .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    // this.gubun = transaction.getGubun().name();
+    // if (transaction.getGubun() == TransactionEnum.WITHDRAW) {
+    // this.from = transaction.getWithdrawAccount().getNumber().toString();
+    // this.to = "ATM";
+    // }
+    // if (transaction.getGubun() == TransactionEnum.DEPOSIT) {
+    // this.from = "ATM";
+    // this.to = transaction.getDepositAccount().getNumber().toString();
+    // }
+    // if (transaction.getGubun() == TransactionEnum.TRANSPER) {
+    // this.from = transaction.getWithdrawAccount().getNumber().toString();
+    // this.to = transaction.getDepositAccount().getNumber().toString();
+    // }
+    // }
+
+    // }
+    // }
 }

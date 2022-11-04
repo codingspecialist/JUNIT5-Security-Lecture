@@ -48,19 +48,21 @@ public class Account extends AudingTime {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @OneToMany(mappedBy = "withdrawAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Transaction> withdrawTransactions = new ArrayList<>();
+    // @OneToMany(mappedBy = "withdrawAccount", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL)
+    // private List<Transaction> withdrawTransactions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "depositAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Transaction> depositTransactions = new ArrayList<>();
+    // @OneToMany(mappedBy = "depositAccount", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL)
+    // private List<Transaction> depositTransactions = new ArrayList<>();
 
-    public void addWithdrawTransaction(Transaction transaction) {
-        this.withdrawTransactions.add(transaction);
-    }
+    // public void addWithdrawTransaction(Transaction transaction) {
+    // this.withdrawTransactions.add(transaction);
+    // }
 
-    public void addDepositTransaction(Transaction transaction) {
-        this.depositTransactions.add(transaction);
-    }
+    // public void addDepositTransaction(Transaction transaction) {
+    // this.depositTransactions.add(transaction);
+    // }
 
     @Builder
     public Account(Long id, Long number, String password, Long balance, User user) {
@@ -76,7 +78,8 @@ public class Account extends AudingTime {
      */
     public void deposit(Transaction transaction) {
         balance = balance + transaction.getAmount();
-        addDepositTransaction(transaction);
+        // addDepositTransaction(transaction); // Account 순수객체시점에 Account로 Transactions
+        // 조회하려면 필요함.
     }
 
     /*
@@ -87,7 +90,8 @@ public class Account extends AudingTime {
             throw new CustomApiException(ResponseEnum.LACK_BALANCE);
         }
         balance = balance - transaction.getAmount();
-        addWithdrawTransaction(transaction);
+        // addWithdrawTransaction(transaction); // Account 순수객체시점에 Account로 Transactions
+        // 조회하려면 필요함.
     }
 
     /*

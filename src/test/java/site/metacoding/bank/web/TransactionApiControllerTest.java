@@ -135,19 +135,19 @@ public class TransactionApiControllerTest {
         }
 
         /*
-         * 출금 내역 보기
-         * 테스트 시에는 양방향 순수 매핑으로 인해 Transaction이 1차 캐싱되어서 쿼리가 안생김
+         * 입금 내역 보기
          */
         @WithUserDetails(value = "ssar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
         @Test
-        public void withdrawHistory_test() throws Exception {
+        public void transactionDepositHistory_test() throws Exception {
                 // given
                 Long userId = 1L;
                 Long accountId = 1L;
 
                 // when
                 ResultActions resultActions = mvc
-                                .perform(get("/api/user/" + userId + "/account/" + accountId + "/withdraw"));
+                                .perform(get("/api/user/" + userId + "/account/" + accountId + "/transaction")
+                                                .param("gubun", TransactionEnum.DEPOSIT.name()));
                 String responseBody = resultActions.andReturn().getResponse().getContentAsString();
                 log.debug("디버그 : " + responseBody);
 
@@ -156,18 +156,21 @@ public class TransactionApiControllerTest {
         }
 
         /*
-         * 입금 내역 보기
+         * 출금 내역 보기
+         * 양방향 매핑시 : 테스트 시에는 dataInit()에서 순수 객체에 값을 미리 대입해두어서 Transaction이 1차 캐싱되고 쿼리가
+         * 날라가지 않음.
          */
         @WithUserDetails(value = "ssar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
         @Test
-        public void depositHistory_test() throws Exception {
+        public void transactionWithdrawHistory_test() throws Exception {
                 // given
                 Long userId = 1L;
                 Long accountId = 1L;
 
                 // when
                 ResultActions resultActions = mvc
-                                .perform(get("/api/user/" + userId + "/account/" + accountId + "/deposit"));
+                                .perform(get("/api/user/" + userId + "/account/" + accountId + "/transaction")
+                                                .param("gubun", TransactionEnum.WITHDRAW.name()));
                 String responseBody = resultActions.andReturn().getResponse().getContentAsString();
                 log.debug("디버그 : " + responseBody);
 
@@ -180,7 +183,7 @@ public class TransactionApiControllerTest {
          */
         @WithUserDetails(value = "ssar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
         @Test
-        public void transactionHistory_test() throws Exception {
+        public void transactionAllHistory_test() throws Exception {
                 // given
                 Long userId = 1L;
                 Long accountId = 1L;
