@@ -1,5 +1,8 @@
 # JUNIT & Security
 
+### 이슈정리
+- 입금, 출금, 입출금 내역보기 (하나로 통일해서 동적쿼리 쓸지 고민중)
+
 ### 프로젝트명
 - bank
 
@@ -13,16 +16,6 @@
 - User 
 - Account
 - Transaction
-
-### 할일 목록
-- User 테스트
-- Product 테스트
-- Purchase 테스트
-
-### 시나리오
-- 
--
--
 
 ### 참고
 ```txt
