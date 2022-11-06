@@ -10,9 +10,19 @@
 ### 이슈2
 - Transper, Deposit, Withdraw 요청시에 주소에 필요한 값 받고, DTO에서 
 - 값 빼고, DTO 통일해서 하나의 컨트롤러로 처리하기
+- 위 이슈는 DTO 통일 불가능함. null값이 들어와서 - 기존 유지함.
 
 ### 이슈3
 - toString()으로 문자열 캐스팅 하지말자. Lazy Loading됨.
+
+### 이슈4
+- Validation 체크
+  
+### 이슈5
+- AOP 권한 체크
+
+### 이슈6
+- Repository, Service 테스트 해야함
 
 ### 프로젝트명
 - bank
