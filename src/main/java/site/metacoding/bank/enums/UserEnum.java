@@ -8,5 +8,5 @@ import lombok.RequiredArgsConstructor;
 public enum UserEnum {
     ADMIN("관리자"), CUSTOMER("고객");
 
-    private final String role;
+    private final String value;
 }

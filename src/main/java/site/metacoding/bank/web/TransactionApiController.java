@@ -50,7 +50,7 @@ public class TransactionApiController {
      * 출금
      */
     @PostMapping("/user/{userId}/withdraw")
-    public ResponseEntity<?> withdraw(@PathVariable Long userId,
+    public ResponseEntity<?> withdraw(@PathVariable Long userId, @PathVariable Long withdrawAccountId,
             @RequestBody WithdrawReqDto withdrawReqDto,
             @AuthenticationPrincipal LoginUser loginUser) {
         // 권한 확인

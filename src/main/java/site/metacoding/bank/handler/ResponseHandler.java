@@ -19,7 +19,7 @@ public class ResponseHandler {
 
     @ExceptionHandler(CustomApiException.class)
     public ResponseEntity<?> apiException(CustomApiException e) {
-        return new ResponseEntity<>(new ResponseDto<>(e.getResponseEnum()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ResponseDto<>(e.getResponseEnum(), null), HttpStatus.BAD_REQUEST);
     }
 
 }

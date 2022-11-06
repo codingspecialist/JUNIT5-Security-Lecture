@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import site.metacoding.bank.enums.ResponseEnum;
 
-@AllArgsConstructor
 @Getter
 public class ResponseDto<T> {
 
@@ -12,15 +11,15 @@ public class ResponseDto<T> {
     private String message;
     private T data;
 
+    public ResponseDto(Integer code, String message, T data) {
+        this.code = code;
+        this.message = message;
+        this.data = data;
+    }
+
     public ResponseDto(ResponseEnum respEnum, T data) {
         this.code = respEnum.getCode();
         this.message = respEnum.getMessage();
         this.data = data;
     }
-
-    public ResponseDto(ResponseEnum respEnum) {
-        this.code = respEnum.getCode();
-        this.message = respEnum.getMessage();
-    }
-
 }

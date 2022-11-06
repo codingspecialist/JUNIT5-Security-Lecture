@@ -30,7 +30,6 @@ import site.metacoding.bank.domain.transaction.TransactionRepository;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.domain.user.UserRepository;
 import site.metacoding.bank.dto.account.AccountReqDto.AccountSaveReqDto;
-import site.metacoding.bank.dto.transaction.TransactionReqDto.WithdrawReqDto;
 import site.metacoding.bank.enums.TransactionEnum;
 import site.metacoding.bank.enums.UserEnum;
 
@@ -61,29 +60,6 @@ public class AccountApiControllerTest {
         @BeforeEach
         public void setUp() {
                 dataSetting();
-        }
-
-        @WithUserDetails(value = "ssar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
-        @Test
-        public void withdraw_test() throws Exception {
-                // given
-                Long userId = 1L;
-                WithdrawReqDto withdrawReqDto = new WithdrawReqDto();
-                withdrawReqDto.setWithdrawAccountId(2L);
-                withdrawReqDto.setAmount(1000L);
-                withdrawReqDto.setGubun("WITHDRAW");
-                String requestBody = om.writeValueAsString(withdrawReqDto);
-                log.debug("디버그 : " + requestBody);
-
-                // when
-                ResultActions resultActions = mvc
-                                .perform(post("/api/user/" + userId + "/withdraw").content(requestBody)
-                                                .contentType(APPLICATION_JSON_UTF8));
-                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-                log.debug("디버그 : " + responseBody);
-
-                // then
-                resultActions.andExpect(jsonPath("$.code").value(201));
         }
 
         /**

@@ -11,6 +11,9 @@
 - Transper, Deposit, Withdraw 요청시에 주소에 필요한 값 받고, DTO에서 
 - 값 빼고, DTO 통일해서 하나의 컨트롤러로 처리하기
 
+### 이슈3
+- toString()으로 문자열 캐스팅 하지말자. Lazy Loading됨.
+
 ### 프로젝트명
 - bank
 

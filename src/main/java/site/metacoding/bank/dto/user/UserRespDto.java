@@ -16,4 +16,16 @@ public class UserRespDto {
             this.username = user.getUsername();
         }
     }
+
+    @Setter
+    @Getter
+    public static class UserLoginRespDto {
+        private Long id;
+        private String username;
+
+        public UserLoginRespDto(User user) {
+            this.id = user.getId();
+            this.username = user.getUsername();
+        }
+    }
 }

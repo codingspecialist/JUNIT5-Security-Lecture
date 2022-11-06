@@ -7,11 +7,13 @@ import java.util.stream.Collectors;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.transaction.Transaction;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.enums.TransactionEnum;
 
+@Slf4j
 public class TransactionRespDto {
     @Getter
     @Setter
@@ -223,27 +225,24 @@ public class TransactionRespDto {
             public TransactionDto(Transaction transaction) {
                 this.id = transaction.getId();
                 this.amount = transaction.getAmount();
-                this.gubun = transaction.getGubun().name();
+                this.gubun = transaction.getGubun().getValue();
                 if (transaction.getGubun() == TransactionEnum.WITHDRAW) {
-                    this.createdAt = transaction.getWithdrawAccount().getCreatedAt()
-                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                    this.createdAt = transaction.getWithdrawAccount().getCreatedAt();
                     this.balance = transaction.getWithdrawAccountBalance();
-                    this.from = transaction.getWithdrawAccount().getNumber().toString();
+                    this.from = transaction.getWithdrawAccount().getNumber() + "";
                     this.to = "ATM";
                 }
                 if (transaction.getGubun() == TransactionEnum.DEPOSIT) {
-                    this.createdAt = transaction.getDepositAccount().getCreatedAt()
-                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                    this.createdAt = transaction.getDepositAccount().getCreatedAt();
                     this.balance = transaction.getDepositAccountBalance();
                     this.from = "ATM";
-                    this.to = transaction.getDepositAccount().getNumber().toString();
+                    this.to = transaction.getDepositAccount().getNumber() + ""; // toString()으 쓰지마, LazyLoading때문에!!
                 }
                 if (transaction.getGubun() == TransactionEnum.TRANSPER) {
-                    this.createdAt = transaction.getWithdrawAccount().getCreatedAt()
-                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                    this.createdAt = transaction.getWithdrawAccount().getCreatedAt();
                     this.balance = transaction.getWithdrawAccountBalance();
-                    this.from = transaction.getWithdrawAccount().getNumber().toString();
-                    this.to = transaction.getDepositAccount().getNumber().toString();
+                    this.from = transaction.getWithdrawAccount().getNumber() + "";
+                    this.to = transaction.getDepositAccount().getNumber() + "";
                 }
             }
 

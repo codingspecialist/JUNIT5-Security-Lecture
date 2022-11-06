@@ -31,6 +31,7 @@ public class AccountService {
     }
 
     public List<AccountAllRespDto> 계좌목록보기_유저별(Long id) {
+
         return accountRepository.findByUserId(id)
                 .stream()
                 .map(AccountAllRespDto::new)

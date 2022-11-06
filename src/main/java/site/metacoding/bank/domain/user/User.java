@@ -47,9 +47,3 @@ public class User extends AudingTime {
     }
 
 }
-
-// for (RoleEnum roleValue : RoleEnum.values()) {
-// if (roleValue.name().equals(role)) {
-// user.role = roleValue;
-// }
-// }
