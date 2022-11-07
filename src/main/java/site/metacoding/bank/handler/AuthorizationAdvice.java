@@ -18,7 +18,7 @@ import site.metacoding.bank.config.exceptions.CustomApiException;
 @Aspect
 public class AuthorizationAdvice {
 
-    @Pointcut("@annotation(site.metacoding.bank.config.anno.AuthorizationCheck)")
+    @Pointcut("@annotation(site.metacoding.bank.config.annotations.AuthorizationCheck)")
     public void authorizationCheck() {
     }
 
