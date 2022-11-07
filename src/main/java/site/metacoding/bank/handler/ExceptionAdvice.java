@@ -5,12 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import site.metacoding.bank.config.exceptions.CustomApiException;
+import site.metacoding.bank.config.exceptions.CustomValidationApiException;
 import site.metacoding.bank.dto.ResponseDto;
-import site.metacoding.bank.handler.exception.CustomApiException;
-import site.metacoding.bank.handler.exception.CustomValidationApiException;
 
 @RestControllerAdvice
-public class ResponseHandler {
+public class ExceptionAdvice {
 
     @ExceptionHandler(CustomValidationApiException.class)
     public ResponseEntity<?> validationApiException(CustomValidationApiException e) {

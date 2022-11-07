@@ -16,9 +16,9 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import site.metacoding.bank.config.auth.LoginUser;
+import site.metacoding.bank.config.enums.ResponseEnum;
 import site.metacoding.bank.dto.ResponseDto;
 import site.metacoding.bank.dto.user.UserRespDto.UserLoginRespDto;
-import site.metacoding.bank.enums.ResponseEnum;
 
 @Component
 public class LoginHandler implements AuthenticationSuccessHandler, AuthenticationFailureHandler {

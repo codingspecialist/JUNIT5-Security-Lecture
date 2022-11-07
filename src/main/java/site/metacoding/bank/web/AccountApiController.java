@@ -15,15 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import site.metacoding.bank.config.annotations.AuthorizationCheck;
 import site.metacoding.bank.config.auth.LoginUser;
+import site.metacoding.bank.config.enums.ResponseEnum;
+import site.metacoding.bank.config.enums.UserEnum;
+import site.metacoding.bank.config.exceptions.CustomApiException;
 import site.metacoding.bank.dto.ResponseDto;
 import site.metacoding.bank.dto.account.AccountReqDto.AccountSaveReqDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountAllRespDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountDetailRespDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountSaveRespDto;
-import site.metacoding.bank.enums.ResponseEnum;
-import site.metacoding.bank.enums.UserEnum;
-import site.metacoding.bank.handler.exception.CustomApiException;
 import site.metacoding.bank.service.AccountService;
 
 @Slf4j
@@ -36,46 +37,32 @@ public class AccountApiController {
     @PostMapping("/account")
     public ResponseEntity<?> save(@RequestBody AccountSaveReqDto accountSaveReqDto,
             @AuthenticationPrincipal LoginUser loginUser) {
-        accountSaveReqDto.setLoginUser(loginUser);
-        AccountSaveRespDto accountSaveRespDto = accountService.계좌등록하기(accountSaveReqDto);
+        AccountSaveRespDto accountSaveRespDto = accountService.계좌등록하기(accountSaveReqDto, loginUser.getUser());
         return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.POST_SUCCESS, accountSaveRespDto),
                 HttpStatus.CREATED);
     }
 
-    @GetMapping("user/{userId}/account")
+    @AuthorizationCheck
+    @GetMapping("/user/{userId}/account")
     public ResponseEntity<?> list(@PathVariable Long userId, @AuthenticationPrincipal LoginUser loginUser) {
-        if (userId != loginUser.getUser().getId()) {
-            if (loginUser.getUser().getRole() != UserEnum.ADMIN) {
-                throw new CustomApiException(ResponseEnum.FORBIDDEN);
-            }
-        }
-
         List<AccountAllRespDto> accountAllRespDtos = accountService.계좌목록보기_유저별(userId);
         return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, accountAllRespDtos),
                 HttpStatus.OK);
     }
 
-    @GetMapping("user/{userId}/account/{accountId}")
+    @AuthorizationCheck
+    @GetMapping("/user/{userId}/account/{accountId}")
     public ResponseEntity<?> detail(@PathVariable Long userId, @PathVariable Long accountId,
             @AuthenticationPrincipal LoginUser loginUser) {
-        if (userId != loginUser.getUser().getId()) {
-            if (loginUser.getUser().getRole() != UserEnum.ADMIN) {
-                throw new CustomApiException(ResponseEnum.FORBIDDEN);
-            }
-        }
         AccountDetailRespDto accountDetailRespDtos = accountService.계좌상세보기(accountId, loginUser.getUser().getId());
         return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, accountDetailRespDtos),
                 HttpStatus.OK);
     }
 
+    @AuthorizationCheck
     @DeleteMapping("/user/{userId}/account/{accountId}")
     public ResponseEntity<?> delete(@PathVariable Long userId, @PathVariable Long accountId,
             @AuthenticationPrincipal LoginUser loginUser) {
-        if (userId != loginUser.getUser().getId()) {
-            if (loginUser.getUser().getRole() != UserEnum.ADMIN) {
-                throw new CustomApiException(ResponseEnum.FORBIDDEN);
-            }
-        }
         accountService.계좌삭제(accountId);
         return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.DELETE_SUCCESS, null),
                 HttpStatus.OK);

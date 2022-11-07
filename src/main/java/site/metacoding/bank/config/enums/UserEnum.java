@@ -1,4 +1,4 @@
-package site.metacoding.bank.enums;
+package site.metacoding.bank.config.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

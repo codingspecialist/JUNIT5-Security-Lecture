@@ -2,7 +2,7 @@ package site.metacoding.bank.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import site.metacoding.bank.enums.ResponseEnum;
+import site.metacoding.bank.config.enums.ResponseEnum;
 
 @Getter
 public class ResponseDto<T> {

@@ -2,8 +2,8 @@ package site.metacoding.bank.dto.user;
 
 import lombok.Getter;
 import lombok.Setter;
+import site.metacoding.bank.config.enums.UserEnum;
 import site.metacoding.bank.domain.user.User;
-import site.metacoding.bank.enums.UserEnum;
 
 public class UserReqDto {
     @Setter

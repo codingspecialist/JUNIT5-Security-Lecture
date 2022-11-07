@@ -1,4 +1,4 @@
-package site.metacoding.bank.handler.exception;
+package site.metacoding.bank.config.exceptions;
 
 import java.util.Map;
 

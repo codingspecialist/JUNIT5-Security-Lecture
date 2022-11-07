@@ -17,9 +17,9 @@ import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import site.metacoding.bank.config.enums.TransactionEnum;
 import site.metacoding.bank.domain.AudingTime;
 import site.metacoding.bank.domain.account.Account;
-import site.metacoding.bank.enums.TransactionEnum;
 
 /**
  * deposit and withdrawal history

@@ -8,14 +8,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import site.metacoding.bank.config.enums.ResponseEnum;
+import site.metacoding.bank.config.exceptions.CustomApiException;
 import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.account.AccountRepository;
+import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.dto.account.AccountReqDto.AccountSaveReqDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountAllRespDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountDetailRespDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountSaveRespDto;
-import site.metacoding.bank.enums.ResponseEnum;
-import site.metacoding.bank.handler.exception.CustomApiException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,13 +26,12 @@ public class AccountService {
     private final AccountRepository accountRepository;
 
     @Transactional
-    public AccountSaveRespDto 계좌등록하기(AccountSaveReqDto accountSaveReqDto) {
-        Account accountPS = accountRepository.save(accountSaveReqDto.toEntity());
+    public AccountSaveRespDto 계좌등록하기(AccountSaveReqDto accountSaveReqDto, User user) {
+        Account accountPS = accountRepository.save(accountSaveReqDto.toEntity(user));
         return new AccountSaveRespDto(accountPS);
     }
 
     public List<AccountAllRespDto> 계좌목록보기_유저별(Long id) {
-
         return accountRepository.findByUserId(id)
                 .stream()
                 .map(AccountAllRespDto::new)

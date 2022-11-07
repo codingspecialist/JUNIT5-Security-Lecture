@@ -2,9 +2,9 @@ package site.metacoding.bank.dto.transaction;
 
 import lombok.Getter;
 import lombok.Setter;
+import site.metacoding.bank.config.enums.TransactionEnum;
 import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.transaction.Transaction;
-import site.metacoding.bank.enums.TransactionEnum;
 
 public class TransactionReqDto {
     @Getter

@@ -12,11 +12,11 @@ import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import site.metacoding.bank.config.enums.ResponseEnum;
+import site.metacoding.bank.config.exceptions.CustomApiException;
 import site.metacoding.bank.domain.AudingTime;
 import site.metacoding.bank.domain.transaction.Transaction;
 import site.metacoding.bank.domain.user.User;
-import site.metacoding.bank.enums.ResponseEnum;
-import site.metacoding.bank.handler.exception.CustomApiException;
 
 /**
  * 계좌

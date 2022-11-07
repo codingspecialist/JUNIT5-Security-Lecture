@@ -1,4 +1,4 @@
-package site.metacoding.bank.handler.aop;
+package site.metacoding.bank.handler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
-import site.metacoding.bank.handler.exception.CustomValidationApiException;
+import site.metacoding.bank.config.exceptions.CustomValidationApiException;
 
 @Component
 @Aspect

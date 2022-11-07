@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import site.metacoding.bank.config.enums.TransactionEnum;
+import site.metacoding.bank.config.enums.UserEnum;
 import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.account.AccountRepository;
 import site.metacoding.bank.domain.transaction.Transaction;
@@ -31,8 +33,6 @@ import site.metacoding.bank.domain.user.UserRepository;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.DepositReqDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.TransperReqDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.WithdrawReqDto;
-import site.metacoding.bank.enums.TransactionEnum;
-import site.metacoding.bank.enums.UserEnum;
 
 @Slf4j
 @ActiveProfiles("test")

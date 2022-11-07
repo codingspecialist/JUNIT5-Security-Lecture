@@ -1,6 +1,6 @@
-package site.metacoding.bank.handler.exception;
+package site.metacoding.bank.config.exceptions;
 
-import site.metacoding.bank.enums.ResponseEnum;
+import site.metacoding.bank.config.enums.ResponseEnum;
 
 public class CustomApiException extends RuntimeException {
 

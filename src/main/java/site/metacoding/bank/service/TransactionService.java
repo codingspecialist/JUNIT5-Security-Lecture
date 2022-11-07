@@ -7,6 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import site.metacoding.bank.config.enums.ResponseEnum;
+import site.metacoding.bank.config.enums.TransactionEnum;
+import site.metacoding.bank.config.exceptions.CustomApiException;
 import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.account.AccountRepository;
 import site.metacoding.bank.domain.transaction.Transaction;
@@ -18,16 +21,12 @@ import site.metacoding.bank.dto.transaction.TransactionRespDto.DepositRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.TransactionHistoryRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.TransperRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawRespDto;
-import site.metacoding.bank.enums.ResponseEnum;
-import site.metacoding.bank.enums.TransactionEnum;
-import site.metacoding.bank.handler.exception.CustomApiException;
 
 @Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
 public class TransactionService {
-        private static final String TAG = "TransactionService";
         private final TransactionRepository transactionRepository;
         private final AccountRepository accountRepository;
 

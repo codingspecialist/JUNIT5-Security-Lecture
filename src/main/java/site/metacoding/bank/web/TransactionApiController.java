@@ -12,7 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import site.metacoding.bank.config.annotations.AuthorizationCheck;
 import site.metacoding.bank.config.auth.LoginUser;
+import site.metacoding.bank.config.enums.ResponseEnum;
+import site.metacoding.bank.config.enums.UserEnum;
+import site.metacoding.bank.config.exceptions.CustomApiException;
 import site.metacoding.bank.dto.ResponseDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.DepositReqDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.TransperReqDto;
@@ -21,9 +25,6 @@ import site.metacoding.bank.dto.transaction.TransactionRespDto.DepositRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.TransactionHistoryRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.TransperRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawRespDto;
-import site.metacoding.bank.enums.ResponseEnum;
-import site.metacoding.bank.enums.UserEnum;
-import site.metacoding.bank.handler.exception.CustomApiException;
 import site.metacoding.bank.service.TransactionService;
 
 @Slf4j
@@ -31,8 +32,6 @@ import site.metacoding.bank.service.TransactionService;
 @RequestMapping("/api")
 @RestController
 public class TransactionApiController {
-
-    private static final String TAG = "TransactionApiController";
     private final TransactionService transactionService;
 
     /*
@@ -49,16 +48,11 @@ public class TransactionApiController {
     /*
      * 출금
      */
+    @AuthorizationCheck
     @PostMapping("/user/{userId}/withdraw")
     public ResponseEntity<?> withdraw(@PathVariable Long userId, @PathVariable Long withdrawAccountId,
             @RequestBody WithdrawReqDto withdrawReqDto,
             @AuthenticationPrincipal LoginUser loginUser) {
-        // 권한 확인
-        if (userId != loginUser.getUser().getId()) {
-            if (loginUser.getUser().getRole() != UserEnum.ADMIN) {
-                throw new CustomApiException(ResponseEnum.FORBIDDEN);
-            }
-        }
         WithdrawRespDto withdrawRespDto = transactionService.출금하기(withdrawReqDto, userId);
         return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.POST_SUCCESS, withdrawRespDto),
                 HttpStatus.CREATED);
@@ -68,16 +62,11 @@ public class TransactionApiController {
     /*
      * 이체 (== 출금)
      */
+    @AuthorizationCheck
     @PostMapping("/user/{userId}/transper")
     public ResponseEntity<?> transper(@PathVariable Long userId,
             @RequestBody TransperReqDto transperReqDto,
             @AuthenticationPrincipal LoginUser loginUser) {
-        // 권한 확인
-        if (userId != loginUser.getUser().getId()) {
-            if (loginUser.getUser().getRole() != UserEnum.ADMIN) {
-                throw new CustomApiException(ResponseEnum.FORBIDDEN);
-            }
-        }
         TransperRespDto transperRespDto = transactionService.이체하기(transperReqDto, userId);
         return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.POST_SUCCESS, transperRespDto),
                 HttpStatus.CREATED);
@@ -86,15 +75,10 @@ public class TransactionApiController {
     /*
      * 입출금 내역 보기 (동적 쿼리로 변경)
      */
+    @AuthorizationCheck
     @GetMapping("/user/{userId}/account/{accountId}/transaction")
     public ResponseEntity<?> withdrawHistory(String gubun, @PathVariable Long userId, @PathVariable Long accountId,
             @AuthenticationPrincipal LoginUser loginUser) {
-        // 권한 확인
-        if (userId != loginUser.getUser().getId()) {
-            if (loginUser.getUser().getRole() != UserEnum.ADMIN) {
-                throw new CustomApiException(ResponseEnum.FORBIDDEN);
-            }
-        }
         TransactionHistoryRespDto transactionHistoryRespDto = transactionService.입출금목록보기(userId, accountId, gubun);
         return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, transactionHistoryRespDto),
                 HttpStatus.OK);

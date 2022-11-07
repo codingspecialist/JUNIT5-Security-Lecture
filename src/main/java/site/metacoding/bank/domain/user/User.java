@@ -12,8 +12,8 @@ import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import site.metacoding.bank.config.enums.UserEnum;
 import site.metacoding.bank.domain.AudingTime;
-import site.metacoding.bank.enums.UserEnum;
 
 @NoArgsConstructor
 @Getter
