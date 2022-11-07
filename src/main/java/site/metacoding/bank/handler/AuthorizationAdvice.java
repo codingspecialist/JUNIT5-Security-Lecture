@@ -24,7 +24,9 @@ public class AuthorizationAdvice {
 
     @Around("authorizationCheck()")
     public Object apiAdvice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        // 메서드 파라메터 변수명들
         String[] paramNames = ((CodeSignature) proceedingJoinPoint.getSignature()).getParameterNames();
+        // 메서드 파라메터 변수값들
         Object[] paramValues = proceedingJoinPoint.getArgs();
         Long userId = null;
         LoginUser loginUser = null;

@@ -1,4 +1,4 @@
-package site.metacoding.bank.config;
+package site.metacoding.bank.config.beans;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +10,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import site.metacoding.bank.handler.LoginHandler;
 
 @Configuration
-public class SecurityConfig {
+public class SecurityConfigBean {
 
     @Autowired
     private LoginHandler loginHandler;
@@ -34,8 +34,4 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }

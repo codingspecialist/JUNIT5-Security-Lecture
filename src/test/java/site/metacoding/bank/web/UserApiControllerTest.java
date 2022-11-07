@@ -46,12 +46,8 @@ public class UserApiControllerTest {
     private UserRepository userRepository;
 
     @BeforeEach
-    public void dataInit() {
-        String encPassword = passwordEncoder.encode("1234");
-        User user = User.builder().username("ssar").password(encPassword).email("ssar@nate.com").role(UserEnum.CUSTOMER)
-                .build();
-        userRepository.save(user);
-        log.debug("디버그-" + TAG + " : ssar 유저 insert");
+    public void setUp() {
+        dataSetting();
     }
 
     /**
@@ -97,6 +93,14 @@ public class UserApiControllerTest {
         // then
         resultActions.andExpect(jsonPath("$.code").value(200));
 
+    }
+
+    private void dataSetting() {
+        String encPassword = passwordEncoder.encode("1234");
+        User user = User.builder().username("ssar").password(encPassword).email("ssar@nate.com").role(UserEnum.CUSTOMER)
+                .build();
+        userRepository.save(user);
+        log.debug("디버그-" + TAG + " : ssar 유저 insert");
     }
 
 }
