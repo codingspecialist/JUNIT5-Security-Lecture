@@ -24,6 +24,10 @@
 ### 이슈6
 - Repository, Service 테스트 해야함
 
+### 이슈7
+- @DataJpaTest에서 truncate하면 auto_increment 초기화 안됨.
+- Alter 명령어로 직접 increment 초기화함. (해결)
+
 ### 프로젝트명
 - bank
 

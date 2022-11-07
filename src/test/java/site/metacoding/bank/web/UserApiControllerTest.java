@@ -27,7 +27,6 @@ import site.metacoding.bank.dto.user.UserReqDto.UserJoinReqDto;
 @Slf4j
 @ActiveProfiles("test")
 @Sql("classpath:db/teardown.sql")
-@Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 public class UserApiControllerTest {

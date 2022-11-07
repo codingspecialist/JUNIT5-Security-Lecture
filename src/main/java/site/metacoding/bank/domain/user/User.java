@@ -12,9 +12,11 @@ import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import site.metacoding.bank.config.enums.UserEnum;
 import site.metacoding.bank.domain.AudingTime;
 
+@ToString
 @NoArgsConstructor
 @Getter
 @Table(name = "users")

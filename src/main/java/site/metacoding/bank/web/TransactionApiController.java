@@ -50,7 +50,7 @@ public class TransactionApiController {
      */
     @AuthorizationCheck
     @PostMapping("/user/{userId}/withdraw")
-    public ResponseEntity<?> withdraw(@PathVariable Long userId, @PathVariable Long withdrawAccountId,
+    public ResponseEntity<?> withdraw(@PathVariable Long userId,
             @RequestBody WithdrawReqDto withdrawReqDto,
             @AuthenticationPrincipal LoginUser loginUser) {
         WithdrawRespDto withdrawRespDto = transactionService.출금하기(withdrawReqDto, userId);

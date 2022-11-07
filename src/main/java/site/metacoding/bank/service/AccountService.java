@@ -31,8 +31,8 @@ public class AccountService {
         return new AccountSaveRespDto(accountPS);
     }
 
-    public List<AccountAllRespDto> 계좌목록보기_유저별(Long id) {
-        return accountRepository.findByUserId(id)
+    public List<AccountAllRespDto> 계좌목록보기_유저별(Long userId) {
+        return accountRepository.findByUserId(userId)
                 .stream()
                 .map(AccountAllRespDto::new)
                 .collect(Collectors.toList());

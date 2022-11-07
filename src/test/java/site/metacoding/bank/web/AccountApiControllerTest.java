@@ -18,7 +18,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -36,7 +35,6 @@ import site.metacoding.bank.dto.account.AccountReqDto.AccountSaveReqDto;
 @Slf4j
 @ActiveProfiles("test")
 @Sql("classpath:db/teardown.sql")
-@Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 public class AccountApiControllerTest {
@@ -148,18 +146,21 @@ public class AccountApiControllerTest {
                                 .build();
                 User customer1PS = userRepository.save(customer1);
                 log.debug("디버그 : id:1, username: ssar 유저 생성");
+                log.debug("디버그 : " + customer1PS.getId());
 
                 User customer2 = User.builder().username("cos").password(encPassword).email("cos@nate.com")
                                 .role(UserEnum.CUSTOMER)
                                 .build();
                 User customer2PS = userRepository.save(customer2);
                 log.debug("디버그 : id:2, username: cos 유저 생성");
+                log.debug("디버그 : " + customer2PS.getId());
 
                 User admin = User.builder().username("admin").password(encPassword).email("admin@nate.com")
                                 .role(UserEnum.ADMIN)
                                 .build();
-                userRepository.save(admin);
+                User adminPS = userRepository.save(admin);
                 log.debug("디버그 : id:3, username: admin 관리자 생성");
+                log.debug("디버그 : " + adminPS.getId());
 
                 Account account1 = Account.builder()
                                 .number(1111L)
