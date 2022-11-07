@@ -18,8 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import site.metacoding.bank.config.annotations.AuthorizationCheck;
 import site.metacoding.bank.config.auth.LoginUser;
 import site.metacoding.bank.config.enums.ResponseEnum;
-import site.metacoding.bank.config.enums.UserEnum;
-import site.metacoding.bank.config.exceptions.CustomApiException;
 import site.metacoding.bank.dto.ResponseDto;
 import site.metacoding.bank.dto.account.AccountReqDto.AccountSaveReqDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountAllRespDto;
@@ -32,40 +30,41 @@ import site.metacoding.bank.service.AccountService;
 @RequiredArgsConstructor
 @RestController
 public class AccountApiController {
-    private final AccountService accountService;
+        private final AccountService accountService;
 
-    @PostMapping("/account")
-    public ResponseEntity<?> save(@RequestBody AccountSaveReqDto accountSaveReqDto,
-            @AuthenticationPrincipal LoginUser loginUser) {
-        AccountSaveRespDto accountSaveRespDto = accountService.계좌등록하기(accountSaveReqDto, loginUser.getUser());
-        return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.POST_SUCCESS, accountSaveRespDto),
-                HttpStatus.CREATED);
-    }
+        @PostMapping("/account")
+        public ResponseEntity<?> save(@RequestBody AccountSaveReqDto accountSaveReqDto,
+                        @AuthenticationPrincipal LoginUser loginUser) {
+                AccountSaveRespDto accountSaveRespDto = accountService.계좌등록하기(accountSaveReqDto, loginUser.getUser());
+                return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.POST_SUCCESS, accountSaveRespDto),
+                                HttpStatus.CREATED);
+        }
 
-    @AuthorizationCheck
-    @GetMapping("/user/{userId}/account")
-    public ResponseEntity<?> list(@PathVariable Long userId, @AuthenticationPrincipal LoginUser loginUser) {
-        List<AccountAllRespDto> accountAllRespDtos = accountService.계좌목록보기_유저별(userId);
-        return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, accountAllRespDtos),
-                HttpStatus.OK);
-    }
+        @AuthorizationCheck
+        @GetMapping("/user/{userId}/account")
+        public ResponseEntity<?> list(@PathVariable Long userId, @AuthenticationPrincipal LoginUser loginUser) {
+                List<AccountAllRespDto> accountAllRespDtos = accountService.계좌목록보기_유저별(userId);
+                return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, accountAllRespDtos),
+                                HttpStatus.OK);
+        }
 
-    @AuthorizationCheck
-    @GetMapping("/user/{userId}/account/{accountId}")
-    public ResponseEntity<?> detail(@PathVariable Long userId, @PathVariable Long accountId,
-            @AuthenticationPrincipal LoginUser loginUser) {
-        AccountDetailRespDto accountDetailRespDtos = accountService.계좌상세보기(accountId, loginUser.getUser().getId());
-        return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, accountDetailRespDtos),
-                HttpStatus.OK);
-    }
+        @AuthorizationCheck
+        @GetMapping("/user/{userId}/account/{accountId}")
+        public ResponseEntity<?> detail(@PathVariable Long userId, @PathVariable Long accountId,
+                        @AuthenticationPrincipal LoginUser loginUser) {
+                AccountDetailRespDto accountDetailRespDtos = accountService.계좌상세보기(accountId,
+                                loginUser.getUser().getId());
+                return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, accountDetailRespDtos),
+                                HttpStatus.OK);
+        }
 
-    @AuthorizationCheck
-    @DeleteMapping("/user/{userId}/account/{accountId}")
-    public ResponseEntity<?> delete(@PathVariable Long userId, @PathVariable Long accountId,
-            @AuthenticationPrincipal LoginUser loginUser) {
-        accountService.계좌삭제(accountId);
-        return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.DELETE_SUCCESS, null),
-                HttpStatus.OK);
-    }
+        @AuthorizationCheck
+        @DeleteMapping("/user/{userId}/account/{accountId}")
+        public ResponseEntity<?> delete(@PathVariable Long userId, @PathVariable Long accountId,
+                        @AuthenticationPrincipal LoginUser loginUser) {
+                accountService.계좌삭제(accountId);
+                return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.DELETE_SUCCESS, null),
+                                HttpStatus.OK);
+        }
 
 }

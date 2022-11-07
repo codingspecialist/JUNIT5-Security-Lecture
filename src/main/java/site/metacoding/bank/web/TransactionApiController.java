@@ -15,8 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import site.metacoding.bank.config.annotations.AuthorizationCheck;
 import site.metacoding.bank.config.auth.LoginUser;
 import site.metacoding.bank.config.enums.ResponseEnum;
-import site.metacoding.bank.config.enums.UserEnum;
-import site.metacoding.bank.config.exceptions.CustomApiException;
 import site.metacoding.bank.dto.ResponseDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.DepositReqDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.TransperReqDto;
@@ -32,94 +30,95 @@ import site.metacoding.bank.service.TransactionService;
 @RequestMapping("/api")
 @RestController
 public class TransactionApiController {
-    private final TransactionService transactionService;
+        private final TransactionService transactionService;
 
-    /*
-     * 입금
-     * ATM에서 계좌로 입금하는 것이기 때문에 인증이 필요없다.
-     */
-    @PostMapping("/deposit")
-    public ResponseEntity<?> deposit(@RequestBody DepositReqDto depositReqDto) {
-        DepositRespDto depositRespDto = transactionService.입금하기(depositReqDto);
-        return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.POST_SUCCESS, depositRespDto),
-                HttpStatus.CREATED);
-    }
+        /*
+         * 입금
+         * ATM에서 계좌로 입금하는 것이기 때문에 인증이 필요없다.
+         */
+        @PostMapping("/deposit")
+        public ResponseEntity<?> deposit(@RequestBody DepositReqDto depositReqDto) {
+                DepositRespDto depositRespDto = transactionService.입금하기(depositReqDto);
+                return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.POST_SUCCESS, depositRespDto),
+                                HttpStatus.CREATED);
+        }
 
-    /*
-     * 출금
-     */
-    @AuthorizationCheck
-    @PostMapping("/user/{userId}/withdraw")
-    public ResponseEntity<?> withdraw(@PathVariable Long userId,
-            @RequestBody WithdrawReqDto withdrawReqDto,
-            @AuthenticationPrincipal LoginUser loginUser) {
-        WithdrawRespDto withdrawRespDto = transactionService.출금하기(withdrawReqDto, userId);
-        return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.POST_SUCCESS, withdrawRespDto),
-                HttpStatus.CREATED);
+        /*
+         * 출금
+         */
+        @AuthorizationCheck
+        @PostMapping("/user/{userId}/withdraw")
+        public ResponseEntity<?> withdraw(@PathVariable Long userId,
+                        @RequestBody WithdrawReqDto withdrawReqDto,
+                        @AuthenticationPrincipal LoginUser loginUser) {
+                WithdrawRespDto withdrawRespDto = transactionService.출금하기(withdrawReqDto, userId);
+                return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.POST_SUCCESS, withdrawRespDto),
+                                HttpStatus.CREATED);
 
-    }
+        }
 
-    /*
-     * 이체 (== 출금)
-     */
-    @AuthorizationCheck
-    @PostMapping("/user/{userId}/transper")
-    public ResponseEntity<?> transper(@PathVariable Long userId,
-            @RequestBody TransperReqDto transperReqDto,
-            @AuthenticationPrincipal LoginUser loginUser) {
-        TransperRespDto transperRespDto = transactionService.이체하기(transperReqDto, userId);
-        return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.POST_SUCCESS, transperRespDto),
-                HttpStatus.CREATED);
-    }
+        /*
+         * 이체 (== 출금)
+         */
+        @AuthorizationCheck
+        @PostMapping("/user/{userId}/transper")
+        public ResponseEntity<?> transper(@PathVariable Long userId,
+                        @RequestBody TransperReqDto transperReqDto,
+                        @AuthenticationPrincipal LoginUser loginUser) {
+                TransperRespDto transperRespDto = transactionService.이체하기(transperReqDto, userId);
+                return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.POST_SUCCESS, transperRespDto),
+                                HttpStatus.CREATED);
+        }
 
-    /*
-     * 입출금 내역 보기 (동적 쿼리로 변경)
-     */
-    @AuthorizationCheck
-    @GetMapping("/user/{userId}/account/{accountId}/transaction")
-    public ResponseEntity<?> withdrawHistory(String gubun, @PathVariable Long userId, @PathVariable Long accountId,
-            @AuthenticationPrincipal LoginUser loginUser) {
-        TransactionHistoryRespDto transactionHistoryRespDto = transactionService.입출금목록보기(userId, accountId, gubun);
-        return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, transactionHistoryRespDto),
-                HttpStatus.OK);
-    }
+        /*
+         * 입출금 내역 보기 (동적 쿼리로 변경)
+         */
+        @AuthorizationCheck
+        @GetMapping("/user/{userId}/account/{accountId}/transaction")
+        public ResponseEntity<?> withdrawHistory(String gubun, @PathVariable Long userId, @PathVariable Long accountId,
+                        @AuthenticationPrincipal LoginUser loginUser) {
+                TransactionHistoryRespDto transactionHistoryRespDto = transactionService.입출금목록보기(userId, accountId,
+                                gubun);
+                return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, transactionHistoryRespDto),
+                                HttpStatus.OK);
+        }
 
-    // /*
-    // * 출금 내역 보기
-    // */
-    // @GetMapping("/user/{userId}/account/{accountId}/withdraw")
-    // public ResponseEntity<?> withdrawHistory(@PathVariable Long userId,
-    // @PathVariable Long accountId,
-    // @AuthenticationPrincipal LoginUser loginUser) {
-    // // 권한 확인
-    // if (userId != loginUser.getUser().getId()) {
-    // if (loginUser.getUser().getRole() != UserEnum.ADMIN) {
-    // throw new CustomApiException(ResponseEnum.FORBIDDEN);
-    // }
-    // }
-    // WithdrawHistoryRespDto withdrawHistoryRespDto =
-    // transactionService.출금목록보기(userId, accountId);
-    // return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS,
-    // withdrawHistoryRespDto), HttpStatus.OK);
-    // }
+        // /*
+        // * 출금 내역 보기
+        // */
+        // @GetMapping("/user/{userId}/account/{accountId}/withdraw")
+        // public ResponseEntity<?> withdrawHistory(@PathVariable Long userId,
+        // @PathVariable Long accountId,
+        // @AuthenticationPrincipal LoginUser loginUser) {
+        // // 권한 확인
+        // if (userId != loginUser.getUser().getId()) {
+        // if (loginUser.getUser().getRole() != UserEnum.ADMIN) {
+        // throw new CustomApiException(ResponseEnum.FORBIDDEN);
+        // }
+        // }
+        // WithdrawHistoryRespDto withdrawHistoryRespDto =
+        // transactionService.출금목록보기(userId, accountId);
+        // return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS,
+        // withdrawHistoryRespDto), HttpStatus.OK);
+        // }
 
-    // /*
-    // * 입금 내역 보기
-    // */
-    // @GetMapping("/user/{userId}/account/{accountId}/deposit")
-    // public ResponseEntity<?> depositHistory(@PathVariable Long userId,
-    // @PathVariable Long accountId,
-    // @AuthenticationPrincipal LoginUser loginUser) {
-    // // 권한 확인
-    // if (userId != loginUser.getUser().getId()) {
-    // if (loginUser.getUser().getRole() != UserEnum.ADMIN) {
-    // throw new CustomApiException(ResponseEnum.FORBIDDEN);
-    // }
-    // }
-    // DepositHistoryRespDto depositHistoryRespDto =
-    // transactionService.입금목록보기(userId, accountId);
-    // return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS,
-    // depositHistoryRespDto), HttpStatus.OK);
-    // }
+        // /*
+        // * 입금 내역 보기
+        // */
+        // @GetMapping("/user/{userId}/account/{accountId}/deposit")
+        // public ResponseEntity<?> depositHistory(@PathVariable Long userId,
+        // @PathVariable Long accountId,
+        // @AuthenticationPrincipal LoginUser loginUser) {
+        // // 권한 확인
+        // if (userId != loginUser.getUser().getId()) {
+        // if (loginUser.getUser().getRole() != UserEnum.ADMIN) {
+        // throw new CustomApiException(ResponseEnum.FORBIDDEN);
+        // }
+        // }
+        // DepositHistoryRespDto depositHistoryRespDto =
+        // transactionService.입금목록보기(userId, accountId);
+        // return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS,
+        // depositHistoryRespDto), HttpStatus.OK);
+        // }
 
 }
