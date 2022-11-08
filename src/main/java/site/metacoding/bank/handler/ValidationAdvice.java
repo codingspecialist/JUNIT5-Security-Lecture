@@ -38,7 +38,6 @@ public class ValidationAdvice {
                     for (FieldError error : bindingResult.getFieldErrors()) {
                         errorMap.put(error.getField(), error.getDefaultMessage());
                     }
-                    System.out.println(errorMap);
                     throw new CustomValidationApiException("유효성 검사 실패함", errorMap);
                 }
 
