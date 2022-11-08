@@ -43,8 +43,8 @@ jobs:
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v20
         with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+          aws_access_key: ${{secrets.AWS_ACCESS_KEY}}
+          aws_secret_key: ${{secrets.AWS_SECRET_KEY}}
           application_name: bank # 엘리스틱 빈스톡 애플리케이션 이름!
           environment_name: Bank-env # 엘리스틱 빈스톡 환경 이름!
           version_label: bank-${{steps.current-time.outputs.formattedTime}}
