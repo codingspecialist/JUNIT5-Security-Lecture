@@ -42,6 +42,42 @@
 - Account
 - Transaction
 
+```sql
+create table users (
+       id bigint auto_increment,
+        created_at timestamp not null,
+        updated_at timestamp not null,
+        email varchar(255) not null,
+        password varchar(255) not null,
+        role varchar(255) not null,
+        username varchar(255) not null unique,
+        primary key (id)
+);
+create table account (
+       id bigint auto_increment,
+        created_at timestamp not null,
+        updated_at timestamp not null,
+        balance bigint not null,
+        number bigint not null unique,
+        password varchar(255),
+        user_id bigint,
+        primary key (id)
+);
+
+create table transaction (
+       id bigint auto_increment,
+        created_at timestamp not null,
+        updated_at timestamp not null,
+        amount bigint,
+        deposit_account_balance bigint,
+        gubun varchar(255),
+        withdraw_account_balance bigint,
+        deposit_account_id bigint,
+        withdraw_account_id bigint,
+        primary key (id)
+);
+```
+
 ### 참고
 ```txt
     // @WithMockUser // 기본값 username=user, password=password role=ROLE_USER
