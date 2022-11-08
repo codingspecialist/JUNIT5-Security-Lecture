@@ -10,9 +10,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import lombok.extern.slf4j.Slf4j;
 import site.metacoding.bank.config.enums.UserEnum;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.domain.user.UserRepository;
@@ -26,10 +27,9 @@ import site.metacoding.bank.dto.user.UserRespDto.UserJoinRespDto;
  * Spy -> 진짜 객체를 만들어서 Mockito환경에 주입함.
  * SpyBean -> Spay객체들을 스프링 ApplicationContext에 주입함. (IoC컨테이너 주입)
  */
-@Slf4j
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
-
+    private final Logger log = LoggerFactory.getLogger(getClass());
     @InjectMocks
     private UserService userService;
 

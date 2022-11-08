@@ -28,6 +28,13 @@
 - @DataJpaTest에서 truncate하면 auto_increment 초기화 안됨.
 - Alter 명령어로 직접 increment 초기화함. (해결)
 
+### 이슈8
+- @Slf4j 해당 어노테이션으로 빌드하면 빌드 실패함.
+- 아래방식으로 해결
+```java
+private final Logger log = LoggerFactory.getLogger(getClass());
+```
+
 ### 프로젝트명
 - bank
 

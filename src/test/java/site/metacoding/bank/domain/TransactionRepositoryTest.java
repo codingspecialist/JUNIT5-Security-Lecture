@@ -8,12 +8,13 @@ import javax.persistence.EntityManager;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
-import lombok.extern.slf4j.Slf4j;
 import site.metacoding.bank.config.enums.TransactionEnum;
 import site.metacoding.bank.config.enums.UserEnum;
 import site.metacoding.bank.domain.account.Account;
@@ -23,10 +24,10 @@ import site.metacoding.bank.domain.transaction.TransactionRepository;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.domain.user.UserRepository;
 
-@Slf4j
 @ActiveProfiles("test")
 @DataJpaTest
 public class TransactionRepositoryTest {
+        private final Logger log = LoggerFactory.getLogger(getClass());
         @Autowired
         private UserRepository userRepository;
         @Autowired
