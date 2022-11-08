@@ -4,11 +4,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import lombok.extern.slf4j.Slf4j;
 import site.metacoding.bank.config.enums.UserEnum;
@@ -16,6 +21,7 @@ import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.account.AccountRepository;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.dto.account.AccountReqDto.AccountSaveReqDto;
+import site.metacoding.bank.dto.account.AccountRespDto.AccountAllRespDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountSaveRespDto;
 
 /*
@@ -34,6 +40,9 @@ public class AccountServiceTest {
 
     @Mock
     private AccountRepository accountRepository;
+
+    @Spy
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Test
     public void 계좌등록하기_test() throws Exception {
@@ -67,5 +76,41 @@ public class AccountServiceTest {
         assertThat(accountSaveRespDto.getNumber()).isEqualTo(1111L);
         assertThat(accountSaveRespDto.getPassword()).isEqualTo("1234");
         assertThat(accountSaveRespDto.getBalance()).isEqualTo(0L);
+    }
+
+    @Test
+    public void 계좌목록보기_유저별_test() throws Exception {
+        // given
+        Long id = 1L;
+
+        // stub
+        String encPassword = passwordEncoder.encode("1234");
+        User customer1 = User.builder().username("ssar").password(encPassword).email("ssar@nate.com")
+                .role(UserEnum.CUSTOMER)
+                .build();
+
+        Account account1 = Account.builder()
+                .number(1111L)
+                .password("1234")
+                .balance(100000L)
+                .user(customer1)
+                .build();
+
+        Account account2 = Account.builder()
+                .number(2222L)
+                .password("1234")
+                .balance(100000L)
+                .user(customer1)
+                .build();
+
+        List<Account> accounts = Arrays.asList(account1, account2);
+        when(accountRepository.findByUserId(id)).thenReturn(accounts);
+
+        // when
+        List<AccountAllRespDto> accountAllRespDtos = accountService.계좌목록보기_유저별(id);
+
+        // then
+        assertThat(accountAllRespDtos.get(0).getNumber()).isEqualTo(1111L);
+        assertThat(accountAllRespDtos.get(1).getNumber()).isEqualTo(2222L);
     }
 }
