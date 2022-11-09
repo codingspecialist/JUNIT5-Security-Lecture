@@ -50,6 +50,9 @@ private final Logger log = LoggerFactory.getLogger(getClass());
 - Transaction
 
 ```sql
+create database metadb;
+use metadb;
+
 create table users (
        id bigint auto_increment,
         created_at timestamp not null,
