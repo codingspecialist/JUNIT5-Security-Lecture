@@ -100,19 +100,19 @@ public class TransactionServiceTest {
 
         /**
          * 구분값 검증 (완)
-         * 출금계좌 소유자 확인
+         * 출금계좌 소유자 확인 (완)
          * 잔액부족 여부 확인 (완)
          * 잔액확인 (1000원) (완)
          */
         @Test
         public void 출금하기_test() throws Exception {
                 // given
-                Long userId = 1L;
+                Long userId = 1L; // 출금계좌 소유자 확인 2로 변경
 
                 WithdrawReqDto withdrawReqDto = new WithdrawReqDto();
                 withdrawReqDto.setWithdrawAccountId(1L);
-                withdrawReqDto.setAmount(1000L);
-                withdrawReqDto.setGubun("WITHDRAW");
+                withdrawReqDto.setAmount(1000L); // 잔액부족 여부 확인 -> 3000원 변경
+                withdrawReqDto.setGubun("WITHDRAW"); // 구분값 검증 -> DEPOSIT 변경
 
                 // stub
                 User ssar = User.builder()
@@ -164,7 +164,7 @@ public class TransactionServiceTest {
                 String body = om.writeValueAsString(withdrawRespDto);
                 log.debug("디버그 : " + body);
 
-                // then
+                // then (잔액 확인)
                 assertThat(withdrawRespDto.getWithdrawAccount().getBalance()).isEqualTo(ssarAccount.getBalance());
         }
 }
