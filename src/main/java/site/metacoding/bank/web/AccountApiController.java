@@ -50,8 +50,7 @@ public class AccountApiController {
         @GetMapping("/user/{userId}/account/{accountId}")
         public ResponseEntity<?> detail(@PathVariable Long userId, @PathVariable Long accountId,
                         @AuthenticationPrincipal LoginUser loginUser) {
-                AccountDetailRespDto accountDetailRespDtos = accountService.계좌상세보기(accountId,
-                                loginUser.getUser().getId());
+                AccountDetailRespDto accountDetailRespDtos = accountService.계좌상세보기(accountId);
                 return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, accountDetailRespDtos),
                                 HttpStatus.OK);
         }

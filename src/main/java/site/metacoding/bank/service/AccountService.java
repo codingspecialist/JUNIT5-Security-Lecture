@@ -37,7 +37,7 @@ public class AccountService {
                 .collect(Collectors.toList());
     }
 
-    public AccountDetailRespDto 계좌상세보기(Long accountId, Long userId) {
+    public AccountDetailRespDto 계좌상세보기(Long accountId) {
         // 계좌확인
         Account accountPS = accountRepository.findById(accountId).orElseThrow(
                 () -> new CustomApiException(ResponseEnum.BAD_REQUEST));
