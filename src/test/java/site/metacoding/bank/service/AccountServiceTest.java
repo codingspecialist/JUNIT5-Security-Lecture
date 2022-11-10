@@ -59,6 +59,8 @@ public class AccountServiceTest {
                 AccountSaveReqDto accountSaveReqDto = new AccountSaveReqDto();
                 accountSaveReqDto.setNumber(1111L);
                 accountSaveReqDto.setPassword("1234");
+
+                // stub (가정)
                 User user = User.builder()
                                 .id(1L)
                                 .username("ssar")
@@ -66,8 +68,6 @@ public class AccountServiceTest {
                                 .email("ssar@nate.com")
                                 .role(UserEnum.CUSTOMER)
                                 .build();
-
-                // stub (가정)
                 Account accountPS = Account.builder()
                                 .id(1L)
                                 .number(1111L)
@@ -119,7 +119,7 @@ public class AccountServiceTest {
                                 .build();
 
                 List<Account> accounts = Arrays.asList(account1, account2);
-                when(accountRepository.findByUserId(id)).thenReturn(accounts);
+                when(accountRepository.findByUserId(any())).thenReturn(accounts);
 
                 // when
                 List<AccountAllRespDto> accountAllRespDtos = accountService.계좌목록보기_유저별(id);
@@ -150,7 +150,7 @@ public class AccountServiceTest {
                                 .balance(100000L)
                                 .user(user)
                                 .build();
-                when(accountRepository.findById(accountId)).thenReturn(Optional.of(account1));
+                when(accountRepository.findById(any())).thenReturn(Optional.of(account1));
 
                 // when
                 AccountDetailRespDto accountDetailRespDto = accountService.계좌상세보기(accountId);
