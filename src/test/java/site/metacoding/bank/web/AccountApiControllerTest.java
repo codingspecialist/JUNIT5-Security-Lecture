@@ -221,7 +221,7 @@ public class AccountApiControllerTest {
                                 .amount(60000L)
                                 .withdrawAccountBalance(45000L)
                                 .depositAccountBalance(160000L)
-                                .gubun(TransactionEnum.TRANSPER)
+                                .gubun(TransactionEnum.TRANSFER)
                                 .build();
                 Transaction trasactionPS3 = transactionRepository.save(transaction3);
                 account1PS.withdraw(trasactionPS3);
@@ -235,7 +235,7 @@ public class AccountApiControllerTest {
                                 .amount(30000L)
                                 .withdrawAccountBalance(70000L)
                                 .depositAccountBalance(75000L)
-                                .gubun(TransactionEnum.TRANSPER)
+                                .gubun(TransactionEnum.TRANSFER)
                                 .build();
                 Transaction trasactionPS4 = transactionRepository.save(transaction4);
                 account2PS.withdraw(trasactionPS4);

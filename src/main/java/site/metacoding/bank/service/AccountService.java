@@ -18,7 +18,6 @@ import site.metacoding.bank.dto.account.AccountRespDto.AccountAllRespDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountDetailRespDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountSaveRespDto;
 
-@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service

@@ -11,21 +11,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import site.metacoding.bank.config.annotations.AuthorizationCheck;
 import site.metacoding.bank.config.auth.LoginUser;
 import site.metacoding.bank.config.enums.ResponseEnum;
 import site.metacoding.bank.dto.ResponseDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.DepositReqDto;
-import site.metacoding.bank.dto.transaction.TransactionReqDto.TransperReqDto;
+import site.metacoding.bank.dto.transaction.TransactionReqDto.TransferReqDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.WithdrawReqDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.DepositRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.TransactionHistoryRespDto;
-import site.metacoding.bank.dto.transaction.TransactionRespDto.TransperRespDto;
+import site.metacoding.bank.dto.transaction.TransactionRespDto.TransferRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawRespDto;
 import site.metacoding.bank.service.TransactionService;
 
-@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api")
 @RestController
@@ -61,12 +59,12 @@ public class TransactionApiController {
          * 이체 (== 출금)
          */
         @AuthorizationCheck
-        @PostMapping("/user/{userId}/transper")
-        public ResponseEntity<?> transper(@PathVariable Long userId,
-                        @RequestBody TransperReqDto transperReqDto,
+        @PostMapping("/user/{userId}/transfer")
+        public ResponseEntity<?> transfer(@PathVariable Long userId,
+                        @RequestBody TransferReqDto transferReqDto,
                         @AuthenticationPrincipal LoginUser loginUser) {
-                TransperRespDto transperRespDto = transactionService.이체하기(transperReqDto, userId);
-                return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.POST_SUCCESS, transperRespDto),
+                TransferRespDto transferRespDto = transactionService.이체하기(transferReqDto, userId);
+                return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.POST_SUCCESS, transferRespDto),
                                 HttpStatus.CREATED);
         }
 

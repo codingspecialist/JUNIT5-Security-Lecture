@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import site.metacoding.bank.config.annotations.AuthorizationCheck;
 import site.metacoding.bank.config.auth.LoginUser;
 import site.metacoding.bank.config.enums.ResponseEnum;
@@ -25,7 +24,6 @@ import site.metacoding.bank.dto.account.AccountRespDto.AccountDetailRespDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountSaveRespDto;
 import site.metacoding.bank.service.AccountService;
 
-@Slf4j
 @RequestMapping("/api")
 @RequiredArgsConstructor
 @RestController

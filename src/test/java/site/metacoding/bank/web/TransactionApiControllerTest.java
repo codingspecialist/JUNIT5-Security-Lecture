@@ -31,7 +31,7 @@ import site.metacoding.bank.domain.transaction.TransactionRepository;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.domain.user.UserRepository;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.DepositReqDto;
-import site.metacoding.bank.dto.transaction.TransactionReqDto.TransperReqDto;
+import site.metacoding.bank.dto.transaction.TransactionReqDto.TransferReqDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.WithdrawReqDto;
 
 @ActiveProfiles("test")
@@ -114,17 +114,17 @@ public class TransactionApiControllerTest {
         public void transper_test() throws Exception {
                 // given
                 Long userId = 1L;
-                TransperReqDto transperReqDto = new TransperReqDto();
-                transperReqDto.setWithdrawAccountId(2L);
-                transperReqDto.setDepositAccountId(1L);
-                transperReqDto.setAmount(5000L);
-                transperReqDto.setGubun("TRANSPER");
-                String requestBody = om.writeValueAsString(transperReqDto);
+                TransferReqDto transferReqDto = new TransferReqDto();
+                transferReqDto.setWithdrawAccountId(2L);
+                transferReqDto.setDepositAccountId(1L);
+                transferReqDto.setAmount(5000L);
+                transferReqDto.setGubun("TRANSFER");
+                String requestBody = om.writeValueAsString(transferReqDto);
                 log.debug("디버그 : " + requestBody);
 
                 // when
                 ResultActions resultActions = mvc
-                                .perform(post("/api/user/" + userId + "/transper").content(requestBody)
+                                .perform(post("/api/user/" + userId + "/transfer").content(requestBody)
                                                 .contentType(APPLICATION_JSON_UTF8));
                 String responseBody = resultActions.andReturn().getResponse().getContentAsString();
                 log.debug("디버그 : " + responseBody);
@@ -275,7 +275,7 @@ public class TransactionApiControllerTest {
                                 .amount(60000L)
                                 .withdrawAccountBalance(45000L)
                                 .depositAccountBalance(160000L)
-                                .gubun(TransactionEnum.TRANSPER)
+                                .gubun(TransactionEnum.TRANSFER)
                                 .build();
                 Transaction trasactionPS3 = transactionRepository.save(transaction3);
                 account1PS.withdraw(trasactionPS3);
@@ -289,7 +289,7 @@ public class TransactionApiControllerTest {
                                 .amount(30000L)
                                 .withdrawAccountBalance(70000L)
                                 .depositAccountBalance(75000L)
-                                .gubun(TransactionEnum.TRANSPER)
+                                .gubun(TransactionEnum.TRANSFER)
                                 .build();
                 Transaction trasactionPS4 = transactionRepository.save(transaction4);
                 account2PS.withdraw(trasactionPS4);

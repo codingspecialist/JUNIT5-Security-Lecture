@@ -6,6 +6,21 @@ import site.metacoding.bank.config.enums.TransactionEnum;
 import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.transaction.Transaction;
 
+class Animal {
+
+    public Animal() {
+    }
+
+}
+
+class Dog extends Animal {
+
+    public Dog() {
+        super();
+    }
+
+}
+
 public class TransactionReqDto {
     @Getter
     @Setter
@@ -43,7 +58,7 @@ public class TransactionReqDto {
 
     @Getter
     @Setter
-    public static class TransperReqDto {
+    public static class TransferReqDto {
         private Long withdrawAccountId; // 출금 계좌
         private Long depositAccountId; // 입금 계좌
         private Long amount; // 금액

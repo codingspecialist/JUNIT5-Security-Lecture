@@ -19,7 +19,6 @@ interface Dao {
     List<Transaction> findByTransactionHistory(Long accountId, String gubun);
 }
 
-@Slf4j
 @RequiredArgsConstructor
 public class TransactionRepositoryImpl implements Dao {
     private final EntityManager em;

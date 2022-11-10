@@ -15,11 +15,11 @@ import site.metacoding.bank.domain.account.AccountRepository;
 import site.metacoding.bank.domain.transaction.Transaction;
 import site.metacoding.bank.domain.transaction.TransactionRepository;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.DepositReqDto;
-import site.metacoding.bank.dto.transaction.TransactionReqDto.TransperReqDto;
+import site.metacoding.bank.dto.transaction.TransactionReqDto.TransferReqDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.WithdrawReqDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.DepositRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.TransactionHistoryRespDto;
-import site.metacoding.bank.dto.transaction.TransactionRespDto.TransperRespDto;
+import site.metacoding.bank.dto.transaction.TransactionRespDto.TransferRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawRespDto;
 
 @Slf4j
@@ -75,36 +75,36 @@ public class TransactionService {
         }
 
         @Transactional
-        public TransperRespDto 이체하기(TransperReqDto transperReqDto, Long userId) {
+        public TransferRespDto 이체하기(TransferReqDto transferReqDto, Long userId) {
                 // GUBUN값 검증
-                if (TransactionEnum.valueOf(transperReqDto.getGubun()) != TransactionEnum.TRANSPER) {
+                if (TransactionEnum.valueOf(transferReqDto.getGubun()) != TransactionEnum.TRANSFER) {
                         throw new CustomApiException(ResponseEnum.BAD_REQUEST);
                 }
 
                 // 입금 계좌와 출금 계좌가 동일하면 거부
-                if (transperReqDto.getWithdrawAccountId() == transperReqDto.getDepositAccountId()) {
+                if (transferReqDto.getWithdrawAccountId() == transferReqDto.getDepositAccountId()) {
                         throw new CustomApiException(ResponseEnum.SAME_ACCOUNT);
                 }
 
                 // 출금계좌 확인
-                Account withdrawAccountPS = accountRepository.findById(transperReqDto.getWithdrawAccountId())
+                Account withdrawAccountPS = accountRepository.findById(transferReqDto.getWithdrawAccountId())
                                 .orElseThrow(() -> new CustomApiException(ResponseEnum.BAD_REQUEST));
 
                 // 출금계좌 소유자 확인
                 withdrawAccountPS.isAccountOwner(userId);
 
                 // 입금계좌 확인
-                Account depositAccountPS = accountRepository.findById(transperReqDto.getDepositAccountId())
+                Account depositAccountPS = accountRepository.findById(transferReqDto.getDepositAccountId())
                                 .orElseThrow(() -> new CustomApiException(ResponseEnum.BAD_REQUEST));
 
                 // 이체 하기
-                Transaction transperPS = transactionRepository
-                                .save(transperReqDto.toEntity(withdrawAccountPS, depositAccountPS));
-                withdrawAccountPS.withdraw(transperPS);
-                depositAccountPS.deposit(transperPS);
+                Transaction transferPS = transactionRepository
+                                .save(transferReqDto.toEntity(withdrawAccountPS, depositAccountPS));
+                withdrawAccountPS.withdraw(transferPS);
+                depositAccountPS.deposit(transferPS);
 
                 // DTO
-                return new TransperRespDto(transperPS);
+                return new TransferRespDto(transferPS);
         }
 
         public TransactionHistoryRespDto 입출금목록보기(Long userId, Long accountId, String gubun) {

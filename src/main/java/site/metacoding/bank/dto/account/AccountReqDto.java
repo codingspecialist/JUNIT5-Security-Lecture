@@ -2,11 +2,9 @@ package site.metacoding.bank.dto.account;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.user.User;
 
-@Slf4j
 public class AccountReqDto {
     @Setter
     @Getter
