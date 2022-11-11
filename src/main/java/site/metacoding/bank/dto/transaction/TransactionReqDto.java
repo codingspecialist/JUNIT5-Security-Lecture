@@ -6,21 +6,6 @@ import site.metacoding.bank.config.enums.TransactionEnum;
 import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.transaction.Transaction;
 
-class Animal {
-
-    public Animal() {
-    }
-
-}
-
-class Dog extends Animal {
-
-    public Dog() {
-        super();
-    }
-
-}
-
 public class TransactionReqDto {
     @Getter
     @Setter

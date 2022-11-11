@@ -61,11 +61,11 @@ public class TransactionServiceTest extends DummyBeans {
 
                 // stub
                 User ssarUser = newUser(1L, "ssar");
-                Account ssarAccount = newAccount(1L, 1111L, ssarUser);
+                Account ssarAccount = newAccount(1L, 1111L, "쌀", ssarUser);
                 when(accountRepository.findById(any()))
                                 .thenReturn(Optional.of(ssarAccount));
 
-                Transaction transaction = newDepositTransaction(1L, ssarAccount);
+                Transaction transaction = newServiceDepositTransaction(1L, ssarAccount);
                 when(transactionRepository.save(any()))
                                 .thenReturn(transaction);
 
@@ -100,14 +100,14 @@ public class TransactionServiceTest extends DummyBeans {
                 User cosUser = newUser(2L, "cos");
                 User adminUser = newUser(3L, "admin");
                 List<User> users = Arrays.asList(ssarUser, cosUser, adminUser);
-                Account ssarAccount1 = newAccount(1L, 1111L, ssarUser);
-                Account ssarAccount2 = newAccount(2L, 2222L, ssarUser);
-                Account cosAccount1 = newAccount(3L, 3333L, cosUser);
+                Account ssarAccount1 = newAccount(1L, 1111L, "쌀", ssarUser);
+                Account ssarAccount2 = newAccount(2L, 2222L, "쌀", ssarUser);
+                Account cosAccount1 = newAccount(3L, 3333L, "코스", cosUser);
                 List<Account> accounts = Arrays.asList(ssarAccount1, ssarAccount2, cosAccount1);
-                Transaction withdrawTransaction1 = newWithdrawTransaction(1L, ssarAccount1);
-                Transaction withdrawTransaction2 = newWithdrawTransaction(2L, ssarAccount1);
-                Transaction depositTransaction1 = newDepositTransaction(3L, ssarAccount1);
-                Transaction transferTransaction1 = newTransferTransaction(4L, ssarAccount1, cosAccount1);
+                Transaction withdrawTransaction1 = newServiceWithdrawTransaction(1L, ssarAccount1);
+                Transaction withdrawTransaction2 = newServiceWithdrawTransaction(2L, ssarAccount1);
+                Transaction depositTransaction1 = newServiceDepositTransaction(3L, ssarAccount1);
+                Transaction transferTransaction1 = newServiceTransferTransaction(4L, ssarAccount1, cosAccount1);
                 List<Transaction> transactions = Arrays.asList(withdrawTransaction1, withdrawTransaction2,
                                 depositTransaction1, transferTransaction1);
 
@@ -142,17 +142,13 @@ public class TransactionServiceTest extends DummyBeans {
                 // stub
                 User ssarUser = newUser(1L, "ssar");
                 User cosUser = newUser(2L, "cos");
-                Account ssarAccount1 = newAccount(1L, 1111L, ssarUser);
-                Account cosAccount1 = newAccount(2L, 3333L, cosUser);
+                Account ssarAccount1 = newAccount(1L, 1111L, "쌀", ssarUser);
+                Account cosAccount1 = newAccount(2L, 3333L, "코스", cosUser);
                 when(accountRepository.findById(1L)).thenReturn((Optional.of(ssarAccount1)));
                 when(accountRepository.findById(2L)).thenReturn((Optional.of(cosAccount1)));
 
-                Transaction transferTransaction1 = newTransferTransaction(1L, ssarAccount1, cosAccount1);
+                Transaction transferTransaction1 = newServiceTransferTransaction(1L, ssarAccount1, cosAccount1);
                 when(transactionRepository.save(any())).thenReturn(transferTransaction1);
-                log.debug("디버그 : " + transferTransaction1.getWithdrawAccountBalance());
-                log.debug("디버그 : " + transferTransaction1.getWithdrawAccount().getBalance());
-                log.debug("디버그 : " + transferTransaction1.getDepositAccountBalance());
-                log.debug("디버그 : " + transferTransaction1.getDepositAccount().getBalance());
 
                 // when
                 TransferRespDto transferRespDto = transactionService.이체하기(transferReqDto, userId);

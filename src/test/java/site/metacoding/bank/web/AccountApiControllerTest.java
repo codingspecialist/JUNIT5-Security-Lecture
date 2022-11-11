@@ -147,9 +147,9 @@ public class AccountApiControllerTest extends DummyBeans {
                 User ssarUser = userRepository.save(newUser(1L, "ssar"));
                 User cosUser = userRepository.save(newUser(2L, "cos"));
                 User adminUser = userRepository.save(newUser(3L, "admin"));
-                Account ssarAccount1 = accountRepository.save(newAccount(1L, 1111L, ssarUser));
-                Account ssarAccount2 = accountRepository.save(newAccount(2L, 2222L, ssarUser));
-                Account cosAccount1 = accountRepository.save(newAccount(3L, 3333L, cosUser));
+                Account ssarAccount1 = accountRepository.save(newAccount(1L, 1111L, "쌀", ssarUser));
+                Account ssarAccount2 = accountRepository.save(newAccount(2L, 2222L, "쌀", ssarUser));
+                Account cosAccount1 = accountRepository.save(newAccount(3L, 3333L, "코스", cosUser));
                 Transaction withdrawTransaction1 = transactionRepository.save(newWithdrawTransaction(1L, ssarAccount1));
                 Transaction withdrawTransaction2 = transactionRepository.save(newWithdrawTransaction(2L, ssarAccount1));
                 Transaction depositTransaction1 = transactionRepository.save(newDepositTransaction(3L, ssarAccount1));

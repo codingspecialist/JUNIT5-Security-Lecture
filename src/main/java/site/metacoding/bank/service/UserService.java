@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import site.metacoding.bank.config.enums.UserEnum;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.domain.user.UserRepository;
 import site.metacoding.bank.dto.user.UserReqDto.UserJoinReqDto;
@@ -25,7 +26,7 @@ public class UserService {
         userJoinReqDto.setPassword(encPassword);
 
         // action
-        User userPS = userRepository.save(userJoinReqDto.toEntity());
+        User userPS = userRepository.save(userJoinReqDto.toEntity(UserEnum.CUSTOMER));
 
         // cut
         return new UserJoinRespDto(userPS);

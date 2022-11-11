@@ -18,7 +18,7 @@ public class AccountReqDto {
                     .number(number)
                     .password(password)
                     .ownerName(ownerName)
-                    .balance(0L)
+                    .balance(1000L)
                     .user(user)
                     .isUse(true)
                     .build();

@@ -100,14 +100,22 @@ public class TransactionRepositoryTest extends DummyBeans {
                 User ssarUser = userRepository.save(newUser(1L, "ssar"));
                 User cosUser = userRepository.save(newUser(2L, "cos"));
                 User adminUser = userRepository.save(newUser(3L, "admin"));
-                Account ssarAccount1 = accountRepository.save(newAccount(1L, 1111L, ssarUser));
-                Account ssarAccount2 = accountRepository.save(newAccount(2L, 2222L, ssarUser));
-                Account cosAccount1 = accountRepository.save(newAccount(3L, 3333L, cosUser));
+                Account ssarAccount1 = accountRepository.save(newAccount(1L, 1111L, "쌀", ssarUser));
+                Account ssarAccount2 = accountRepository.save(newAccount(2L, 2222L, "쌀", ssarUser));
+                Account cosAccount1 = accountRepository.save(newAccount(3L, 3333L, "코스", cosUser));
                 Transaction withdrawTransaction1 = transactionRepository.save(newWithdrawTransaction(1L, ssarAccount1));
+                log.debug("디버그 : " + withdrawTransaction1.getWithdrawAccount().getBalance());
+                log.debug("디버그 : " + withdrawTransaction1.getWithdrawAccountBalance());
                 Transaction withdrawTransaction2 = transactionRepository.save(newWithdrawTransaction(2L, ssarAccount1));
+                log.debug("디버그 : " + withdrawTransaction2.getWithdrawAccount().getBalance());
+                log.debug("디버그 : " + withdrawTransaction2.getWithdrawAccountBalance());
                 Transaction depositTransaction1 = transactionRepository.save(newDepositTransaction(3L, ssarAccount1));
+                log.debug("디버그 : " + depositTransaction1.getDepositAccount().getBalance());
+                log.debug("디버그 : " + depositTransaction1.getDepositAccountBalance());
                 Transaction transferTransaction1 = transactionRepository
                                 .save(newTransferTransaction(4L, ssarAccount1, cosAccount1));
+                log.debug("디버그 : " + transferTransaction1.getWithdrawAccount().getBalance());
+                log.debug("디버그 : " + transferTransaction1.getWithdrawAccountBalance());
 
         }
 }

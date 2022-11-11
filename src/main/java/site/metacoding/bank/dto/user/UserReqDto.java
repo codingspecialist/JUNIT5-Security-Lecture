@@ -13,12 +13,12 @@ public class UserReqDto {
         private String password;
         private String email;
 
-        public User toEntity() {
+        public User toEntity(UserEnum userEnum) {
             return User.builder()
                     .username(username)
                     .password(password)
                     .email(email)
-                    .role(UserEnum.CUSTOMER)
+                    .role(userEnum)
                     .build();
         }
     }

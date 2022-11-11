@@ -40,6 +40,9 @@ private final Logger log = LoggerFactory.getLogger(getClass());
 - 0원 이체, 0원 출금, 0원 입금 불가능 처리 해야함.
 - 잔액 유효성 검사 메서드 분리
 - 계좌주인 이름 필요
+
+### 이슈10 (해결)
+- 계좌 개설시에는 무조건 1000원 들어가 있어야 함.
  
 ### 프로젝트명
 - bank

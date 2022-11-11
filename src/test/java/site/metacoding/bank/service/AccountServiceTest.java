@@ -69,7 +69,7 @@ public class AccountServiceTest extends DummyBeans {
 
                 // stub
                 User ssarUser = newUser(1L, "ssar");
-                Account ssarAccount1 = newAccount(1L, 1111L, ssarUser);
+                Account ssarAccount1 = newAccount(1L, 1111L, "쌀", ssarUser);
                 when(accountRepository.findById(any())).thenReturn(Optional.of(ssarAccount1));
 
                 // when
@@ -89,7 +89,7 @@ public class AccountServiceTest extends DummyBeans {
 
                 // stub
                 User ssarUser = newUser(1L, "ssar");
-                Account ssarAccount1 = newAccount(1L, 1111L, ssarUser);
+                Account ssarAccount1 = newAccount(1L, 1111L, "쌀", ssarUser);
 
                 when(accountRepository.save(any())).thenReturn(ssarAccount1);
 
@@ -112,9 +112,9 @@ public class AccountServiceTest extends DummyBeans {
                 // stub
                 User ssarUser = newUser(1L, "ssar");
                 User cosUser = newUser(2L, "cos");
-                Account ssarAccount1 = newAccount(1L, 1111L, ssarUser);
-                Account ssarAccount2 = newAccount(2L, 2222L, ssarUser);
-                Account cosAccount1 = newAccount(3L, 3333L, cosUser);
+                Account ssarAccount1 = newAccount(1L, 1111L, "쌀", ssarUser);
+                Account ssarAccount2 = newAccount(2L, 2222L, "쌀", ssarUser);
+                Account cosAccount1 = newAccount(3L, 3333L, "코스", cosUser);
                 List<Account> accounts = Arrays.asList(ssarAccount1, ssarAccount2, cosAccount1);
 
                 when(accountRepository.findByUserId(any())).thenReturn(accounts);
@@ -137,8 +137,8 @@ public class AccountServiceTest extends DummyBeans {
                 // stub
                 User ssarUser = newUser(1L, "ssar");
                 User cosUser = newUser(2L, "cos");
-                Account ssarAccount1 = newAccount(1L, 1111L, ssarUser);
-                Account cosAccount1 = newAccount(3L, 3333L, cosUser);
+                Account ssarAccount1 = newAccount(1L, 1111L, "쌀", ssarUser);
+                Account cosAccount1 = newAccount(3L, 3333L, "코스", cosUser);
                 Transaction withdrawTransaction1 = newWithdrawTransaction(1L, ssarAccount1);
                 Transaction withdrawTransaction2 = newWithdrawTransaction(2L, ssarAccount1);
                 Transaction depositTransaction1 = newDepositTransaction(3L, ssarAccount1);

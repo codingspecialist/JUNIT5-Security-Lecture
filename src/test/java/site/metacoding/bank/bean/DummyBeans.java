@@ -23,7 +23,7 @@ public class DummyBeans {
         return user;
     }
 
-    protected Account newAccount(Long id, Long number, User user) {
+    protected Account newAccount(Long id, Long number, String ownername, User user) {
         Account account = Account.builder()
                 .id(id)
                 .number(number)
@@ -52,7 +52,7 @@ public class DummyBeans {
                 .gubun(TransactionEnum.WITHDRAW)
                 .build();
         transaction.setTestDate();
-        // withdrawAccount.withdraw(amount);
+        withdrawAccount.withdraw(amount);
 
         return transaction;
     }
@@ -72,7 +72,7 @@ public class DummyBeans {
                 .gubun(TransactionEnum.DEPOSIT)
                 .build();
         transaction.setTestDate();
-        // depositAccount.deposit(amount);
+        depositAccount.deposit(amount);
         return transaction;
     }
 
@@ -93,8 +93,66 @@ public class DummyBeans {
                 .gubun(TransactionEnum.TRANSFER)
                 .build();
         transaction.setTestDate();
-        // withdrawAccount.withdraw(amount);
-        // depositAccount.deposit(amount);
+        withdrawAccount.withdraw(amount);
+        depositAccount.deposit(amount);
+
+        return transaction;
+    }
+
+    protected Transaction newServiceWithdrawTransaction(Long id, Account withdrawAccount) {
+        // 출금 금액
+        Long amount = 100L;
+        // 잔액
+        Long balance = withdrawAccount.getBalance() - amount;
+        Transaction transaction = Transaction.builder()
+                .id(id)
+                .withdrawAccount(withdrawAccount)
+                .depositAccount(null)
+                .amount(amount)
+                .withdrawAccountBalance(balance)
+                .depositAccountBalance(null)
+                .gubun(TransactionEnum.WITHDRAW)
+                .build();
+        transaction.setTestDate();
+
+        return transaction;
+    }
+
+    protected Transaction newServiceDepositTransaction(Long id, Account depositAccount) {
+        // 입금 금액
+        Long amount = 100L;
+        // 잔액
+        Long balance = depositAccount.getBalance() + amount;
+        Transaction transaction = Transaction.builder()
+                .id(id)
+                .withdrawAccount(null)
+                .depositAccount(depositAccount)
+                .amount(amount)
+                .withdrawAccountBalance(null)
+                .depositAccountBalance(balance)
+                .gubun(TransactionEnum.DEPOSIT)
+                .build();
+        transaction.setTestDate();
+        return transaction;
+    }
+
+    protected Transaction newServiceTransferTransaction(Long id, Account withdrawAccount, Account depositAccount) {
+        // 이체 금액
+        Long amount = 100L;
+        // 잔액
+        Long withdrawBalance = withdrawAccount.getBalance() - amount;
+        Long depositBalance = depositAccount.getBalance() + amount;
+
+        Transaction transaction = Transaction.builder()
+                .id(id)
+                .withdrawAccount(withdrawAccount)
+                .depositAccount(depositAccount)
+                .amount(amount)
+                .withdrawAccountBalance(withdrawBalance)
+                .depositAccountBalance(depositBalance)
+                .gubun(TransactionEnum.TRANSFER)
+                .build();
+        transaction.setTestDate();
 
         return transaction;
     }
