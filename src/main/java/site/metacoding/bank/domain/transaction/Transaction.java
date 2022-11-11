@@ -1,5 +1,6 @@
 package site.metacoding.bank.domain.transaction;
 
+import javax.persistence.Column;
 import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -44,10 +45,12 @@ public class Transaction extends AudingTime {
     @ManyToOne(fetch = FetchType.LAZY)
     private Account depositAccount; // 입금 계좌 (받는 분)
 
+    @Column(nullable = false)
     private Long amount; // 입출금, 이체 금액
     private Long withdrawAccountBalance; // 출금계좌 현재 잔액
     private Long depositAccountBalance; // 입금계좌 현재 잔액
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TransactionEnum gubun; // 입금(자동화기기로부터), 출금(자동화기기로), 이체(다른계좌)
 

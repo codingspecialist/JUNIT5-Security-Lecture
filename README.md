@@ -87,7 +87,7 @@ create table transaction (
         updated_at timestamp not null,
         amount bigint not null,
         deposit_account_balance bigint,
-        gubun varchar(255),
+        gubun varchar(255) not null,
         withdraw_account_balance bigint,
         deposit_account_id bigint,
         withdraw_account_id bigint,

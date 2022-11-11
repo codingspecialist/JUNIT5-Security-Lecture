@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import site.metacoding.bank.bean.AllEntityTest;
+import site.metacoding.bank.bean.DummyBeans;
 import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.account.AccountRepository;
 import site.metacoding.bank.domain.transaction.Transaction;
@@ -31,7 +31,7 @@ import site.metacoding.bank.dto.transaction.TransactionRespDto.DepositRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawRespDto;
 
 @ExtendWith(MockitoExtension.class)
-public class TransactionServiceTest extends AllEntityTest {
+public class TransactionServiceTest extends DummyBeans {
         private final Logger log = LoggerFactory.getLogger(getClass());
 
         @InjectMocks

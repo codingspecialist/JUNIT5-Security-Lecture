@@ -8,7 +8,7 @@ import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.transaction.Transaction;
 import site.metacoding.bank.domain.user.User;
 
-public class AllEntityTest {
+public class DummyBeans {
     protected User newUser(Long id, String username) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encPassword = passwordEncoder.encode("1234");

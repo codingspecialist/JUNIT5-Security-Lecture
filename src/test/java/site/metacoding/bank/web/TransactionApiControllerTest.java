@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import site.metacoding.bank.bean.AllEntityTest;
+import site.metacoding.bank.bean.DummyBeans;
 import site.metacoding.bank.config.enums.TransactionEnum;
 import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.account.AccountRepository;
@@ -37,7 +37,7 @@ import site.metacoding.bank.dto.transaction.TransactionReqDto.WithdrawReqDto;
 @Sql("classpath:db/teardown.sql")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-public class TransactionApiControllerTest extends AllEntityTest {
+public class TransactionApiControllerTest extends DummyBeans {
         private final Logger log = LoggerFactory.getLogger(getClass());
         private static final String APPLICATION_JSON_UTF8 = "application/json; charset=utf-8";
         private static final String APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded; charset=utf-8";

@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import site.metacoding.bank.bean.AllEntityTest;
+import site.metacoding.bank.bean.DummyBeans;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.domain.user.UserRepository;
 import site.metacoding.bank.dto.user.UserReqDto.UserJoinReqDto;
@@ -27,7 +27,7 @@ import site.metacoding.bank.dto.user.UserReqDto.UserJoinReqDto;
 @Sql("classpath:db/teardown.sql")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-public class UserApiControllerTest extends AllEntityTest {
+public class UserApiControllerTest extends DummyBeans {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private static final String APPLICATION_JSON_UTF8 = "application/json; charset=utf-8";
     private static final String APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded; charset=utf-8";

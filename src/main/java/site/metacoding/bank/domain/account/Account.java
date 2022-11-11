@@ -36,6 +36,7 @@ public class Account extends AudingTime {
     @Column(nullable = false)
     private String ownerName; // 계좌주 실명
 
+    @Column(nullable = false)
     private String password; // 계좌 비밀번호
 
     @Column(nullable = false)

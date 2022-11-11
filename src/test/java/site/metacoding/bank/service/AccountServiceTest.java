@@ -20,7 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import site.metacoding.bank.bean.AllEntityTest;
+import site.metacoding.bank.bean.DummyBeans;
 import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.account.AccountRepository;
 import site.metacoding.bank.domain.transaction.Transaction;
@@ -40,7 +40,7 @@ import site.metacoding.bank.dto.account.AccountRespDto.AccountSaveRespDto;
  */
 
 @ExtendWith(MockitoExtension.class)
-public class AccountServiceTest extends AllEntityTest {
+public class AccountServiceTest extends DummyBeans {
         private final Logger log = LoggerFactory.getLogger(getClass());
 
         @InjectMocks

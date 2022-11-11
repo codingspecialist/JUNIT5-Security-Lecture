@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import site.metacoding.bank.bean.AllEntityTest;
+import site.metacoding.bank.bean.DummyBeans;
 import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.account.AccountRepository;
 import site.metacoding.bank.domain.transaction.Transaction;
@@ -24,7 +24,7 @@ import site.metacoding.bank.domain.user.UserRepository;
 
 @ActiveProfiles("test")
 @DataJpaTest
-public class TransactionRepositoryTest extends AllEntityTest {
+public class TransactionRepositoryTest extends DummyBeans {
         private final Logger log = LoggerFactory.getLogger(getClass());
         @Autowired
         private UserRepository userRepository;
