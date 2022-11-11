@@ -88,6 +88,7 @@ public class TransactionApiControllerTest extends DummyBeans {
                 WithdrawReqDto withdrawReqDto = new WithdrawReqDto();
                 withdrawReqDto.setWithdrawAccountId(2L);
                 withdrawReqDto.setAmount(1000L);
+                withdrawReqDto.setAccountPassword("1234");
                 withdrawReqDto.setGubun("WITHDRAW");
                 String requestBody = om.writeValueAsString(withdrawReqDto);
                 log.debug("디버그 : " + requestBody);
@@ -115,6 +116,7 @@ public class TransactionApiControllerTest extends DummyBeans {
                 transferReqDto.setWithdrawAccountId(2L);
                 transferReqDto.setDepositAccountId(1L);
                 transferReqDto.setAmount(200L);
+                transferReqDto.setAccountPassword("1234");
                 transferReqDto.setGubun("TRANSFER");
                 String requestBody = om.writeValueAsString(transferReqDto);
                 log.debug("디버그 : " + requestBody);

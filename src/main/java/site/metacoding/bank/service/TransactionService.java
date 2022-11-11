@@ -41,6 +41,9 @@ public class TransactionService {
                                 .orElseThrow(
                                                 () -> new CustomApiException(ResponseEnum.BAD_REQUEST));
 
+                // 0원 체크
+                depositAccountPS.zeroAmountCheck(depositReqDto.getAmount());
+
                 // 입금 하기
                 Transaction depositPS = transactionRepository
                                 .save(depositReqDto.toEntity(depositAccountPS));
@@ -61,8 +64,14 @@ public class TransactionService {
                 Account withdrawAccountPS = accountRepository.findById(withdrawReqDto.getWithdrawAccountId())
                                 .orElseThrow(() -> new CustomApiException(ResponseEnum.BAD_REQUEST));
 
+                // 0원 체크
+                withdrawAccountPS.zeroAmountCheck(withdrawReqDto.getAmount());
+
                 // 출금계좌 소유자 확인
-                withdrawAccountPS.isAccountOwner(userId);
+                withdrawAccountPS.ownerCheck(userId);
+
+                // 출금계좌 비밀번호 확인
+                withdrawAccountPS.passwordCheck(withdrawReqDto.getAccountPassword());
 
                 // 출금 하기
                 Transaction withdrawPS = transactionRepository
@@ -89,8 +98,14 @@ public class TransactionService {
                 Account withdrawAccountPS = accountRepository.findById(transferReqDto.getWithdrawAccountId())
                                 .orElseThrow(() -> new CustomApiException(ResponseEnum.BAD_REQUEST));
 
+                // 0원 체크
+                withdrawAccountPS.zeroAmountCheck(transferReqDto.getAmount());
+
                 // 출금계좌 소유자 확인
-                withdrawAccountPS.isAccountOwner(userId);
+                withdrawAccountPS.ownerCheck(userId);
+
+                // 출금계좌 비밀번호 확인
+                withdrawAccountPS.passwordCheck(transferReqDto.getAccountPassword());
 
                 // 입금계좌 확인
                 Account depositAccountPS = accountRepository.findById(transferReqDto.getDepositAccountId())
@@ -112,7 +127,7 @@ public class TransactionService {
                                 .orElseThrow(() -> new CustomApiException(ResponseEnum.BAD_REQUEST));
 
                 // 계좌 소유자 확인
-                accountPS.isAccountOwner(userId);
+                accountPS.ownerCheck(userId);
 
                 // 입출금 내역 조회
                 List<Transaction> transactionListPS = transactionRepository

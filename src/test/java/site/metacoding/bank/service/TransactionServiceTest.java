@@ -47,8 +47,7 @@ public class TransactionServiceTest extends DummyBeans {
         private ObjectMapper om;
 
         /*
-         * 구분값 검증 : setGubun("WITHDRAW") (완)
-         * 잔액 확인 (1000원) (완)
+         * 입금하기
          */
         @Test
         public void 입금하기_test() throws Exception {
@@ -91,6 +90,7 @@ public class TransactionServiceTest extends DummyBeans {
                 WithdrawReqDto withdrawReqDto = new WithdrawReqDto();
                 withdrawReqDto.setWithdrawAccountId(1L);
                 withdrawReqDto.setAmount(100L); // 잔액부족 여부 확인
+                withdrawReqDto.setAccountPassword("1234");
                 withdrawReqDto.setGubun("WITHDRAW"); // 구분값 검증
 
                 // stub

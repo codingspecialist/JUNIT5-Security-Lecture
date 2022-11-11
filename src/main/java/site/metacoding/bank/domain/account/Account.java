@@ -45,22 +45,6 @@ public class Account extends AudingTime {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    // @OneToMany(mappedBy = "withdrawAccount", fetch = FetchType.LAZY, cascade =
-    // CascadeType.ALL)
-    // private List<Transaction> withdrawTransactions = new ArrayList<>();
-
-    // @OneToMany(mappedBy = "depositAccount", fetch = FetchType.LAZY, cascade =
-    // CascadeType.ALL)
-    // private List<Transaction> depositTransactions = new ArrayList<>();
-
-    // public void addWithdrawTransaction(Transaction transaction) {
-    // this.withdrawTransactions.add(transaction);
-    // }
-
-    // public void addDepositTransaction(Transaction transaction) {
-    // this.depositTransactions.add(transaction);
-    // }
-
     @Builder
     public Account(Long id, Long number, String ownerName, String password, Long balance, User user) {
         this.id = id;
@@ -102,10 +86,44 @@ public class Account extends AudingTime {
     /*
      * 계좌 소유자 확인
      */
-    public void isAccountOwner(Long userId) {
+    public void ownerCheck(Long userId) {
         if (user.getId() != userId) {
             throw new CustomApiException(ResponseEnum.ISNOT_ACCOUNT_OWNER);
         }
     }
+
+    /*
+     * 계좌 비밀번호 확인
+     */
+    public void passwordCheck(String password) {
+        if (!this.password.equals(password)) {
+            throw new CustomApiException(ResponseEnum.ISNOT_SAME_PASSWORD);
+        }
+    }
+
+    /*
+     * 입출금이체 0원 체크
+     */
+    public void zeroAmountCheck(Long amount) {
+        if (amount <= 0L) {
+            throw new CustomApiException(ResponseEnum.ISNOT_ZERO_AMOUNT);
+        }
+    }
+
+    // @OneToMany(mappedBy = "withdrawAccount", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL)
+    // private List<Transaction> withdrawTransactions = new ArrayList<>();
+
+    // @OneToMany(mappedBy = "depositAccount", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL)
+    // private List<Transaction> depositTransactions = new ArrayList<>();
+
+    // public void addWithdrawTransaction(Transaction transaction) {
+    // this.withdrawTransactions.add(transaction);
+    // }
+
+    // public void addDepositTransaction(Transaction transaction) {
+    // this.depositTransactions.add(transaction);
+    // }
 
 }

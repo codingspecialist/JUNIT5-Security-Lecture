@@ -24,7 +24,9 @@ public enum ResponseEnum {
     JOIN_FAIL(500, "회원가입 실패"),
     LACK_BALANCE(400, "잔액 부족"),
     SAME_ACCOUNT(400, "입출금 계좌 동일"),
-    ISNOT_ACCOUNT_OWNER(400, "계좌 소유자가 아님");
+    ISNOT_ACCOUNT_OWNER(400, "계좌 소유자가 아님"),
+    ISNOT_SAME_PASSWORD(403, "계좌 패스워드 다름"),
+    ISNOT_ZERO_AMOUNT(400, "0원 이하 금액 입출금이체 불가");
 
     private final int code;
     private final String message;

@@ -28,6 +28,7 @@ public class TransactionReqDto {
         private Long withdrawAccountId; // 출금 계좌
         private Long amount; // 금액
         private String gubun; // 고정값 (계좌에서 ATM 출금)
+        private String accountPassword;
 
         public Transaction toEntity(Account withdrawAccount) {
             return Transaction.builder()
@@ -63,6 +64,7 @@ public class TransactionReqDto {
         private Long depositAccountId; // 입금 계좌
         private Long amount; // 금액
         private String gubun; // 고정값 (내계좌에서 다른계좌로 이체)
+        private String accountPassword;
 
         public Transaction toEntity(Account withdrawAccount, Account depositAccount) {
             return Transaction.builder()

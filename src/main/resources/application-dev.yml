@@ -4,6 +4,7 @@ server:
     encoding:
       charset: utf-8
       force: true
+  
 spring:
   datasource:
     url: jdbc:h2:mem:test;MODE=MySQL

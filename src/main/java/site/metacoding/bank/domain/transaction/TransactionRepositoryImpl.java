@@ -6,7 +6,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import site.metacoding.bank.config.enums.ResponseEnum;
 import site.metacoding.bank.config.enums.TransactionEnum;
 import site.metacoding.bank.config.exceptions.CustomApiException;

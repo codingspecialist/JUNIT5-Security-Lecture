@@ -33,7 +33,6 @@ public class AccountService {
     }
 
     public List<AccountAllRespDto> 계좌목록보기_유저별(Long userId) {
-
         return accountRepository.findByUserId(userId)
                 .stream()
                 .map(AccountAllRespDto::new)
@@ -54,6 +53,7 @@ public class AccountService {
 
     @Transactional
     public void 계좌삭제(Long accountId) {
+
         // 계좌확인
         accountRepository.findById(accountId).orElseThrow(
                 () -> new CustomApiException(ResponseEnum.BAD_REQUEST));
