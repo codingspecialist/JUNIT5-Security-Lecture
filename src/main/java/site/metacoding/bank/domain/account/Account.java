@@ -15,12 +15,12 @@ import lombok.NoArgsConstructor;
 import site.metacoding.bank.config.enums.ResponseEnum;
 import site.metacoding.bank.config.exceptions.CustomApiException;
 import site.metacoding.bank.domain.AudingTime;
-import site.metacoding.bank.domain.transaction.Transaction;
 import site.metacoding.bank.domain.user.User;
 
 /**
  * 계좌
  */
+
 @NoArgsConstructor
 @Getter
 @Table(name = "account")
@@ -32,6 +32,9 @@ public class Account extends AudingTime {
 
     @Column(unique = true, nullable = false)
     private Long number; // 계좌 번호
+
+    @Column(nullable = false)
+    private String ownerName; // 계좌주 실명
 
     private String password; // 계좌 비밀번호
 
@@ -58,19 +61,29 @@ public class Account extends AudingTime {
     // }
 
     @Builder
-    public Account(Long id, Long number, String password, Long balance, User user) {
+    public Account(Long id, Long number, String ownerName, String password, Long balance, User user) {
         this.id = id;
         this.number = number;
+        this.ownerName = ownerName;
         this.password = password;
         this.balance = balance;
         this.user = user;
     }
 
     /*
+     * 잔액 유효성 검사
+     */
+    public void checkBalance(Long amount) {
+        if (amount > balance) {
+            throw new CustomApiException(ResponseEnum.LACK_BALANCE);
+        }
+    }
+
+    /*
      * 입금
      */
-    public void deposit(Transaction transaction) {
-        balance = balance + transaction.getAmount();
+    public void deposit(Long amount) {
+        balance = balance + amount;
         // addDepositTransaction(transaction); // Account 순수객체시점에 Account로 Transactions
         // 조회하려면 필요함.
     }
@@ -78,11 +91,9 @@ public class Account extends AudingTime {
     /*
      * 출금
      */
-    public void withdraw(Transaction transaction) {
-        if (transaction.getAmount() > balance) {
-            throw new CustomApiException(ResponseEnum.LACK_BALANCE);
-        }
-        balance = balance - transaction.getAmount();
+    public void withdraw(Long amount) {
+        checkBalance(amount);
+        balance = balance - amount;
         // addWithdrawTransaction(transaction); // Account 순수객체시점에 Account로 Transactions
         // 조회하려면 필요함.
     }

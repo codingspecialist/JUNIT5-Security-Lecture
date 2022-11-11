@@ -183,6 +183,7 @@ public class TransactionRespDto {
     public static class TransactionHistoryRespDto {
         private Long id;
         private Long number;
+        private String ownerName;
         private Long balance;
         private UserDto user;
 
@@ -191,6 +192,7 @@ public class TransactionRespDto {
         public TransactionHistoryRespDto(Account account, List<Transaction> transactions) {
             this.id = account.getId();
             this.number = account.getNumber();
+            this.ownerName = account.getOwnerName();
             this.balance = account.getBalance();
             this.user = new UserDto(account.getUser());
             this.transactions = transactions.stream().map(TransactionDto::new).collect(Collectors.toList());
@@ -224,19 +226,19 @@ public class TransactionRespDto {
                 this.amount = transaction.getAmount();
                 this.gubun = transaction.getGubun().getValue();
                 if (transaction.getGubun() == TransactionEnum.WITHDRAW) {
-                    this.createdAt = transaction.getWithdrawAccount().getCreatedAt();
+                    this.createdAt = transaction.getCreatedAt();
                     this.balance = transaction.getWithdrawAccountBalance();
                     this.from = transaction.getWithdrawAccount().getNumber() + "";
                     this.to = "ATM";
                 }
                 if (transaction.getGubun() == TransactionEnum.DEPOSIT) {
-                    this.createdAt = transaction.getDepositAccount().getCreatedAt();
+                    this.createdAt = transaction.getCreatedAt();
                     this.balance = transaction.getDepositAccountBalance();
                     this.from = "ATM";
                     this.to = transaction.getDepositAccount().getNumber() + ""; // toString()으 쓰지마, LazyLoading때문에!!
                 }
                 if (transaction.getGubun() == TransactionEnum.TRANSFER) {
-                    this.createdAt = transaction.getWithdrawAccount().getCreatedAt();
+                    this.createdAt = transaction.getCreatedAt();
                     this.balance = transaction.getWithdrawAccountBalance();
                     this.from = transaction.getWithdrawAccount().getNumber() + "";
                     this.to = transaction.getDepositAccount().getNumber() + "";

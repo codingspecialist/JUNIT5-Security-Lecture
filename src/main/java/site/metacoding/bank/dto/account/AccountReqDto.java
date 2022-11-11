@@ -11,11 +11,13 @@ public class AccountReqDto {
     public static class AccountSaveReqDto {
         private Long number;
         private String password;
+        private String ownerName;
 
         public Account toEntity(User user) {
             return Account.builder()
                     .number(number)
                     .password(password)
+                    .ownerName(ownerName)
                     .balance(0L)
                     .user(user)
                     .build();

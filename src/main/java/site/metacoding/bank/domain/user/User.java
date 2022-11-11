@@ -28,10 +28,10 @@ public class User extends AudingTime {
     private String username;
 
     @Column(nullable = false)
-    private String password;
+    private String email;
 
     @Column(nullable = false)
-    private String email;
+    private String password;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

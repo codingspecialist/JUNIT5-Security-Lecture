@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,7 +18,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import site.metacoding.bank.config.enums.UserEnum;
+import site.metacoding.bank.bean.AllEntityTest;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.domain.user.UserRepository;
 import site.metacoding.bank.dto.user.UserReqDto.UserJoinReqDto;
@@ -28,7 +27,7 @@ import site.metacoding.bank.dto.user.UserReqDto.UserJoinReqDto;
 @Sql("classpath:db/teardown.sql")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-public class UserApiControllerTest {
+public class UserApiControllerTest extends AllEntityTest {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private static final String APPLICATION_JSON_UTF8 = "application/json; charset=utf-8";
     private static final String APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded; charset=utf-8";
@@ -38,8 +37,6 @@ public class UserApiControllerTest {
     private MockMvc mvc;
     @Autowired
     private ObjectMapper om;
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userRepository;
 
@@ -55,17 +52,17 @@ public class UserApiControllerTest {
     public void join_test() throws Exception {
         // given
         UserJoinReqDto userJoinReqDto = new UserJoinReqDto();
-        userJoinReqDto.setUsername("cos");
+        userJoinReqDto.setUsername("love");
         userJoinReqDto.setPassword("1234");
-        userJoinReqDto.setEmail("cos@nate.com");
+        userJoinReqDto.setEmail("love@nate.com");
 
         String requestBody = om.writeValueAsString(userJoinReqDto);
 
         // when
         ResultActions resultActions = mvc
                 .perform(post("/api/join").content(requestBody).contentType(APPLICATION_JSON_UTF8));
-        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-
+        String body = resultActions.andReturn().getResponse().getContentAsString();
+        log.debug("디버그 : " + body);
         // then
         resultActions.andExpect(jsonPath("$.code").value(201));
     }
@@ -82,18 +79,18 @@ public class UserApiControllerTest {
         ResultActions resultActions = mvc
                 .perform(post("/api/login").content(requestBody)
                         .contentType(APPLICATION_FORM_URLENCODED));
-        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        String body = resultActions.andReturn().getResponse().getContentAsString();
+        log.debug("디버그 : " + body);
 
         // then
         resultActions.andExpect(jsonPath("$.code").value(200));
 
     }
 
-    private void dataSetting() {
-        String encPassword = passwordEncoder.encode("1234");
-        User user = User.builder().username("ssar").password(encPassword).email("ssar@nate.com").role(UserEnum.CUSTOMER)
-                .build();
-        userRepository.save(user);
+    public void dataSetting() {
+        User ssarUser = userRepository.save(newUser(1L, "ssar"));
+        User cosUser = userRepository.save(newUser(2L, "cos"));
+        User adminUser = userRepository.save(newUser(3L, "admin"));
     }
 
 }

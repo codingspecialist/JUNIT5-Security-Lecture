@@ -22,7 +22,6 @@ import site.metacoding.bank.dto.transaction.TransactionRespDto.TransactionHistor
 import site.metacoding.bank.dto.transaction.TransactionRespDto.TransferRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawRespDto;
 
-@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
@@ -45,7 +44,7 @@ public class TransactionService {
                 // 입금 하기
                 Transaction depositPS = transactionRepository
                                 .save(depositReqDto.toEntity(depositAccountPS));
-                depositAccountPS.deposit(depositPS);
+                depositAccountPS.deposit(depositPS.getAmount());
 
                 // DTO
                 return new DepositRespDto(depositPS);
@@ -68,7 +67,7 @@ public class TransactionService {
                 // 출금 하기
                 Transaction withdrawPS = transactionRepository
                                 .save(withdrawReqDto.toEntity(withdrawAccountPS));
-                withdrawAccountPS.withdraw(withdrawPS);
+                withdrawAccountPS.withdraw(withdrawPS.getAmount());
 
                 // DTO
                 return new WithdrawRespDto(withdrawPS);
@@ -100,8 +99,8 @@ public class TransactionService {
                 // 이체 하기
                 Transaction transferPS = transactionRepository
                                 .save(transferReqDto.toEntity(withdrawAccountPS, depositAccountPS));
-                withdrawAccountPS.withdraw(transferPS);
-                depositAccountPS.deposit(transferPS);
+                withdrawAccountPS.withdraw(transferPS.getAmount());
+                depositAccountPS.deposit(transferPS.getAmount());
 
                 // DTO
                 return new TransferRespDto(transferPS);

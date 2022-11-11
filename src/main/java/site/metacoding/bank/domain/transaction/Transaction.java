@@ -1,6 +1,5 @@
 package site.metacoding.bank.domain.transaction;
 
-import javax.persistence.CascadeType;
 import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -27,6 +26,7 @@ import site.metacoding.bank.domain.account.Account;
  * 출금계좌(null) -> 입금계좌 (자동화기기)
  * 출금계좌 -> 입금계좌(null) (자동화기기)
  */
+
 @NoArgsConstructor
 @Getter
 @Table(name = "transaction")

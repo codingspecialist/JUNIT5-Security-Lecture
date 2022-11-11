@@ -85,7 +85,7 @@ public class DBInit {
                                         .gubun(TransactionEnum.DEPOSIT)
                                         .build();
                         Transaction trasactionPS1 = transactionRepository.save(transaction1);
-                        account1PS.deposit(trasactionPS1);
+                        account1PS.deposit(trasactionPS1.getAmount());
                         log.debug("디버그 : ATM -> 1111계좌(ssar), 입금액 : 10000, 잔액 : 110000 ");
 
                         // 계좌 -> ATM (출금)
@@ -97,7 +97,7 @@ public class DBInit {
                                         .gubun(TransactionEnum.WITHDRAW)
                                         .build();
                         Transaction trasactionPS2 = transactionRepository.save(transaction2);
-                        account1PS.withdraw(trasactionPS2);
+                        account1PS.withdraw(trasactionPS2.getAmount());
                         log.debug("디버그 : 1111계좌(ssar) -> ATM, 출금액 : 5000, 잔액 : 105000 ");
 
                         // 계좌1 -> 계좌3
@@ -110,8 +110,8 @@ public class DBInit {
                                         .gubun(TransactionEnum.TRANSFER)
                                         .build();
                         Transaction trasactionPS3 = transactionRepository.save(transaction3);
-                        account1PS.withdraw(trasactionPS3);
-                        account3PS.deposit(trasactionPS3);
+                        account1PS.withdraw(trasactionPS3.getAmount());
+                        account3PS.deposit(trasactionPS3.getAmount());
                         log.debug("디버그 : 1111계좌(ssar) -> 3333계좌(cos), 이체액 : 60000, 1111계좌잔액 : 45000 , 3333계좌잔액: 160000");
 
                         // 계좌2 -> 계좌1
@@ -124,8 +124,8 @@ public class DBInit {
                                         .gubun(TransactionEnum.TRANSFER)
                                         .build();
                         Transaction trasactionPS4 = transactionRepository.save(transaction4);
-                        account2PS.withdraw(trasactionPS4);
-                        account1PS.deposit(trasactionPS4);
+                        account2PS.withdraw(trasactionPS4.getAmount());
+                        account1PS.deposit(trasactionPS4.getAmount());
                         log.debug("디버그 : 2222계좌(ssar) -> 1111계좌(ssar), 이체액 : 30000, 1111계좌잔액 : 75000 , 2222계좌잔액: 70000");
                 };
         }

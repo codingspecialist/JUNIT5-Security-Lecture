@@ -7,11 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import site.metacoding.bank.config.enums.ResponseEnum;
 import site.metacoding.bank.config.exceptions.CustomApiException;
 import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.account.AccountRepository;
+import site.metacoding.bank.domain.transaction.Transaction;
+import site.metacoding.bank.domain.transaction.TransactionRepository;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.dto.account.AccountReqDto.AccountSaveReqDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountAllRespDto;
@@ -23,6 +24,7 @@ import site.metacoding.bank.dto.account.AccountRespDto.AccountSaveRespDto;
 @Service
 public class AccountService {
     private final AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
 
     @Transactional
     public AccountSaveRespDto 계좌등록하기(AccountSaveReqDto accountSaveReqDto, User user) {
@@ -31,6 +33,7 @@ public class AccountService {
     }
 
     public List<AccountAllRespDto> 계좌목록보기_유저별(Long userId) {
+
         return accountRepository.findByUserId(userId)
                 .stream()
                 .map(AccountAllRespDto::new)
@@ -42,8 +45,11 @@ public class AccountService {
         Account accountPS = accountRepository.findById(accountId).orElseThrow(
                 () -> new CustomApiException(ResponseEnum.BAD_REQUEST));
 
+        // 계좌 입출금이체 내역
+        List<Transaction> transactions = transactionRepository.findByTransactionHistory(accountPS.getId(), null);
+
         // DTO
-        return new AccountDetailRespDto(accountPS);
+        return new AccountDetailRespDto(accountPS, transactions);
     }
 
     @Transactional

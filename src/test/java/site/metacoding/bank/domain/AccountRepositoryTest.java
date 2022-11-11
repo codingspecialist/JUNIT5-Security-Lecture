@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
+import site.metacoding.bank.bean.AllEntityTest;
 import site.metacoding.bank.config.enums.ResponseEnum;
 import site.metacoding.bank.config.enums.UserEnum;
 import site.metacoding.bank.config.exceptions.CustomApiException;
@@ -25,7 +26,7 @@ import site.metacoding.bank.domain.user.UserRepository;
 
 @ActiveProfiles("test")
 @DataJpaTest // 내부에 Transactional 어노테이션 있어서 자동 롤백됨.
-public class AccountRepositoryTest {
+public class AccountRepositoryTest extends AllEntityTest {
         private final Logger log = LoggerFactory.getLogger(getClass());
         @Autowired
         private UserRepository userRepository;
@@ -33,8 +34,6 @@ public class AccountRepositoryTest {
         private AccountRepository accountRepository;
         @Autowired
         private EntityManager em;
-
-        private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         @BeforeEach
         public void setUp() {
@@ -82,53 +81,11 @@ public class AccountRepositoryTest {
         }
 
         public void dataSetting() {
-                String encPassword = passwordEncoder.encode("1234");
-                User customer1 = User.builder().username("ssar").password(encPassword).email("ssar@nate.com")
-                                .role(UserEnum.CUSTOMER)
-                                .build();
-                User customer1PS = userRepository.save(customer1);
-                log.debug("디버그 : id:1, username: ssar 유저 생성");
-                log.debug("디버그 : " + customer1PS.getId());
-
-                User customer2 = User.builder().username("cos").password(encPassword).email("cos@nate.com")
-                                .role(UserEnum.CUSTOMER)
-                                .build();
-                User customer2PS = userRepository.save(customer2);
-                log.debug("디버그 : id:2, username: cos 유저 생성");
-                log.debug("디버그 : " + customer2PS.getId());
-
-                User admin = User.builder().username("admin").password(encPassword).email("admin@nate.com")
-                                .role(UserEnum.ADMIN)
-                                .build();
-                User adminPS = userRepository.save(admin);
-                log.debug("디버그 : id:3, username: admin 관리자 생성");
-                log.debug("디버그 : " + adminPS.getId());
-
-                Account account1 = Account.builder()
-                                .number(1111L)
-                                .password("1234")
-                                .balance(100000L)
-                                .user(customer1PS)
-                                .build();
-                accountRepository.save(account1);
-                log.debug("디버그 : ssar 고객 1111 계좌 생성 , 잔액 100000");
-
-                Account account2 = Account.builder()
-                                .number(2222L)
-                                .password("1234")
-                                .balance(100000L)
-                                .user(customer1PS)
-                                .build();
-                accountRepository.save(account2);
-                log.debug("디버그 : ssar 고객 2222 계좌 생성 , 잔액 100000");
-
-                Account account3 = Account.builder()
-                                .number(3333L)
-                                .password("1234")
-                                .balance(100000L)
-                                .user(customer2PS)
-                                .build();
-                accountRepository.save(account3);
-                log.debug("디버그 : cos 고객 3333 계좌 생성 , 잔액 100000");
+                User ssarUser = userRepository.save(newUser(1L, "ssar"));
+                User cosUser = userRepository.save(newUser(2L, "cos"));
+                User adminUser = userRepository.save(newUser(3L, "admin"));
+                Account ssarAccount1 = accountRepository.save(newAccount(1L, 1111L, ssarUser));
+                Account ssarAccount2 = accountRepository.save(newAccount(2L, 2222L, ssarUser));
+                Account cosAccount1 = accountRepository.save(newAccount(3L, 3333L, cosUser));
         }
 }
