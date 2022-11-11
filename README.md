@@ -75,7 +75,7 @@ create table account (
         updated_at timestamp not null,
         balance bigint not null,
         number bigint not null unique,
-        owner_name varchar(255) not null
+        owner_name varchar(255) not null,
         password varchar(255) not null,
         user_id bigint,
         primary key (id)
