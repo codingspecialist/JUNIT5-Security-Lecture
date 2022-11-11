@@ -113,9 +113,9 @@ public class TransactionApiControllerTest extends DummyBeans {
                 // given
                 Long userId = 1L;
                 TransferReqDto transferReqDto = new TransferReqDto();
-                transferReqDto.setWithdrawAccountId(2L);
-                transferReqDto.setDepositAccountId(1L);
-                transferReqDto.setAmount(200L);
+                transferReqDto.setWithdrawAccountId(1L);
+                transferReqDto.setDepositAccountId(2L);
+                transferReqDto.setAmount(100L);
                 transferReqDto.setAccountPassword("1234");
                 transferReqDto.setGubun("TRANSFER");
                 String requestBody = om.writeValueAsString(transferReqDto);
@@ -130,6 +130,8 @@ public class TransactionApiControllerTest extends DummyBeans {
 
                 // then
                 resultActions.andExpect(jsonPath("$.code").value(201));
+                resultActions.andExpect(jsonPath("$.data.withdrawAccount.balance").value(900L));
+                resultActions.andExpect(jsonPath("$.data.depositAccount.balance").value(1100L));
         }
 
         /*

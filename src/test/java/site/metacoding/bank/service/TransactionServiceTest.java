@@ -26,8 +26,10 @@ import site.metacoding.bank.domain.transaction.Transaction;
 import site.metacoding.bank.domain.transaction.TransactionRepository;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.DepositReqDto;
+import site.metacoding.bank.dto.transaction.TransactionReqDto.TransferReqDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.WithdrawReqDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.DepositRespDto;
+import site.metacoding.bank.dto.transaction.TransactionRespDto.TransferRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawRespDto;
 
 @ExtendWith(MockitoExtension.class)
@@ -125,6 +127,44 @@ public class TransactionServiceTest extends DummyBeans {
         }
 
         // 이체하기
+        @Test
+        public void 이체하기_test() throws Exception {
+                // given
+                Long userId = 1L;
+
+                TransferReqDto transferReqDto = new TransferReqDto();
+                transferReqDto.setAccountPassword("1234");
+                transferReqDto.setAmount(100L);
+                transferReqDto.setWithdrawAccountId(1L);
+                transferReqDto.setDepositAccountId(2L);
+                transferReqDto.setGubun("TRANSFER");
+
+                // stub
+                User ssarUser = newUser(1L, "ssar");
+                User cosUser = newUser(2L, "cos");
+                Account ssarAccount1 = newAccount(1L, 1111L, ssarUser);
+                Account cosAccount1 = newAccount(2L, 3333L, cosUser);
+                when(accountRepository.findById(1L)).thenReturn((Optional.of(ssarAccount1)));
+                when(accountRepository.findById(2L)).thenReturn((Optional.of(cosAccount1)));
+
+                Transaction transferTransaction1 = newTransferTransaction(1L, ssarAccount1, cosAccount1);
+                when(transactionRepository.save(any())).thenReturn(transferTransaction1);
+                log.debug("디버그 : " + transferTransaction1.getWithdrawAccountBalance());
+                log.debug("디버그 : " + transferTransaction1.getWithdrawAccount().getBalance());
+                log.debug("디버그 : " + transferTransaction1.getDepositAccountBalance());
+                log.debug("디버그 : " + transferTransaction1.getDepositAccount().getBalance());
+
+                // when
+                TransferRespDto transferRespDto = transactionService.이체하기(transferReqDto, userId);
+                String body = om.writeValueAsString(transferRespDto);
+                log.debug("디버그 : " + body);
+
+                // then
+                assertThat(transferRespDto.getWithdrawAccount().getBalance())
+                                .isEqualTo(transferTransaction1.getWithdrawAccountBalance());
+                assertThat(transferRespDto.getDepositAccount().getBalance())
+                                .isEqualTo(transferTransaction1.getDepositAccountBalance());
+        }
 
         // 입출금목록보기
 }

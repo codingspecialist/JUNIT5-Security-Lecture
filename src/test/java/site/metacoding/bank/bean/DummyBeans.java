@@ -52,7 +52,7 @@ public class DummyBeans {
                 .gubun(TransactionEnum.WITHDRAW)
                 .build();
         transaction.setTestDate();
-        withdrawAccount.withdraw(amount);
+        // withdrawAccount.withdraw(amount);
 
         return transaction;
     }
@@ -72,7 +72,7 @@ public class DummyBeans {
                 .gubun(TransactionEnum.DEPOSIT)
                 .build();
         transaction.setTestDate();
-        depositAccount.deposit(amount);
+        // depositAccount.deposit(amount);
         return transaction;
     }
 
@@ -93,8 +93,8 @@ public class DummyBeans {
                 .gubun(TransactionEnum.TRANSFER)
                 .build();
         transaction.setTestDate();
-        withdrawAccount.withdraw(amount);
-        depositAccount.deposit(amount);
+        // withdrawAccount.withdraw(amount);
+        // depositAccount.deposit(amount);
 
         return transaction;
     }
