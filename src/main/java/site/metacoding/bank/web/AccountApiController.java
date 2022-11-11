@@ -2,15 +2,13 @@ package site.metacoding.bank.web;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,8 +18,10 @@ import site.metacoding.bank.config.annotations.AuthorizationCheck;
 import site.metacoding.bank.config.auth.LoginUser;
 import site.metacoding.bank.config.enums.ResponseEnum;
 import site.metacoding.bank.dto.ResponseDto;
+import site.metacoding.bank.dto.account.AccountReqDto.AccountDeleteReqDto;
 import site.metacoding.bank.dto.account.AccountReqDto.AccountSaveReqDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountAllRespDto;
+import site.metacoding.bank.dto.account.AccountRespDto.AccountDeleteRespDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountDetailRespDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountSaveRespDto;
 import site.metacoding.bank.service.AccountService;
@@ -58,11 +58,12 @@ public class AccountApiController {
         }
 
         @AuthorizationCheck
-        @DeleteMapping("/user/{userId}/account/{accountId}")
+        @PutMapping("/user/{userId}/account/{accountId}/delete")
         public ResponseEntity<?> delete(@PathVariable Long userId, @PathVariable Long accountId,
+                        @RequestBody AccountDeleteReqDto accountDeleteReqDto,
                         @AuthenticationPrincipal LoginUser loginUser) {
-                accountService.계좌삭제(accountId);
-                return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.DELETE_SUCCESS, null),
+                AccountDeleteRespDto accountDeleteRespDto = accountService.계좌삭제(accountDeleteReqDto, accountId);
+                return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.DELETE_SUCCESS, accountDeleteRespDto),
                                 HttpStatus.OK);
         }
 

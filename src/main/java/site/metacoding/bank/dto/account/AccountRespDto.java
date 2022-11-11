@@ -1,5 +1,7 @@
 package site.metacoding.bank.dto.account;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -98,5 +100,21 @@ public class AccountRespDto {
             this.ownerName = account.getOwnerName();
             this.balance = account.getBalance();
         }
+    }
+
+    @Setter
+    @Getter
+    public static class AccountDeleteRespDto {
+        private Long accountNumber;
+        private Boolean isUse;
+        private String deleteDate;
+
+        public AccountDeleteRespDto(Account account) {
+            this.accountNumber = account.getNumber();
+            this.isUse = account.getIsUse();
+            // 더티체킹 타이밍 보다 빨라서 DB값 못씀.
+            this.deleteDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        }
+
     }
 }

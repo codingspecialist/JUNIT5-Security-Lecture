@@ -1,8 +1,8 @@
 package site.metacoding.bank.web;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +29,7 @@ import site.metacoding.bank.domain.transaction.Transaction;
 import site.metacoding.bank.domain.transaction.TransactionRepository;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.domain.user.UserRepository;
+import site.metacoding.bank.dto.account.AccountReqDto.AccountDeleteReqDto;
 import site.metacoding.bank.dto.account.AccountReqDto.AccountSaveReqDto;
 
 @ActiveProfiles("test")
@@ -126,10 +127,15 @@ public class AccountApiControllerTest extends DummyBeans {
                 // given
                 Long accountId = 1L;
                 Long userId = 1L;
+                AccountDeleteReqDto accountDeleteReqDto = new AccountDeleteReqDto();
+                accountDeleteReqDto.setAccountPassword("1234");
+                String requestBody = om.writeValueAsString(accountDeleteReqDto);
+                log.debug("디버그 : " + requestBody);
 
                 // when
                 ResultActions resultActions = mvc
-                                .perform(delete("/api/user/" + userId + "/account/" + accountId));
+                                .perform(put("/api/user/" + userId + "/account/" + accountId + "/delete")
+                                                .content(requestBody).contentType(APPLICATION_JSON_UTF8));
                 String responseBody = resultActions.andReturn().getResponse().getContentAsString();
                 log.debug("디버그 : " + responseBody);
 

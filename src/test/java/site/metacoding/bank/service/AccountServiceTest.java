@@ -26,8 +26,10 @@ import site.metacoding.bank.domain.account.AccountRepository;
 import site.metacoding.bank.domain.transaction.Transaction;
 import site.metacoding.bank.domain.transaction.TransactionRepository;
 import site.metacoding.bank.domain.user.User;
+import site.metacoding.bank.dto.account.AccountReqDto.AccountDeleteReqDto;
 import site.metacoding.bank.dto.account.AccountReqDto.AccountSaveReqDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountAllRespDto;
+import site.metacoding.bank.dto.account.AccountRespDto.AccountDeleteRespDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountDetailRespDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountSaveRespDto;
 
@@ -57,6 +59,25 @@ public class AccountServiceTest extends DummyBeans {
 
         @Spy
         private ObjectMapper om;
+
+        @Test
+        public void 계좌삭제하기_test() {
+                // given
+                Long accountId = 1L;
+                AccountDeleteReqDto accountDeleteReqDto = new AccountDeleteReqDto();
+                accountDeleteReqDto.setAccountPassword("1234");
+
+                // stub
+                User ssarUser = newUser(1L, "ssar");
+                Account ssarAccount1 = newAccount(1L, 1111L, ssarUser);
+                when(accountRepository.findById(any())).thenReturn(Optional.of(ssarAccount1));
+
+                // when
+                AccountDeleteRespDto accountDeleteRespDto = accountService.계좌삭제(accountDeleteReqDto, accountId);
+
+                // then
+                assertThat(accountDeleteRespDto.getIsUse()).isEqualTo(false);
+        }
 
         @Test
         public void 계좌등록하기_test() throws Exception {

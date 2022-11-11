@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,14 +47,18 @@ public class Account extends AudingTime {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    @Column(nullable = false)
+    private Boolean isUse;
+
     @Builder
-    public Account(Long id, Long number, String ownerName, String password, Long balance, User user) {
+    public Account(Long id, Long number, String ownerName, String password, Long balance, User user, Boolean isUse) {
         this.id = id;
         this.number = number;
         this.ownerName = ownerName;
         this.password = password;
         this.balance = balance;
         this.user = user;
+        this.isUse = isUse;
     }
 
     /*
@@ -108,6 +114,11 @@ public class Account extends AudingTime {
         if (amount <= 0L) {
             throw new CustomApiException(ResponseEnum.ISNOT_ZERO_AMOUNT);
         }
+    }
+
+    public Boolean delete() {
+        isUse = false;
+        return isUse;
     }
 
     // @OneToMany(mappedBy = "withdrawAccount", fetch = FetchType.LAZY, cascade =

@@ -31,6 +31,7 @@ public class DummyBeans {
                 .ownerName(user.getUsername())
                 .balance(1000L)
                 .user(user)
+                .isUse(true)
                 .build();
         account.setTestDate();
         return account;

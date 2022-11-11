@@ -14,8 +14,10 @@ import site.metacoding.bank.domain.account.AccountRepository;
 import site.metacoding.bank.domain.transaction.Transaction;
 import site.metacoding.bank.domain.transaction.TransactionRepository;
 import site.metacoding.bank.domain.user.User;
+import site.metacoding.bank.dto.account.AccountReqDto.AccountDeleteReqDto;
 import site.metacoding.bank.dto.account.AccountReqDto.AccountSaveReqDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountAllRespDto;
+import site.metacoding.bank.dto.account.AccountRespDto.AccountDeleteRespDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountDetailRespDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountSaveRespDto;
 
@@ -52,14 +54,20 @@ public class AccountService {
     }
 
     @Transactional
-    public void 계좌삭제(Long accountId) {
+    public AccountDeleteRespDto 계좌삭제(AccountDeleteReqDto accountDeleteReqDto, Long accountId) {
 
         // 계좌확인
-        accountRepository.findById(accountId).orElseThrow(
+        Account accountPS = accountRepository.findById(accountId).orElseThrow(
                 () -> new CustomApiException(ResponseEnum.BAD_REQUEST));
 
+        // 계좌 비밀번호 확인
+        accountPS.passwordCheck(accountDeleteReqDto.getAccountPassword());
+
         // 계좌삭제
-        accountRepository.deleteById(accountId);
+        accountPS.delete();
+
+        // DTO
+        return new AccountDeleteRespDto(accountPS);
     }
 
 }

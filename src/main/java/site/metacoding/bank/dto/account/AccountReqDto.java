@@ -20,7 +20,14 @@ public class AccountReqDto {
                     .ownerName(ownerName)
                     .balance(0L)
                     .user(user)
+                    .isUse(true)
                     .build();
         }
+    }
+
+    @Setter
+    @Getter
+    public static class AccountDeleteReqDto {
+        private String accountPassword;
     }
 }
