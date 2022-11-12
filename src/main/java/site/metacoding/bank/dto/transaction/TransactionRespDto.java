@@ -12,95 +12,75 @@ import site.metacoding.bank.domain.transaction.Transaction;
 import site.metacoding.bank.domain.user.User;
 
 public class TransactionRespDto {
-    @Getter
-    @Setter
-    public static class WithdrawRespDto {
-        private Long id;
-        private Long amount;
-        private String gubun;
-        private WithdrawAccountDto withdrawAccount;
 
-        public WithdrawRespDto(Transaction transaction) {
-            this.id = transaction.getId();
-            this.amount = transaction.getAmount();
-            this.gubun = transaction.getGubun().name();
-            this.withdrawAccount = new WithdrawAccountDto(transaction.getWithdrawAccount());
+    @Setter
+    @Getter
+    public static class DepositRespDto {
+        private Long id; // 계좌 ID
+        private Long number; // 계좌번호
+        private String ownerName;
+        private Long balance;
+        private TransactionDto transaction;
+
+        public DepositRespDto(Account account, Transaction transaction) {
+            this.id = account.getId();
+            this.number = account.getNumber();
+            this.ownerName = account.getOwnerName();
+            this.balance = account.getBalance();
+            this.transaction = new TransactionDto(transaction);
         }
 
         @Getter
         @Setter
-        public class WithdrawAccountDto {
+        public class TransactionDto {
             private Long id;
-            private Long number;
-            private Long balance;
-            private UserDto user;
+            private Long amount;
+            private String gubun; // 입금
+            private String from; // ATM
 
-            public WithdrawAccountDto(Account account) {
-                this.id = account.getId();
-                this.number = account.getNumber();
-                this.balance = account.getBalance();
-                this.user = new UserDto(account.getUser());
+            public TransactionDto(Transaction transaction) {
+                this.id = transaction.getId();
+                this.amount = transaction.getAmount();
+                this.gubun = transaction.getGubun().getValue();
+                this.from = "ATM";
             }
 
-            @Getter
-            @Setter
-            public class UserDto {
-                private Long id;
-                private String username;
-
-                public UserDto(User user) {
-                    this.id = user.getId();
-                    this.username = user.getUsername();
-                }
-
-            }
         }
     }
 
-    @Getter
     @Setter
-    public static class DepositRespDto {
-        private Long id;
-        private Long amount;
-        private String gubun;
-        private DepositAccountDto depositAccount;
+    @Getter
+    public static class WithdrawRespDto {
+        private Long id; // 계좌 ID
+        private Long number; // 계좌번호
+        private String ownerName;
+        private Long balance;
+        private TransactionDto transaction;
 
-        public DepositRespDto(Transaction transaction) {
-            this.id = transaction.getId();
-            this.amount = transaction.getAmount();
-            this.gubun = transaction.getGubun().name();
-            this.depositAccount = new DepositAccountDto(transaction.getDepositAccount());
+        public WithdrawRespDto(Account account, Transaction transaction) {
+            this.id = account.getId();
+            this.number = account.getNumber();
+            this.ownerName = account.getOwnerName();
+            this.balance = account.getBalance();
+            this.transaction = new TransactionDto(transaction);
         }
 
         @Getter
         @Setter
-        public class DepositAccountDto {
+        public class TransactionDto {
             private Long id;
-            private Long number;
-            private Long balance;
-            private UserDto user;
+            private Long amount;
+            private String gubun; // 출금
+            private String to; // ATM
 
-            public DepositAccountDto(Account account) {
-                this.id = account.getId();
-                this.number = account.getNumber();
-                this.balance = account.getBalance();
-                this.user = new UserDto(account.getUser());
+            public TransactionDto(Transaction transaction) {
+                this.id = transaction.getId();
+                this.amount = transaction.getAmount();
+                this.gubun = transaction.getGubun().getValue();
+                this.to = "ATM";
             }
 
-            @Getter
-            @Setter
-            public class UserDto {
-                private Long id;
-                private String username;
-
-                public UserDto(User user) {
-                    this.id = user.getId();
-                    this.username = user.getUsername();
-                }
-
-            }
         }
-
     }
 
     @Getter

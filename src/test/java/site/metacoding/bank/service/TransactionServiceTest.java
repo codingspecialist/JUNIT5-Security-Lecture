@@ -75,7 +75,7 @@ public class TransactionServiceTest extends DummyBeans {
                 log.debug("디버그 : " + body);
 
                 // then
-                assertThat(depositRespDto.getDepositAccount().getBalance()).isEqualTo(ssarAccount.getBalance());
+                assertThat(depositRespDto.getBalance()).isEqualTo(ssarAccount.getBalance());
         }
 
         /**
@@ -123,7 +123,7 @@ public class TransactionServiceTest extends DummyBeans {
                 log.debug("디버그 : " + body);
 
                 // then (잔액 확인)
-                assertThat(withdrawRespDto.getWithdrawAccount().getBalance()).isEqualTo(ssarAccount1.getBalance());
+                assertThat(withdrawRespDto.getBalance()).isEqualTo(ssarAccount1.getBalance());
         }
 
         // 이체하기

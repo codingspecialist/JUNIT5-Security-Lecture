@@ -2,11 +2,12 @@ package site.metacoding.bank.service;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import site.metacoding.bank.config.enums.ResponseEnum;
 import site.metacoding.bank.config.enums.TransactionEnum;
 import site.metacoding.bank.config.exceptions.CustomApiException;
@@ -28,6 +29,7 @@ import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawRespDto;
 public class TransactionService {
         private final TransactionRepository transactionRepository;
         private final AccountRepository accountRepository;
+        private final EntityManager em;
 
         @Transactional
         public DepositRespDto 입금하기(DepositReqDto depositReqDto) {
@@ -45,12 +47,11 @@ public class TransactionService {
                 depositAccountPS.zeroAmountCheck(depositReqDto.getAmount());
 
                 // 입금 하기
-                Transaction depositPS = transactionRepository
-                                .save(depositReqDto.toEntity(depositAccountPS));
-                depositAccountPS.deposit(depositPS.getAmount());
+                Transaction transaction = depositAccountPS.deposit(depositReqDto.getAmount());
+                Transaction transactionPS = transactionRepository.save(transaction);
 
                 // DTO
-                return new DepositRespDto(depositPS);
+                return new DepositRespDto(depositAccountPS, transactionPS);
         }
 
         @Transactional
@@ -74,12 +75,11 @@ public class TransactionService {
                 withdrawAccountPS.passwordCheck(withdrawReqDto.getAccountPassword());
 
                 // 출금 하기
-                Transaction withdrawPS = transactionRepository
-                                .save(withdrawReqDto.toEntity(withdrawAccountPS));
-                withdrawAccountPS.withdraw(withdrawPS.getAmount());
+                Transaction transaction = withdrawAccountPS.withdraw(withdrawReqDto.getAmount());
+                em.persist(withdrawAccountPS);
 
                 // DTO
-                return new WithdrawRespDto(withdrawPS);
+                return new WithdrawRespDto(withdrawAccountPS, transaction);
         }
 
         @Transactional
