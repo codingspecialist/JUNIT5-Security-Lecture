@@ -18,9 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import site.metacoding.bank.bean.DummyBeans;
+import site.metacoding.bank.bean.DummyMockBeans;
 import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.account.AccountRepository;
 import site.metacoding.bank.domain.transaction.Transaction;
@@ -42,7 +40,7 @@ import site.metacoding.bank.dto.account.AccountRespDto.AccountSaveRespDto;
  */
 
 @ExtendWith(MockitoExtension.class)
-public class AccountServiceTest extends DummyBeans {
+public class AccountServiceTest extends DummyMockBeans {
         private final Logger log = LoggerFactory.getLogger(getClass());
 
         @InjectMocks
@@ -56,9 +54,6 @@ public class AccountServiceTest extends DummyBeans {
 
         @Spy
         private BCryptPasswordEncoder passwordEncoder;
-
-        @Spy
-        private ObjectMapper om;
 
         @Test
         public void 계좌삭제하기_test() {
@@ -139,10 +134,10 @@ public class AccountServiceTest extends DummyBeans {
                 User cosUser = newUser(2L, "cos");
                 Account ssarAccount1 = newAccount(1L, 1111L, "쌀", ssarUser);
                 Account cosAccount1 = newAccount(3L, 3333L, "코스", cosUser);
-                Transaction withdrawTransaction1 = newWithdrawTransaction(1L, ssarAccount1);
-                Transaction withdrawTransaction2 = newWithdrawTransaction(2L, ssarAccount1);
-                Transaction depositTransaction1 = newDepositTransaction(3L, ssarAccount1);
-                Transaction transferTransaction1 = newTransferTransaction(4L, ssarAccount1, cosAccount1);
+                Transaction withdrawTransaction1 = newWithdrawTransaction(1L, 100L, ssarAccount1);
+                Transaction withdrawTransaction2 = newWithdrawTransaction(2L, 100L, ssarAccount1);
+                Transaction depositTransaction1 = newDepositTransaction(3L, 100L, ssarAccount1);
+                Transaction transferTransaction1 = newTransferTransaction(4L, 100L, ssarAccount1, cosAccount1);
                 List<Transaction> transactions = Arrays.asList(withdrawTransaction1, withdrawTransaction2,
                                 depositTransaction1, transferTransaction1);
 

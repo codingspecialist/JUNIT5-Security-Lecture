@@ -47,19 +47,22 @@ public class AccountRespDto {
                 this.amount = transaction.getAmount();
                 this.gubun = transaction.getGubun().getValue();
                 if (transaction.getGubun() == TransactionEnum.WITHDRAW) {
-                    this.createdAt = transaction.getCreatedAt();
+                    this.createdAt = transaction.getCreatedAt()
+                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                     this.balance = transaction.getWithdrawAccountBalance();
                     this.from = transaction.getWithdrawAccount().getNumber() + "";
                     this.to = "ATM";
                 }
                 if (transaction.getGubun() == TransactionEnum.DEPOSIT) {
-                    this.createdAt = transaction.getCreatedAt();
+                    this.createdAt = transaction.getCreatedAt()
+                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                     this.balance = transaction.getDepositAccountBalance();
                     this.from = "ATM";
                     this.to = transaction.getDepositAccount().getNumber() + ""; // toString()으 쓰지마, LazyLoading때문에!!
                 }
                 if (transaction.getGubun() == TransactionEnum.TRANSFER) {
-                    this.createdAt = transaction.getCreatedAt();
+                    this.createdAt = transaction.getCreatedAt()
+                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                     this.balance = transaction.getWithdrawAccountBalance();
                     this.from = transaction.getWithdrawAccount().getNumber() + "";
                     this.to = transaction.getDepositAccount().getNumber() + "";

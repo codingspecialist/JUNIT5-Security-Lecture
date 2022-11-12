@@ -48,7 +48,7 @@ public class UserServiceTest extends DummyBeans {
         userJoinReqDto.setEmail("ssar@nate.com");
 
         // stub
-        User ssarUser = newUser(1L, "ssar");
+        User ssarUser = newUser("ssar");
         when(userRepository.save(any())).thenReturn(ssarUser);
 
         // when

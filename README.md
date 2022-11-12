@@ -43,6 +43,10 @@ private final Logger log = LoggerFactory.getLogger(getClass());
 
 ### 이슈10 (해결)
 - 계좌 개설시에는 무조건 1000원 들어가 있어야 함.
+
+### 이슈11 (해결)
+- DTO에 화면에는 필요 없지만, Test 검증을 위해 데이터를 추가해야 하는가?
+- 하지말자!!!!!!!!!!!!!!!
  
 ### 프로젝트명
 - bank

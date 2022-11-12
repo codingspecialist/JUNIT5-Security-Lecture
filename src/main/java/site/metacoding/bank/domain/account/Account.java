@@ -123,9 +123,9 @@ public class Account extends AudingTime {
     /*
      * 이체
      */
-    public void transper(Long amount, Account deposiAccount) {
+    public Transaction transper(Long amount, Account deposiAccount) {
         checkBalance(amount);
-        balance = balance - amount;
+        withdraw(amount);
         deposiAccount.deposit(amount);
         Transaction transaction = Transaction.builder()
                 .withdrawAccount(this)
@@ -136,6 +136,7 @@ public class Account extends AudingTime {
                 .gubun(TransactionEnum.TRANSFER)
                 .build();
         addWithdrawTransaction(transaction);
+        return transaction;
     }
 
     /*

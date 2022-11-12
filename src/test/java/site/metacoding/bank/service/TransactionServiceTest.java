@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +17,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.SerializationUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -50,24 +52,26 @@ public class TransactionServiceTest extends DummyBeans {
 
         /*
          * 입금하기
+         * Mock 객체는 깊은 복사를 이용해서 전달해야 한다. 아니면 객체로 새로 만들어서 전달해야한다.
+         * when에서 정의해둔 객체를 다른 곳에서 사용하게 되면 실행시점에 값이 변경될 수 있기 떄문이다.
          */
         @Test
         public void 입금하기_test() throws Exception {
                 // given
                 DepositReqDto depositReqDto = new DepositReqDto();
                 depositReqDto.setDepositAccountId(1L);
-                depositReqDto.setAmount(1000L);
+                depositReqDto.setAmount(100L);
                 depositReqDto.setGubun("DEPOSIT");
 
                 // stub
-                User ssarUser = newUser(1L, "ssar");
-                Account ssarAccount = newAccount(1L, 1111L, "쌀", ssarUser);
-                when(accountRepository.findById(any()))
-                                .thenReturn(Optional.of(ssarAccount));
+                User ssarUser = newUser("ssar");
+                Account ssarAccount = newAccount(1111L, "쌀", ssarUser);
+                when(accountRepository.findById(any())).thenReturn(Optional.of(ssarAccount));
 
-                Transaction transaction = newServiceDepositTransaction(1L, ssarAccount);
-                when(transactionRepository.save(any()))
-                                .thenReturn(transaction);
+                User ssarUserCopy = newUser("ssar");
+                Account ssarAccountCopy = newAccount(1111L, "쌀", ssarUserCopy);
+                Transaction transaction = newDepositTransaction(depositReqDto.getAmount(), ssarAccountCopy);
+                when(transactionRepository.save(any())).thenReturn(transaction);
 
                 // when
                 DepositRespDto depositRespDto = transactionService.입금하기(depositReqDto);
@@ -75,7 +79,7 @@ public class TransactionServiceTest extends DummyBeans {
                 log.debug("디버그 : " + body);
 
                 // then
-                assertThat(depositRespDto.getBalance()).isEqualTo(ssarAccount.getBalance());
+                assertThat(depositRespDto.getBalance()).isEqualTo(1100L);
         }
 
         /**
@@ -96,18 +100,18 @@ public class TransactionServiceTest extends DummyBeans {
                 withdrawReqDto.setGubun("WITHDRAW"); // 구분값 검증
 
                 // stub
-                User ssarUser = newUser(1L, "ssar");
-                User cosUser = newUser(2L, "cos");
-                User adminUser = newUser(3L, "admin");
+                User ssarUser = newUser("ssar");
+                User cosUser = newUser("cos");
+                User adminUser = newUser("admin");
                 List<User> users = Arrays.asList(ssarUser, cosUser, adminUser);
-                Account ssarAccount1 = newAccount(1L, 1111L, "쌀", ssarUser);
-                Account ssarAccount2 = newAccount(2L, 2222L, "쌀", ssarUser);
-                Account cosAccount1 = newAccount(3L, 3333L, "코스", cosUser);
+                Account ssarAccount1 = newAccount(1111L, "쌀", ssarUser);
+                Account ssarAccount2 = newAccount(2222L, "쌀", ssarUser);
+                Account cosAccount1 = newAccount(3333L, "코스", cosUser);
                 List<Account> accounts = Arrays.asList(ssarAccount1, ssarAccount2, cosAccount1);
-                Transaction withdrawTransaction1 = newServiceWithdrawTransaction(1L, ssarAccount1);
-                Transaction withdrawTransaction2 = newServiceWithdrawTransaction(2L, ssarAccount1);
-                Transaction depositTransaction1 = newServiceDepositTransaction(3L, ssarAccount1);
-                Transaction transferTransaction1 = newServiceTransferTransaction(4L, ssarAccount1, cosAccount1);
+                Transaction withdrawTransaction1 = newWithdrawTransaction(100L, ssarAccount1);
+                Transaction withdrawTransaction2 = newWithdrawTransaction(100L, ssarAccount1);
+                Transaction depositTransaction1 = newDepositTransaction(100L, ssarAccount1);
+                Transaction transferTransaction1 = newTransferTransaction(100L, ssarAccount1, cosAccount1);
                 List<Transaction> transactions = Arrays.asList(withdrawTransaction1, withdrawTransaction2,
                                 depositTransaction1, transferTransaction1);
 
@@ -140,14 +144,14 @@ public class TransactionServiceTest extends DummyBeans {
                 transferReqDto.setGubun("TRANSFER");
 
                 // stub
-                User ssarUser = newUser(1L, "ssar");
-                User cosUser = newUser(2L, "cos");
-                Account ssarAccount1 = newAccount(1L, 1111L, "쌀", ssarUser);
-                Account cosAccount1 = newAccount(2L, 3333L, "코스", cosUser);
+                User ssarUser = newUser("ssar");
+                User cosUser = newUser("cos");
+                Account ssarAccount1 = newAccount(1111L, "쌀", ssarUser);
+                Account cosAccount1 = newAccount(3333L, "코스", cosUser);
                 when(accountRepository.findById(1L)).thenReturn((Optional.of(ssarAccount1)));
                 when(accountRepository.findById(2L)).thenReturn((Optional.of(cosAccount1)));
 
-                Transaction transferTransaction1 = newServiceTransferTransaction(1L, ssarAccount1, cosAccount1);
+                Transaction transferTransaction1 = newTransferTransaction(1L, ssarAccount1, cosAccount1);
                 when(transactionRepository.save(any())).thenReturn(transferTransaction1);
 
                 // when
@@ -156,9 +160,9 @@ public class TransactionServiceTest extends DummyBeans {
                 log.debug("디버그 : " + body);
 
                 // then
-                assertThat(transferRespDto.getWithdrawAccount().getBalance())
+                assertThat(transferRespDto.getBalance())
                                 .isEqualTo(transferTransaction1.getWithdrawAccountBalance());
-                assertThat(transferRespDto.getDepositAccount().getBalance())
+                assertThat(transferRespDto.getBalance())
                                 .isEqualTo(transferTransaction1.getDepositAccountBalance());
         }
 

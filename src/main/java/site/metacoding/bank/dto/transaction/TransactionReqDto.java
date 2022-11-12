@@ -32,16 +32,5 @@ public class TransactionReqDto {
         private Long amount; // 금액
         private String gubun; // 고정값 (내계좌에서 다른계좌로 이체)
         private String accountPassword;
-
-        public Transaction toEntity(Account withdrawAccount, Account depositAccount) {
-            return Transaction.builder()
-                    .withdrawAccount(withdrawAccount)
-                    .depositAccount(depositAccount)
-                    .amount(amount)
-                    .withdrawAccountBalance(withdrawAccount.getBalance())
-                    .depositAccountBalance(depositAccount.getBalance())
-                    .gubun(TransactionEnum.valueOf(gubun))
-                    .build();
-        }
     }
 }

@@ -2,8 +2,8 @@ package site.metacoding.bank.service;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,9 +27,9 @@ import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawRespDto;
 @Transactional(readOnly = true)
 @Service
 public class TransactionService {
+        private final Logger log = LoggerFactory.getLogger(getClass());
         private final TransactionRepository transactionRepository;
         private final AccountRepository accountRepository;
-        private final EntityManager em;
 
         @Transactional
         public DepositRespDto 입금하기(DepositReqDto depositReqDto) {
@@ -42,13 +42,16 @@ public class TransactionService {
                 Account depositAccountPS = accountRepository.findById(depositReqDto.getDepositAccountId())
                                 .orElseThrow(
                                                 () -> new CustomApiException(ResponseEnum.BAD_REQUEST));
+                log.debug("디버그 : 1 :입금계좌 : " + depositAccountPS.getBalance());
 
                 // 0원 체크
                 depositAccountPS.zeroAmountCheck(depositReqDto.getAmount());
 
                 // 입금 하기
+
                 Transaction transaction = depositAccountPS.deposit(depositReqDto.getAmount());
                 Transaction transactionPS = transactionRepository.save(transaction);
+                log.debug("디버그 : transactionPS id : " + transactionPS.getId());
 
                 // DTO
                 return new DepositRespDto(depositAccountPS, transactionPS);
@@ -76,10 +79,10 @@ public class TransactionService {
 
                 // 출금 하기
                 Transaction transaction = withdrawAccountPS.withdraw(withdrawReqDto.getAmount());
-                em.persist(withdrawAccountPS);
+                Transaction transactionPS = transactionRepository.save(transaction);
 
                 // DTO
-                return new WithdrawRespDto(withdrawAccountPS, transaction);
+                return new WithdrawRespDto(withdrawAccountPS, transactionPS);
         }
 
         @Transactional
@@ -112,13 +115,11 @@ public class TransactionService {
                                 .orElseThrow(() -> new CustomApiException(ResponseEnum.BAD_REQUEST));
 
                 // 이체 하기
-                Transaction transferPS = transactionRepository
-                                .save(transferReqDto.toEntity(withdrawAccountPS, depositAccountPS));
-                withdrawAccountPS.withdraw(transferPS.getAmount());
-                depositAccountPS.deposit(transferPS.getAmount());
+                Transaction transaction = withdrawAccountPS.transper(transferReqDto.getAmount(), depositAccountPS);
+                Transaction transactionPS = transactionRepository.save(transaction);
 
                 // DTO
-                return new TransferRespDto(transferPS);
+                return new TransferRespDto(withdrawAccountPS, transactionPS);
         }
 
         public TransactionHistoryRespDto 입출금목록보기(Long userId, Long accountId, String gubun) {
