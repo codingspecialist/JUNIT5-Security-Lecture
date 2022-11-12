@@ -47,6 +47,11 @@ private final Logger log = LoggerFactory.getLogger(getClass());
 ### 이슈11 (해결)
 - DTO에 화면에는 필요 없지만, Test 검증을 위해 데이터를 추가해야 하는가?
 - 하지말자!!!!!!!!!!!!!!!
+
+### 이슈12
+- LocalDateTime 문제 (getter 어떻게 할것인지)
+- 서비스 테스트시에 id값 할당 어떻게 할지 (setData() 메서드로 시간과 ID를 함께 반영하는 것이 어떨까?)
+- 서비스쪽 조회 로직 마지막으로 점검하기
  
 ### 프로젝트명
 - bank
