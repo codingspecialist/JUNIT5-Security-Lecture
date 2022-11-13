@@ -88,9 +88,9 @@ public class UserApiControllerTest extends DummyBeans {
     }
 
     public void dataSetting() {
-        User ssarUser = userRepository.save(newUser(1L, "ssar"));
-        User cosUser = userRepository.save(newUser(2L, "cos"));
-        User adminUser = userRepository.save(newUser(3L, "admin"));
+        User ssarUser = userRepository.save(newUser("ssar"));
+        User cosUser = userRepository.save(newUser("cos"));
+        User adminUser = userRepository.save(newUser("admin"));
     }
 
 }

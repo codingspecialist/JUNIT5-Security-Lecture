@@ -64,7 +64,7 @@ public class TransactionApiControllerTest extends DummyBeans {
                 // given
                 DepositReqDto depositReqDto = new DepositReqDto();
                 depositReqDto.setDepositAccountId(1L);
-                depositReqDto.setAmount(1000L);
+                depositReqDto.setAmount(100L);
                 depositReqDto.setGubun("DEPOSIT");
                 String requestBody = om.writeValueAsString(depositReqDto);
                 log.debug("디버그 : " + requestBody);
@@ -86,8 +86,8 @@ public class TransactionApiControllerTest extends DummyBeans {
                 // given
                 Long userId = 1L;
                 WithdrawReqDto withdrawReqDto = new WithdrawReqDto();
-                withdrawReqDto.setWithdrawAccountId(2L);
-                withdrawReqDto.setAmount(1000L);
+                withdrawReqDto.setWithdrawAccountId(1L);
+                withdrawReqDto.setAmount(100L);
                 withdrawReqDto.setAccountPassword("1234");
                 withdrawReqDto.setGubun("WITHDRAW");
                 String requestBody = om.writeValueAsString(withdrawReqDto);
@@ -130,8 +130,9 @@ public class TransactionApiControllerTest extends DummyBeans {
 
                 // then
                 resultActions.andExpect(jsonPath("$.code").value(201));
-                resultActions.andExpect(jsonPath("$.data.withdrawAccount.balance").value(900L));
-                resultActions.andExpect(jsonPath("$.data.depositAccount.balance").value(1100L));
+                resultActions.andExpect(jsonPath("$.data.balance").value(900L));
+                // 만약 아래에서 실패하면 롤백됨. 검증안해도 됨.
+                // resultActions.andExpect(jsonPath("$.data.transaction.depositAccountBalance").value(1100L));
         }
 
         /*
@@ -199,16 +200,21 @@ public class TransactionApiControllerTest extends DummyBeans {
         }
 
         public void dataSetting() {
-                User ssarUser = userRepository.save(newUser(1L, "ssar"));
-                User cosUser = userRepository.save(newUser(2L, "cos"));
-                User adminUser = userRepository.save(newUser(3L, "admin"));
-                Account ssarAccount1 = accountRepository.save(newAccount(1L, 1111L, "쌀", ssarUser));
-                Account ssarAccount2 = accountRepository.save(newAccount(2L, 2222L, "쌀", ssarUser));
-                Account cosAccount1 = accountRepository.save(newAccount(3L, 3333L, "코스", cosUser));
-                Transaction withdrawTransaction1 = transactionRepository.save(newWithdrawTransaction(1L, ssarAccount1));
-                Transaction withdrawTransaction2 = transactionRepository.save(newWithdrawTransaction(2L, ssarAccount1));
-                Transaction depositTransaction1 = transactionRepository.save(newDepositTransaction(3L, ssarAccount1));
+                User ssarUser = userRepository.save(newUser("ssar"));
+                User cosUser = userRepository.save(newUser("cos"));
+                User adminUser = userRepository.save(newUser("admin"));
+                Account ssarAccount1 = accountRepository.save(newAccount(1111L, "쌀", ssarUser));
+                Account ssarAccount2 = accountRepository.save(newAccount(2222L, "쌀", ssarUser));
+                Account cosAccount1 = accountRepository.save(newAccount(3333L, "코스", cosUser));
+                Transaction withdrawTransaction1 = transactionRepository
+                                .save(newWithdrawTransaction(100L, ssarAccount1));
+                Transaction withdrawTransaction2 = transactionRepository
+                                .save(newWithdrawTransaction(100L, ssarAccount1));
+                Transaction depositTransaction1 = transactionRepository
+                                .save(newDepositTransaction(100L, ssarAccount1));
                 Transaction transferTransaction1 = transactionRepository
-                                .save(newTransferTransaction(4L, ssarAccount1, cosAccount1));
+                                .save(newTransferTransaction(100L, ssarAccount1, cosAccount1));
+                Transaction transferTransaction2 = transactionRepository
+                                .save(newTransferTransaction(100L, ssarAccount1, ssarAccount2));
         }
 }

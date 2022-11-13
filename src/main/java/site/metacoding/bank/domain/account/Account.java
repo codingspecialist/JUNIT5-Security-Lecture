@@ -1,5 +1,10 @@
 package site.metacoding.bank.domain.account;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -7,16 +12,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.ColumnDefault;
+import org.springframework.context.annotation.Profile;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import site.metacoding.bank.config.enums.ResponseEnum;
+import site.metacoding.bank.config.enums.TransactionEnum;
 import site.metacoding.bank.config.exceptions.CustomApiException;
 import site.metacoding.bank.domain.AudingTime;
+import site.metacoding.bank.domain.transaction.Transaction;
 import site.metacoding.bank.domain.user.User;
 
 /**
@@ -50,6 +58,20 @@ public class Account extends AudingTime {
     @Column(nullable = false)
     private Boolean isUse;
 
+    @OneToMany(mappedBy = "withdrawAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Transaction> withdrawTransactions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "depositAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Transaction> depositTransactions = new ArrayList<>();
+
+    public void addWithdrawTransaction(Transaction transaction) {
+        this.withdrawTransactions.add(transaction);
+    }
+
+    public void addDepositTransaction(Transaction transaction) {
+        this.depositTransactions.add(transaction);
+    }
+
     @Builder
     public Account(Long id, Long number, String ownerName, String password, Long balance, User user, Boolean isUse) {
         this.id = id;
@@ -59,6 +81,13 @@ public class Account extends AudingTime {
         this.balance = balance;
         this.user = user;
         this.isUse = isUse;
+    }
+
+    @Profile("test")
+    public void setMockData(Long id) {
+        this.id = id;
+        super.createdAt = LocalDateTime.now();
+        super.updatedAt = LocalDateTime.now();
     }
 
     /*
@@ -71,22 +100,53 @@ public class Account extends AudingTime {
     }
 
     /*
-     * 입금
+     * 출금
      */
-    public void deposit(Long amount) {
-        balance = balance + amount;
-        // addDepositTransaction(transaction); // Account 순수객체시점에 Account로 Transactions
-        // 조회하려면 필요함.
+    public Transaction withdraw(Long amount) {
+        checkBalance(amount);
+        balance = balance - amount;
+        Transaction transaction = Transaction.builder()
+                .withdrawAccount(this)
+                .withdrawAccountBalance(balance)
+                .amount(amount)
+                .gubun(TransactionEnum.WITHDRAW)
+                .build();
+        addWithdrawTransaction(transaction);
+        return transaction;
     }
 
     /*
-     * 출금
+     * 입금
      */
-    public void withdraw(Long amount) {
+    public Transaction deposit(Long amount) {
+        balance = balance + amount;
+        Transaction transaction = Transaction.builder()
+                .depositAccount(this)
+                .depositAccountBalance(balance)
+                .amount(amount)
+                .gubun(TransactionEnum.DEPOSIT)
+                .build();
+        addWithdrawTransaction(transaction);
+        return transaction;
+    }
+
+    /*
+     * 이체
+     */
+    public Transaction transper(Long amount, Account deposiAccount) {
         checkBalance(amount);
-        balance = balance - amount;
-        // addWithdrawTransaction(transaction); // Account 순수객체시점에 Account로 Transactions
-        // 조회하려면 필요함.
+        withdraw(amount);
+        deposiAccount.deposit(amount);
+        Transaction transaction = Transaction.builder()
+                .withdrawAccount(this)
+                .depositAccount(deposiAccount)
+                .withdrawAccountBalance(balance)
+                .depositAccountBalance(deposiAccount.getBalance())
+                .amount(amount)
+                .gubun(TransactionEnum.TRANSFER)
+                .build();
+        addWithdrawTransaction(transaction);
+        return transaction;
     }
 
     /*
@@ -120,21 +180,5 @@ public class Account extends AudingTime {
         isUse = false;
         return isUse;
     }
-
-    // @OneToMany(mappedBy = "withdrawAccount", fetch = FetchType.LAZY, cascade =
-    // CascadeType.ALL)
-    // private List<Transaction> withdrawTransactions = new ArrayList<>();
-
-    // @OneToMany(mappedBy = "depositAccount", fetch = FetchType.LAZY, cascade =
-    // CascadeType.ALL)
-    // private List<Transaction> depositTransactions = new ArrayList<>();
-
-    // public void addWithdrawTransaction(Transaction transaction) {
-    // this.withdrawTransactions.add(transaction);
-    // }
-
-    // public void addDepositTransaction(Transaction transaction) {
-    // this.depositTransactions.add(transaction);
-    // }
 
 }

@@ -79,11 +79,11 @@ public class AccountRepositoryTest extends DummyBeans {
         }
 
         public void dataSetting() {
-                User ssarUser = userRepository.save(newUser(1L, "ssar"));
-                User cosUser = userRepository.save(newUser(2L, "cos"));
-                User adminUser = userRepository.save(newUser(3L, "admin"));
-                Account ssarAccount1 = accountRepository.save(newAccount(1L, 1111L, "쌀", ssarUser));
-                Account ssarAccount2 = accountRepository.save(newAccount(2L, 2222L, "쌀", ssarUser));
-                Account cosAccount1 = accountRepository.save(newAccount(3L, 3333L, "코스", cosUser));
+                User ssarUser = userRepository.save(newUser("ssar"));
+                User cosUser = userRepository.save(newUser("cos"));
+                User adminUser = userRepository.save(newUser("admin"));
+                Account ssarAccount1 = accountRepository.save(newAccount(1111L, "쌀", ssarUser));
+                Account ssarAccount2 = accountRepository.save(newAccount(2222L, "쌀", ssarUser));
+                Account cosAccount1 = accountRepository.save(newAccount(3333L, "코스", cosUser));
         }
 }

@@ -2,11 +2,12 @@ package site.metacoding.bank.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import site.metacoding.bank.config.enums.ResponseEnum;
 import site.metacoding.bank.config.enums.TransactionEnum;
 import site.metacoding.bank.config.exceptions.CustomApiException;
@@ -26,6 +27,7 @@ import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawRespDto;
 @Transactional(readOnly = true)
 @Service
 public class TransactionService {
+        private final Logger log = LoggerFactory.getLogger(getClass());
         private final TransactionRepository transactionRepository;
         private final AccountRepository accountRepository;
 
@@ -40,17 +42,19 @@ public class TransactionService {
                 Account depositAccountPS = accountRepository.findById(depositReqDto.getDepositAccountId())
                                 .orElseThrow(
                                                 () -> new CustomApiException(ResponseEnum.BAD_REQUEST));
+                log.debug("디버그 : 1 :입금계좌 : " + depositAccountPS.getBalance());
 
                 // 0원 체크
                 depositAccountPS.zeroAmountCheck(depositReqDto.getAmount());
 
                 // 입금 하기
-                Transaction depositPS = transactionRepository
-                                .save(depositReqDto.toEntity(depositAccountPS));
-                depositAccountPS.deposit(depositPS.getAmount());
+
+                Transaction transaction = depositAccountPS.deposit(depositReqDto.getAmount());
+                Transaction transactionPS = transactionRepository.save(transaction);
+                log.debug("디버그 : transactionPS id : " + transactionPS.getId());
 
                 // DTO
-                return new DepositRespDto(depositPS);
+                return new DepositRespDto(depositAccountPS, transactionPS);
         }
 
         @Transactional
@@ -74,12 +78,11 @@ public class TransactionService {
                 withdrawAccountPS.passwordCheck(withdrawReqDto.getAccountPassword());
 
                 // 출금 하기
-                Transaction withdrawPS = transactionRepository
-                                .save(withdrawReqDto.toEntity(withdrawAccountPS));
-                withdrawAccountPS.withdraw(withdrawPS.getAmount());
+                Transaction transaction = withdrawAccountPS.withdraw(withdrawReqDto.getAmount());
+                Transaction transactionPS = transactionRepository.save(transaction);
 
                 // DTO
-                return new WithdrawRespDto(withdrawPS);
+                return new WithdrawRespDto(withdrawAccountPS, transactionPS);
         }
 
         @Transactional
@@ -112,13 +115,11 @@ public class TransactionService {
                                 .orElseThrow(() -> new CustomApiException(ResponseEnum.BAD_REQUEST));
 
                 // 이체 하기
-                Transaction transferPS = transactionRepository
-                                .save(transferReqDto.toEntity(withdrawAccountPS, depositAccountPS));
-                withdrawAccountPS.withdraw(transferPS.getAmount());
-                depositAccountPS.deposit(transferPS.getAmount());
+                Transaction transaction = withdrawAccountPS.transper(transferReqDto.getAmount(), depositAccountPS);
+                Transaction transactionPS = transactionRepository.save(transaction);
 
                 // DTO
-                return new TransferRespDto(transferPS);
+                return new TransferRespDto(withdrawAccountPS, transactionPS);
         }
 
         public TransactionHistoryRespDto 입출금목록보기(Long userId, Long accountId, String gubun) {

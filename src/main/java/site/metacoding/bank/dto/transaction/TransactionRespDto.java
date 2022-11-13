@@ -1,5 +1,6 @@
 package site.metacoding.bank.dto.transaction;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,169 +13,111 @@ import site.metacoding.bank.domain.transaction.Transaction;
 import site.metacoding.bank.domain.user.User;
 
 public class TransactionRespDto {
-    @Getter
+
     @Setter
-    public static class WithdrawRespDto {
-        private Long id;
-        private Long amount;
-        private String gubun;
-        private WithdrawAccountDto withdrawAccount;
-
-        public WithdrawRespDto(Transaction transaction) {
-            this.id = transaction.getId();
-            this.amount = transaction.getAmount();
-            this.gubun = transaction.getGubun().name();
-            this.withdrawAccount = new WithdrawAccountDto(transaction.getWithdrawAccount());
-        }
-
-        @Getter
-        @Setter
-        public class WithdrawAccountDto {
-            private Long id;
-            private Long number;
-            private Long balance;
-            private UserDto user;
-
-            public WithdrawAccountDto(Account account) {
-                this.id = account.getId();
-                this.number = account.getNumber();
-                this.balance = account.getBalance();
-                this.user = new UserDto(account.getUser());
-            }
-
-            @Getter
-            @Setter
-            public class UserDto {
-                private Long id;
-                private String username;
-
-                public UserDto(User user) {
-                    this.id = user.getId();
-                    this.username = user.getUsername();
-                }
-
-            }
-        }
-    }
-
     @Getter
-    @Setter
-    public static class DepositRespDto {
-        private Long id;
-        private Long amount;
-        private String gubun;
-        private DepositAccountDto depositAccount;
-
-        public DepositRespDto(Transaction transaction) {
-            this.id = transaction.getId();
-            this.amount = transaction.getAmount();
-            this.gubun = transaction.getGubun().name();
-            this.depositAccount = new DepositAccountDto(transaction.getDepositAccount());
-        }
-
-        @Getter
-        @Setter
-        public class DepositAccountDto {
-            private Long id;
-            private Long number;
-            private Long balance;
-            private UserDto user;
-
-            public DepositAccountDto(Account account) {
-                this.id = account.getId();
-                this.number = account.getNumber();
-                this.balance = account.getBalance();
-                this.user = new UserDto(account.getUser());
-            }
-
-            @Getter
-            @Setter
-            public class UserDto {
-                private Long id;
-                private String username;
-
-                public UserDto(User user) {
-                    this.id = user.getId();
-                    this.username = user.getUsername();
-                }
-
-            }
-        }
-
-    }
-
-    @Getter
-    @Setter
     public static class TransferRespDto {
-        private Long id;
-        private Long amount;
-        private String gubun; // 고정 (이체)
-        private WithdrawAccountDto withdrawAccount;
-        private DepositAccountDto depositAccount;
+        private Long id; // 계좌 ID
+        private Long number; // 계좌번호
+        private String ownerName;
+        private Long balance;
+        private TransactionDto transaction;
 
-        public TransferRespDto(Transaction transaction) {
-            this.id = transaction.getId();
-            this.amount = transaction.getAmount();
-            this.gubun = transaction.getGubun().name();
-            this.withdrawAccount = new WithdrawAccountDto(transaction.getWithdrawAccount());
-            this.depositAccount = new DepositAccountDto(transaction.getDepositAccount());
+        public TransferRespDto(Account account, Transaction transaction) {
+            this.id = account.getId();
+            this.number = account.getNumber();
+            this.ownerName = account.getOwnerName();
+            this.balance = account.getBalance();
+            this.transaction = new TransactionDto(transaction);
         }
 
         @Getter
         @Setter
-        public class WithdrawAccountDto {
+        public class TransactionDto {
             private Long id;
-            private Long number;
-            private Long balance;
-            private UserDto user;
+            private Long amount;
+            private String gubun; // 이체
+            private String from; // 출금계좌 (내계좌)
+            private String to; // 입금계좌
 
-            public WithdrawAccountDto(Account account) {
-                this.id = account.getId();
-                this.number = account.getNumber();
-                this.balance = account.getBalance();
-                this.user = new UserDto(account.getUser());
+            public TransactionDto(Transaction transaction) {
+                this.id = transaction.getId();
+                this.amount = transaction.getAmount();
+                this.gubun = transaction.getGubun().getValue();
+                this.from = transaction.getWithdrawAccount().getNumber() + "";
+                this.to = transaction.getDepositAccount().getNumber() + "";
             }
 
-            @Getter
-            @Setter
-            public class UserDto {
-                private Long id;
-                private String username;
+        }
+    }
 
-                public UserDto(User user) {
-                    this.id = user.getId();
-                    this.username = user.getUsername();
-                }
-            }
+    @Setter
+    @Getter
+    public static class DepositRespDto {
+        private Long id; // 계좌 ID
+        private Long number; // 계좌번호
+        private String ownerName;
+        private Long balance;
+        private TransactionDto transaction;
 
+        public DepositRespDto(Account account, Transaction transaction) {
+            this.id = account.getId();
+            this.number = account.getNumber();
+            this.ownerName = account.getOwnerName();
+            this.balance = account.getBalance();
+            this.transaction = new TransactionDto(transaction);
         }
 
         @Getter
         @Setter
-        public class DepositAccountDto {
+        public class TransactionDto {
             private Long id;
-            private Long number;
-            private Long balance;
-            private UserDto user;
+            private Long amount;
+            private String gubun; // 입금
+            private String from; // ATM
 
-            public DepositAccountDto(Account account) {
-                this.id = account.getId();
-                this.number = account.getNumber();
-                this.balance = account.getBalance();
-                this.user = new UserDto(account.getUser());
+            public TransactionDto(Transaction transaction) {
+                this.id = transaction.getId();
+                this.amount = transaction.getAmount();
+                this.gubun = transaction.getGubun().getValue();
+                this.from = "ATM";
             }
 
-            @Getter
-            @Setter
-            public class UserDto {
-                private Long id;
-                private String username;
+        }
+    }
 
-                public UserDto(User user) {
-                    this.id = user.getId();
-                    this.username = user.getUsername();
-                }
+    @Setter
+    @Getter
+    public static class WithdrawRespDto {
+        private Long id; // 계좌 ID
+        private Long number; // 계좌번호
+        private String ownerName;
+        private Long balance;
+        private TransactionDto transaction;
+
+        public WithdrawRespDto(Account account, Transaction transaction) {
+            this.id = account.getId();
+            this.number = account.getNumber();
+            this.ownerName = account.getOwnerName();
+            this.balance = account.getBalance();
+            this.transaction = new TransactionDto(transaction);
+        }
+
+        @Getter
+        @Setter
+        public class TransactionDto {
+            private Long id;
+            private Long amount;
+            private String gubun; // 출금
+            private String to; // ATM
+
+            public TransactionDto(Transaction transaction) {
+                this.id = transaction.getId();
+                this.amount = transaction.getAmount();
+                this.gubun = transaction.getGubun().getValue();
+                this.to = "ATM";
             }
+
         }
     }
 
@@ -226,19 +169,22 @@ public class TransactionRespDto {
                 this.amount = transaction.getAmount();
                 this.gubun = transaction.getGubun().getValue();
                 if (transaction.getGubun() == TransactionEnum.WITHDRAW) {
-                    this.createdAt = transaction.getCreatedAt();
+                    this.createdAt = transaction.getCreatedAt()
+                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                     this.balance = transaction.getWithdrawAccountBalance();
                     this.from = transaction.getWithdrawAccount().getNumber() + "";
                     this.to = "ATM";
                 }
                 if (transaction.getGubun() == TransactionEnum.DEPOSIT) {
-                    this.createdAt = transaction.getCreatedAt();
+                    this.createdAt = transaction.getCreatedAt()
+                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                     this.balance = transaction.getDepositAccountBalance();
                     this.from = "ATM";
                     this.to = transaction.getDepositAccount().getNumber() + ""; // toString()으 쓰지마, LazyLoading때문에!!
                 }
                 if (transaction.getGubun() == TransactionEnum.TRANSFER) {
-                    this.createdAt = transaction.getCreatedAt();
+                    this.createdAt = transaction.getCreatedAt()
+                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                     this.balance = transaction.getWithdrawAccountBalance();
                     this.from = transaction.getWithdrawAccount().getNumber() + "";
                     this.to = transaction.getDepositAccount().getNumber() + "";

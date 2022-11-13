@@ -97,25 +97,20 @@ public class TransactionRepositoryTest extends DummyBeans {
         }
 
         public void dataSetting() {
-                User ssarUser = userRepository.save(newUser(1L, "ssar"));
-                User cosUser = userRepository.save(newUser(2L, "cos"));
-                User adminUser = userRepository.save(newUser(3L, "admin"));
-                Account ssarAccount1 = accountRepository.save(newAccount(1L, 1111L, "쌀", ssarUser));
-                Account ssarAccount2 = accountRepository.save(newAccount(2L, 2222L, "쌀", ssarUser));
-                Account cosAccount1 = accountRepository.save(newAccount(3L, 3333L, "코스", cosUser));
-                Transaction withdrawTransaction1 = transactionRepository.save(newWithdrawTransaction(1L, ssarAccount1));
-                log.debug("디버그 : " + withdrawTransaction1.getWithdrawAccount().getBalance());
-                log.debug("디버그 : " + withdrawTransaction1.getWithdrawAccountBalance());
-                Transaction withdrawTransaction2 = transactionRepository.save(newWithdrawTransaction(2L, ssarAccount1));
-                log.debug("디버그 : " + withdrawTransaction2.getWithdrawAccount().getBalance());
-                log.debug("디버그 : " + withdrawTransaction2.getWithdrawAccountBalance());
-                Transaction depositTransaction1 = transactionRepository.save(newDepositTransaction(3L, ssarAccount1));
-                log.debug("디버그 : " + depositTransaction1.getDepositAccount().getBalance());
-                log.debug("디버그 : " + depositTransaction1.getDepositAccountBalance());
+                User ssarUser = userRepository.save(newUser("ssar"));
+                User cosUser = userRepository.save(newUser("cos"));
+                User adminUser = userRepository.save(newUser("admin"));
+                Account ssarAccount1 = accountRepository.save(newAccount(1111L, "쌀", ssarUser));
+                Account ssarAccount2 = accountRepository.save(newAccount(2222L, "쌀", ssarUser));
+                Account cosAccount1 = accountRepository.save(newAccount(3333L, "코스", cosUser));
+                Transaction withdrawTransaction1 = transactionRepository
+                                .save(newWithdrawTransaction(100L, ssarAccount1));
+                Transaction withdrawTransaction2 = transactionRepository
+                                .save(newWithdrawTransaction(100L, ssarAccount1));
+                Transaction depositTransaction1 = transactionRepository
+                                .save(newDepositTransaction(100L, ssarAccount1));
                 Transaction transferTransaction1 = transactionRepository
-                                .save(newTransferTransaction(4L, ssarAccount1, cosAccount1));
-                log.debug("디버그 : " + transferTransaction1.getWithdrawAccount().getBalance());
-                log.debug("디버그 : " + transferTransaction1.getWithdrawAccountBalance());
+                                .save(newTransferTransaction(100L, ssarAccount1, cosAccount1));
 
         }
 }
