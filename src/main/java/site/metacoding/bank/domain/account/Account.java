@@ -1,5 +1,6 @@
 package site.metacoding.bank.domain.account;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.springframework.context.annotation.Profile;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -78,6 +81,13 @@ public class Account extends AudingTime {
         this.balance = balance;
         this.user = user;
         this.isUse = isUse;
+    }
+
+    @Profile("test")
+    public void setMockData(Long id) {
+        this.id = id;
+        super.createdAt = LocalDateTime.now();
+        super.updatedAt = LocalDateTime.now();
     }
 
     /*

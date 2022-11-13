@@ -158,5 +158,7 @@ public class AccountApiControllerTest extends DummyBeans {
                                 .save(newDepositTransaction(100L, ssarAccount1));
                 Transaction transferTransaction1 = transactionRepository
                                 .save(newTransferTransaction(100L, ssarAccount1, cosAccount1));
+                Transaction transferTransaction2 = transactionRepository
+                                .save(newTransferTransaction(100L, ssarAccount1, ssarAccount2));
         }
 }

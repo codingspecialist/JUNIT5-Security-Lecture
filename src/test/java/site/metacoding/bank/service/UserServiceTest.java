@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import site.metacoding.bank.bean.DummyBeans;
+import site.metacoding.bank.bean.DummyMockBeans;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.domain.user.UserRepository;
 import site.metacoding.bank.dto.user.UserReqDto.UserJoinReqDto;
@@ -28,7 +28,7 @@ import site.metacoding.bank.dto.user.UserRespDto.UserJoinRespDto;
  * SpyBean -> Spay객체들을 스프링 ApplicationContext에 주입함. (IoC컨테이너 주입)
  */
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest extends DummyBeans {
+public class UserServiceTest extends DummyMockBeans {
     private final Logger log = LoggerFactory.getLogger(getClass());
     @InjectMocks
     private UserService userService;
@@ -48,14 +48,14 @@ public class UserServiceTest extends DummyBeans {
         userJoinReqDto.setEmail("ssar@nate.com");
 
         // stub
-        User ssarUser = newUser("ssar");
+        User ssarUser = newUser(1L, "ssar");
         when(userRepository.save(any())).thenReturn(ssarUser);
 
         // when
         UserJoinRespDto userJoinRespDto = userService.회원가입(userJoinReqDto);
 
         // then
-        assertThat(userJoinRespDto.getId()).isEqualTo(ssarUser.getId());
-        assertThat(userJoinRespDto.getUsername()).isEqualTo(ssarUser.getUsername());
+        assertThat(userJoinRespDto.getId()).isEqualTo(1L);
+        assertThat(userJoinRespDto.getUsername()).isEqualTo("ssar");
     }
 }

@@ -20,11 +20,11 @@ import lombok.Getter;
 public abstract class AudingTime {
     @CreatedDate
     @Column(nullable = false)
-    private LocalDateTime updatedAt;
+    protected LocalDateTime updatedAt;
 
     @LastModifiedDate
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    protected LocalDateTime createdAt;
 
     // public String getUpdatedAt() {
     // return this.updatedAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd
@@ -36,9 +36,4 @@ public abstract class AudingTime {
     // HH:mm:ss"));
     // }
 
-    @Profile("test")
-    public void setTestDate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
 }

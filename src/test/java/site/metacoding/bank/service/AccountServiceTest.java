@@ -56,25 +56,6 @@ public class AccountServiceTest extends DummyMockBeans {
         private BCryptPasswordEncoder passwordEncoder;
 
         @Test
-        public void 계좌삭제하기_test() {
-                // given
-                Long accountId = 1L;
-                AccountDeleteReqDto accountDeleteReqDto = new AccountDeleteReqDto();
-                accountDeleteReqDto.setAccountPassword("1234");
-
-                // stub
-                User ssarUser = newUser(1L, "ssar");
-                Account ssarAccount1 = newAccount(1L, 1111L, "쌀", ssarUser);
-                when(accountRepository.findById(any())).thenReturn(Optional.of(ssarAccount1));
-
-                // when
-                AccountDeleteRespDto accountDeleteRespDto = accountService.계좌삭제(accountDeleteReqDto, accountId);
-
-                // then
-                assertThat(accountDeleteRespDto.getIsUse()).isEqualTo(false);
-        }
-
-        @Test
         public void 계좌등록하기_test() throws Exception {
                 // given
                 AccountSaveReqDto accountSaveReqDto = new AccountSaveReqDto();
@@ -94,9 +75,9 @@ public class AccountServiceTest extends DummyMockBeans {
                 log.debug("디버그 : " + body);
 
                 // then
-                assertThat(accountSaveRespDto.getId()).isEqualTo(ssarAccount1.getId());
-                assertThat(accountSaveRespDto.getNumber()).isEqualTo(ssarAccount1.getNumber());
-                assertThat(accountSaveRespDto.getBalance()).isEqualTo(ssarAccount1.getBalance());
+                assertThat(accountSaveRespDto.getId()).isEqualTo(1L);
+                assertThat(accountSaveRespDto.getNumber()).isEqualTo(1111L);
+                assertThat(accountSaveRespDto.getBalance()).isEqualTo(1000L);
         }
 
         @Test
@@ -129,19 +110,25 @@ public class AccountServiceTest extends DummyMockBeans {
                 // given
                 Long accountId = 1L;
 
-                // stub
+                // stub 1
                 User ssarUser = newUser(1L, "ssar");
                 User cosUser = newUser(2L, "cos");
                 Account ssarAccount1 = newAccount(1L, 1111L, "쌀", ssarUser);
+                Account ssarAccount2 = newAccount(2L, 2222L, "쌀", ssarUser);
                 Account cosAccount1 = newAccount(3L, 3333L, "코스", cosUser);
-                Transaction withdrawTransaction1 = newWithdrawTransaction(1L, 100L, ssarAccount1);
-                Transaction withdrawTransaction2 = newWithdrawTransaction(2L, 100L, ssarAccount1);
-                Transaction depositTransaction1 = newDepositTransaction(3L, 100L, ssarAccount1);
-                Transaction transferTransaction1 = newTransferTransaction(4L, 100L, ssarAccount1, cosAccount1);
-                List<Transaction> transactions = Arrays.asList(withdrawTransaction1, withdrawTransaction2,
-                                depositTransaction1, transferTransaction1);
-
                 when(accountRepository.findById(any())).thenReturn(Optional.of(ssarAccount1));
+
+                // stub 2
+                Account ssarAccount1Copy = accountCopy(ssarAccount1);
+                Account ssarAccount2Copy = accountCopy(ssarAccount2);
+                Account cosAccount1Copy = accountCopy(cosAccount1);
+                Transaction withdrawTransaction1 = newWithdrawTransaction(1L, 100L, ssarAccount1Copy);
+                Transaction withdrawTransaction2 = newWithdrawTransaction(2L, 100L, ssarAccount1Copy);
+                Transaction depositTransaction1 = newDepositTransaction(3L, 100L, ssarAccount1Copy);
+                Transaction transferTransaction1 = newTransferTransaction(4L, 100L, ssarAccount1Copy, cosAccount1Copy);
+                Transaction transferTransaction2 = newTransferTransaction(5L, 100L, ssarAccount1Copy, ssarAccount2Copy);
+                List<Transaction> transactions = Arrays.asList(withdrawTransaction1, withdrawTransaction2,
+                                depositTransaction1, transferTransaction1, transferTransaction2);
                 when(transactionRepository.findByTransactionHistory(any(), any()))
                                 .thenReturn(transactions);
 
@@ -155,7 +142,24 @@ public class AccountServiceTest extends DummyMockBeans {
                 assertThat(accountDetailRespDto.getNumber()).isEqualTo(1111L);
         }
 
-        // 계좌삭제 테스트 할 것이 없음. (DTO 잘 변경됐는지 확인이라고 해야하는데, 그냥 삭제만 함. )
-        // 삭제는 Repository 테스트에서 이미 확인함.
+        @Test
+        public void 계좌삭제하기_test() throws Exception {
+                // given
+                Long accountId = 1L;
+                AccountDeleteReqDto accountDeleteReqDto = new AccountDeleteReqDto();
+                accountDeleteReqDto.setAccountPassword("1234");
 
+                // stub
+                User ssarUser = newUser(1L, "ssar");
+                Account ssarAccount = newAccount(1L, 1111L, "쌀", ssarUser);
+                when(accountRepository.findById(any())).thenReturn(Optional.of(ssarAccount));
+
+                // when
+                AccountDeleteRespDto accountDeleteRespDto = accountService.계좌삭제(accountDeleteReqDto, accountId);
+                String body = om.writeValueAsString(accountDeleteRespDto);
+                log.debug("디버그 : " + body);
+
+                // then
+                assertThat(accountDeleteRespDto.getIsUse()).isEqualTo(false);
+        }
 }

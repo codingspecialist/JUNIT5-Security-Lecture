@@ -1,5 +1,7 @@
 package site.metacoding.bank.domain.transaction;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
@@ -13,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.springframework.context.annotation.Profile;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -65,6 +69,13 @@ public class Transaction extends AudingTime {
         this.depositAccountBalance = depositAccountBalance;
         this.gubun = gubun;
 
+    }
+
+    @Profile("test")
+    public void setMockData(Long id) {
+        this.id = id;
+        super.createdAt = LocalDateTime.now();
+        super.updatedAt = LocalDateTime.now();
     }
 
 }

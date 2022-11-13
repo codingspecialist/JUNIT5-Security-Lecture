@@ -1,5 +1,7 @@
 package site.metacoding.bank.domain.user;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -8,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.springframework.context.annotation.Profile;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -46,4 +50,10 @@ public class User extends AudingTime {
         this.role = role;
     }
 
+    @Profile("test")
+    public void setMockData(Long id) {
+        this.id = id;
+        super.createdAt = LocalDateTime.now();
+        super.updatedAt = LocalDateTime.now();
+    }
 }

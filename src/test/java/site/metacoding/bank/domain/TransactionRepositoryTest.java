@@ -105,20 +105,12 @@ public class TransactionRepositoryTest extends DummyBeans {
                 Account cosAccount1 = accountRepository.save(newAccount(3333L, "코스", cosUser));
                 Transaction withdrawTransaction1 = transactionRepository
                                 .save(newWithdrawTransaction(100L, ssarAccount1));
-                log.debug("디버그 : " + withdrawTransaction1.getWithdrawAccount().getBalance());
-                log.debug("디버그 : " + withdrawTransaction1.getWithdrawAccountBalance());
                 Transaction withdrawTransaction2 = transactionRepository
                                 .save(newWithdrawTransaction(100L, ssarAccount1));
-                log.debug("디버그 : " + withdrawTransaction2.getWithdrawAccount().getBalance());
-                log.debug("디버그 : " + withdrawTransaction2.getWithdrawAccountBalance());
                 Transaction depositTransaction1 = transactionRepository
                                 .save(newDepositTransaction(100L, ssarAccount1));
-                log.debug("디버그 : " + depositTransaction1.getDepositAccount().getBalance());
-                log.debug("디버그 : " + depositTransaction1.getDepositAccountBalance());
                 Transaction transferTransaction1 = transactionRepository
-                                .save(newTransferTransaction(4L, ssarAccount1, cosAccount1));
-                log.debug("디버그 : " + transferTransaction1.getWithdrawAccount().getBalance());
-                log.debug("디버그 : " + transferTransaction1.getWithdrawAccountBalance());
+                                .save(newTransferTransaction(100L, ssarAccount1, cosAccount1));
 
         }
 }

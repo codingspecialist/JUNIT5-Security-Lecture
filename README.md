@@ -49,7 +49,7 @@ private final Logger log = LoggerFactory.getLogger(getClass());
 - 하지말자!!!!!!!!!!!!!!!
 
 ### 이슈12
-- LocalDateTime 문제 (getter 어떻게 할것인지)
+- LocalDateTime 문제 (getter 어떻게 할것인지 -> getter 삭제 DTO에서 format 하기, 이렇게 안하면 역직렬화가 안된다.)
 - 서비스 테스트시에 id값 할당 어떻게 할지 (setData() 메서드로 시간과 ID를 함께 반영하는 것이 어떨까?)
 - 서비스쪽 조회 로직 마지막으로 점검하기
  
@@ -72,7 +72,7 @@ create database metadb;
 use metadb;
 
 create table users (
-       id bigint auto_increment,
+        id bigint auto_increment,
         created_at timestamp not null,
         updated_at timestamp not null,
         email varchar(255) not null,
@@ -82,7 +82,7 @@ create table users (
         primary key (id)
 );
 create table account (
-       id bigint auto_increment,
+        id bigint auto_increment,
         created_at timestamp not null,
         updated_at timestamp not null,
         balance bigint not null,
@@ -95,7 +95,7 @@ create table account (
 );
 
 create table transaction (
-       id bigint auto_increment,
+        id bigint auto_increment,
         created_at timestamp not null,
         updated_at timestamp not null,
         amount bigint not null,
@@ -108,45 +108,46 @@ create table transaction (
 );
 ```
 
-### 테스트 더미 데이터 (순수 객체)
+### 테스트 더미 데이터 (영속화된 객체 Controller, Repository 사용 == DummyBeans)
 ```java
-User ssarUser = newUser(1L, "ssar");
-                User cosUser = newUser(2L, "cos");
-                User adminUser = newUser(3L, "admin");
-                List<User> users = Arrays.asList(ssarUser, cosUser, adminUser);
-                Account ssarAccount1 = newAccount(1L, 1111L, ssarUser);
-                Account ssarAccount2 = newAccount(2L, 2222L, ssarUser);
-                Account cosAccount1 = newAccount(3L, 3333L, cosUser);
-                List<Account> accounts = Arrays.asList(ssarAccount1, ssarAccount2, cosAccount1);
-                Transaction withdrawTransaction1 = newWithdrawTransaction(1L, ssarAccount1);
-                Transaction withdrawTransaction2 = newWithdrawTransaction(2L, ssarAccount1);
-                Transaction depositTransaction1 = newDepositTransaction(3L, ssarAccount1);
-                Transaction transferTransaction1 = newTransferTransaction(4L, ssarAccount1, cosAccount1);
-                List<Transaction> transactions = Arrays.asList(withdrawTransaction1, withdrawTransaction2,
-                                depositTransaction1, transferTransaction1);
+User ssarUser = userRepository.save(newUser("ssar"));
+User cosUser = userRepository.save(newUser("cos"));
+User adminUser = userRepository.save(newUser("admin"));
+Account ssarAccount1 = accountRepository.save(newAccount(1000L, 1111L, ssarUser));
+Account ssarAccount2 = accountRepository.save(newAccount(1000L, 2222L, ssarUser));
+Account cosAccount1 = accountRepository.save(newAccount(1000L, 3333L, cosUser));
+Transaction withdrawTransaction1 = transactionRepository.save(newWithdrawTransaction(ssarAccount1));
+Transaction withdrawTransaction2 = transactionRepository.save(newWithdrawTransaction(ssarAccount1));
+Transaction depositTransaction1 = transactionRepository.save(newDepositTransaction(ssarAccount1));
+Transaction transferTransaction1 = transactionRepository.save(newTransferTransaction(ssarAccount1, cosAccount1));
+Transaction transferTransaction1 = transactionRepository.save(newTransferTransaction(ssarAccount1, ssarAcount2));
 ```
 
-### 테스트 더미 데이터 (영속화된 객체)
+### 테스트 더미 데이터 (Mock 객체 Service 사용 == DummyMockBeans)
 ```java
-              User ssarUser = userRepository.save(newUser(1L, "ssar"));
-                User cosUser = userRepository.save(newUser(2L, "cos"));
-                User adminUser = userRepository.save(newUser(3L, "admin"));
-                Account ssarAccount1 = accountRepository.save(newAccount(1L, 1111L, ssarUser));
-                Account ssarAccount2 = accountRepository.save(newAccount(2L, 2222L, ssarUser));
-                Account cosAccount1 = accountRepository.save(newAccount(3L, 3333L, cosUser));
-                Transaction withdrawTransaction1 = transactionRepository.save(newWithdrawTransaction(1L, ssarAccount1));
-                Transaction withdrawTransaction2 = transactionRepository.save(newWithdrawTransaction(2L, ssarAccount1));
-                Transaction depositTransaction1 = transactionRepository.save(newDepositTransaction(3L, ssarAccount1));
-                Transaction transferTransaction1 = transactionRepository
-                                .save(newTransferTransaction(4L, ssarAccount1, cosAccount1));
+User ssarUser = newUser(1L,"ssar");
+User cosUser = newUser(2L,"cos");
+User adminUser = newUser(3L,"admin");
+List<User> users = Arrays.asList(ssarUser, cosUser, adminUser);
+Account ssarAccount1 = newAccount(1L,1000L, 1111L, ssarUser);
+Account ssarAccount2 = newAccount(2L,1000L, 2222L, ssarUser);
+Account cosAccount1 = newAccount(3L,1000L, 3333L, cosUser);
+List<Account> accounts = Arrays.asList(ssarAccount1, ssarAccount2, cosAccount1);
+Transaction withdrawTransaction1 = newWithdrawTransaction(1L,ssarAccount1);
+Transaction withdrawTransaction2 = newWithdrawTransaction(2L,ssarAccount1);
+Transaction depositTransaction1 = newDepositTransaction(3L,ssarAccount1);
+Transaction transferTransaction1 = newTransferTransaction(4L,ssarAccount1, cosAccount1);
+Transaction transferTransaction2 = newTransferTransaction(5L,ssarAccount1, ssarAccount2);
+List<Transaction> transactions = Arrays.asList(withdrawTransaction1, withdrawTransaction2,
+depositTransaction1, transferTransaction1, transferTransaction2);
 ```
 
 ### 참고
 ```txt
-    // @WithMockUser // 기본값 username=user, password=password role=ROLE_USER
-    // @WithMockUser(username = "ssar", password = "1234", roles = "CUSTOMER")
-    // https://velog.io/@rmswjdtn/Spring-SecuritywithUserDetails-%EC%95%8C%EC%95%84%EB%B3%B4%EA%B8%B0
-    // SecurityContext는 default로 TestExecutionListener.beforeTestMethod로 설정이 되어있습니다.
-    // 따라서 @BeforeAll, @BeforeEach 실행전에 WithUserDetails가 실행되어서, DB에 User가 생기기전에 실행됨
-    // setupBefore = TestExecutionEvent.TEST_EXECUTION 이것을 사용하자
+// @WithMockUser // 기본값 username=user, password=password role=ROLE_USER
+// @WithMockUser(username = "ssar", password = "1234", roles = "CUSTOMER")
+// https://velog.io/@rmswjdtn/Spring-SecuritywithUserDetails-%EC%95%8C%EC%95%84%EB%B3%B4%EA%B8%B0
+// SecurityContext는 default로 TestExecutionListener.beforeTestMethod로 설정이 되어있습니다.
+// 따라서 @BeforeAll, @BeforeEach 실행전에 WithUserDetails가 실행되어서, DB에 User가 생기기전에 실행됨
+// setupBefore = TestExecutionEvent.TEST_EXECUTION 이것을 사용하자
 ```
