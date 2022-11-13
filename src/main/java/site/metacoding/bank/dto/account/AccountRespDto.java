@@ -104,17 +104,28 @@ public class AccountRespDto {
 
     @Getter
     @Setter
-    public static class AccountAllRespDto {
-        private Long id;
-        private Long number;
-        private String ownerName;
-        private Long balance;
+    public static class AccountListRespDto {
 
-        public AccountAllRespDto(Account account) {
-            this.id = account.getId();
-            this.number = account.getNumber();
-            this.ownerName = account.getOwnerName();
-            this.balance = account.getBalance();
+        private List<AccountDto> accounts = new ArrayList<>();
+
+        public AccountListRespDto(List<Account> accounts) {
+            this.accounts = accounts.stream().map(AccountDto::new).collect(Collectors.toList());
+        }
+
+        @Setter
+        @Getter
+        public class AccountDto {
+            private Long id;
+            private Long number;
+            private String ownerName;
+            private Long balance;
+
+            public AccountDto(Account account) {
+                this.id = account.getId();
+                this.number = account.getNumber();
+                this.ownerName = account.getOwnerName();
+                this.balance = account.getBalance();
+            }
         }
     }
 

@@ -25,9 +25,9 @@ import site.metacoding.bank.domain.transaction.TransactionRepository;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.dto.account.AccountReqDto.AccountDeleteReqDto;
 import site.metacoding.bank.dto.account.AccountReqDto.AccountSaveReqDto;
-import site.metacoding.bank.dto.account.AccountRespDto.AccountAllRespDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountDeleteRespDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountDetailRespDto;
+import site.metacoding.bank.dto.account.AccountRespDto.AccountListRespDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountSaveRespDto;
 
 /*
@@ -95,13 +95,13 @@ public class AccountServiceTest extends DummyMockBeans {
                 when(accountRepository.findByActiveUserId(any())).thenReturn(accounts);
 
                 // when
-                List<AccountAllRespDto> accountAllRespDtos = accountService.계좌목록보기_유저별(id);
-                String body = om.writeValueAsString(accountAllRespDtos);
+                AccountListRespDto accountListRespDto = accountService.계좌목록보기_유저별(id);
+                String body = om.writeValueAsString(accountListRespDto);
                 log.debug("디버그 : " + body);
 
                 // then
-                assertThat(accountAllRespDtos.get(0).getNumber()).isEqualTo(1111L);
-                assertThat(accountAllRespDtos.get(1).getNumber()).isEqualTo(2222L);
+                assertThat(accountListRespDto.getAccounts().get(0).getNumber()).isEqualTo(1111L);
+                assertThat(accountListRespDto.getAccounts().get(1).getNumber()).isEqualTo(2222L);
         }
 
         @Test

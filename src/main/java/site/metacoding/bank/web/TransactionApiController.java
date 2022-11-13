@@ -1,8 +1,5 @@
 package site.metacoding.bank.web;
 
-import java.util.List;
-
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,7 +20,7 @@ import site.metacoding.bank.dto.transaction.TransactionReqDto.DepositReqDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.TransferReqDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.WithdrawReqDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.DepositRespDto;
-import site.metacoding.bank.dto.transaction.TransactionRespDto.TransactionHistoryRespDto;
+import site.metacoding.bank.dto.transaction.TransactionRespDto.TransactionListRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.TransferRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawRespDto;
 import site.metacoding.bank.service.TransactionService;
@@ -77,16 +74,16 @@ public class TransactionApiController {
          */
         @AuthorizationCheck
         @GetMapping("/user/{userId}/account/{accountId}/transaction")
-        public ResponseEntity<?> transactionHistory(String gubun,
+        public ResponseEntity<?> transactionList(String gubun,
                         @RequestParam(value = "page", defaultValue = "0") Integer page,
                         @PathVariable Long userId,
                         @PathVariable Long accountId,
                         @AuthenticationPrincipal LoginUser loginUser) {
-                List<TransactionHistoryRespDto> transactionHistoryRespDtos = transactionService.입출금목록보기(userId,
+                TransactionListRespDto transactionListRespDto = transactionService.입출금목록보기(userId,
                                 accountId,
                                 gubun,
                                 page);
-                return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, transactionHistoryRespDtos),
+                return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, transactionListRespDto),
                                 HttpStatus.OK);
         }
 }

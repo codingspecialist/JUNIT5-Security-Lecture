@@ -1,7 +1,5 @@
 package site.metacoding.bank.web;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,9 +18,9 @@ import site.metacoding.bank.config.enums.ResponseEnum;
 import site.metacoding.bank.dto.ResponseDto;
 import site.metacoding.bank.dto.account.AccountReqDto.AccountDeleteReqDto;
 import site.metacoding.bank.dto.account.AccountReqDto.AccountSaveReqDto;
-import site.metacoding.bank.dto.account.AccountRespDto.AccountAllRespDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountDeleteRespDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountDetailRespDto;
+import site.metacoding.bank.dto.account.AccountRespDto.AccountListRespDto;
 import site.metacoding.bank.dto.account.AccountRespDto.AccountSaveRespDto;
 import site.metacoding.bank.service.AccountService;
 
@@ -43,8 +41,8 @@ public class AccountApiController {
         @AuthorizationCheck
         @GetMapping("/user/{userId}/account")
         public ResponseEntity<?> list(@PathVariable Long userId, @AuthenticationPrincipal LoginUser loginUser) {
-                List<AccountAllRespDto> accountAllRespDtos = accountService.계좌목록보기_유저별(userId);
-                return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, accountAllRespDtos),
+                AccountListRespDto accountListRespDto = accountService.계좌목록보기_유저별(userId);
+                return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, accountListRespDto),
                                 HttpStatus.OK);
         }
 

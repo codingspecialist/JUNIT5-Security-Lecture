@@ -122,39 +122,49 @@ public class TransactionRespDto {
 
     @Getter
     @Setter
-    public static class TransactionHistoryRespDto {
-        private Long id;
-        private Long amount;
-        private Long balance;
-        private String gubun;
-        private String createdAt;
-        private String from;
-        private String to;
+    public static class TransactionListRespDto {
+        private List<TransactionDto> transactions = new ArrayList<>();
 
-        public TransactionHistoryRespDto(Transaction transaction) {
-            this.id = transaction.getId();
-            this.amount = transaction.getAmount();
-            this.gubun = transaction.getGubun().getValue();
-            if (transaction.getGubun() == TransactionEnum.WITHDRAW) {
-                this.createdAt = transaction.getCreatedAt()
-                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                this.balance = transaction.getWithdrawAccountBalance();
-                this.from = transaction.getWithdrawAccount().getNumber() + "";
-                this.to = "ATM";
-            }
-            if (transaction.getGubun() == TransactionEnum.DEPOSIT) {
-                this.createdAt = transaction.getCreatedAt()
-                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                this.balance = transaction.getDepositAccountBalance();
-                this.from = "ATM";
-                this.to = transaction.getDepositAccount().getNumber() + ""; // toString()으 쓰지마, LazyLoading때문에!!
-            }
-            if (transaction.getGubun() == TransactionEnum.TRANSFER) {
-                this.createdAt = transaction.getCreatedAt()
-                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                this.balance = transaction.getWithdrawAccountBalance();
-                this.from = transaction.getWithdrawAccount().getNumber() + "";
-                this.to = transaction.getDepositAccount().getNumber() + "";
+        public TransactionListRespDto(List<Transaction> transactions) {
+            this.transactions = transactions.stream().map(TransactionDto::new).collect(Collectors.toList());
+        }
+
+        @Getter
+        @Setter
+        public class TransactionDto {
+            private Long id;
+            private Long amount;
+            private Long balance;
+            private String gubun;
+            private String createdAt;
+            private String from;
+            private String to;
+
+            public TransactionDto(Transaction transaction) {
+                this.id = transaction.getId();
+                this.amount = transaction.getAmount();
+                this.gubun = transaction.getGubun().getValue();
+                if (transaction.getGubun() == TransactionEnum.WITHDRAW) {
+                    this.createdAt = transaction.getCreatedAt()
+                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                    this.balance = transaction.getWithdrawAccountBalance();
+                    this.from = transaction.getWithdrawAccount().getNumber() + "";
+                    this.to = "ATM";
+                }
+                if (transaction.getGubun() == TransactionEnum.DEPOSIT) {
+                    this.createdAt = transaction.getCreatedAt()
+                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                    this.balance = transaction.getDepositAccountBalance();
+                    this.from = "ATM";
+                    this.to = transaction.getDepositAccount().getNumber() + ""; // toString()으 쓰지마, LazyLoading때문에!!
+                }
+                if (transaction.getGubun() == TransactionEnum.TRANSFER) {
+                    this.createdAt = transaction.getCreatedAt()
+                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                    this.balance = transaction.getWithdrawAccountBalance();
+                    this.from = transaction.getWithdrawAccount().getNumber() + "";
+                    this.to = transaction.getDepositAccount().getNumber() + "";
+                }
             }
         }
 

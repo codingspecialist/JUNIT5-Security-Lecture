@@ -57,6 +57,7 @@ private final Logger log = LoggerFactory.getLogger(getClass());
 - 동적쿼리 입출금내역 페이징하기(3건씩)
 
 ### 남은 일
+- DTO 내부에 List 가지기
 - 서비스쪽 조회 로직 마지막으로 점검하기
 - Validation 체크
  
