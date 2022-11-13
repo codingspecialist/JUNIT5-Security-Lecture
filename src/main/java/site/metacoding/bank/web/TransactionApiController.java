@@ -1,5 +1,7 @@
 package site.metacoding.bank.web;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -75,48 +77,10 @@ public class TransactionApiController {
         @GetMapping("/user/{userId}/account/{accountId}/transaction")
         public ResponseEntity<?> withdrawHistory(String gubun, @PathVariable Long userId, @PathVariable Long accountId,
                         @AuthenticationPrincipal LoginUser loginUser) {
-                TransactionHistoryRespDto transactionHistoryRespDto = transactionService.입출금목록보기(userId, accountId,
+                List<TransactionHistoryRespDto> transactionHistoryRespDtos = transactionService.입출금목록보기(userId,
+                                accountId,
                                 gubun);
-                return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, transactionHistoryRespDto),
+                return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, transactionHistoryRespDtos),
                                 HttpStatus.OK);
         }
-
-        // /*
-        // * 출금 내역 보기
-        // */
-        // @GetMapping("/user/{userId}/account/{accountId}/withdraw")
-        // public ResponseEntity<?> withdrawHistory(@PathVariable Long userId,
-        // @PathVariable Long accountId,
-        // @AuthenticationPrincipal LoginUser loginUser) {
-        // // 권한 확인
-        // if (userId != loginUser.getUser().getId()) {
-        // if (loginUser.getUser().getRole() != UserEnum.ADMIN) {
-        // throw new CustomApiException(ResponseEnum.FORBIDDEN);
-        // }
-        // }
-        // WithdrawHistoryRespDto withdrawHistoryRespDto =
-        // transactionService.출금목록보기(userId, accountId);
-        // return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS,
-        // withdrawHistoryRespDto), HttpStatus.OK);
-        // }
-
-        // /*
-        // * 입금 내역 보기
-        // */
-        // @GetMapping("/user/{userId}/account/{accountId}/deposit")
-        // public ResponseEntity<?> depositHistory(@PathVariable Long userId,
-        // @PathVariable Long accountId,
-        // @AuthenticationPrincipal LoginUser loginUser) {
-        // // 권한 확인
-        // if (userId != loginUser.getUser().getId()) {
-        // if (loginUser.getUser().getRole() != UserEnum.ADMIN) {
-        // throw new CustomApiException(ResponseEnum.FORBIDDEN);
-        // }
-        // }
-        // DepositHistoryRespDto depositHistoryRespDto =
-        // transactionService.입금목록보기(userId, accountId);
-        // return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS,
-        // depositHistoryRespDto), HttpStatus.OK);
-        // }
-
 }

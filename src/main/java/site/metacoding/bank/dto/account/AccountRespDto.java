@@ -13,6 +13,7 @@ import lombok.Setter;
 import site.metacoding.bank.config.enums.TransactionEnum;
 import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.transaction.Transaction;
+import site.metacoding.bank.domain.user.User;
 
 public class AccountRespDto {
 
@@ -24,6 +25,7 @@ public class AccountRespDto {
         private Long number;
         private String ownerName;
         private Long balance;
+        private UserDto user;
         private List<TransactionDto> transactions = new ArrayList<>();
 
         private List<TransactionDto> reduceTransactionDto(List<Transaction> withdrawTransaction,
@@ -40,8 +42,21 @@ public class AccountRespDto {
             this.number = account.getNumber();
             this.ownerName = account.getOwnerName();
             this.balance = account.getBalance();
+            this.user = new UserDto(account.getUser());
             this.transactions = reduceTransactionDto(account.getWithdrawTransactions(),
                     account.getDepositTransactions());
+        }
+
+        @Getter
+        @Setter
+        public class UserDto {
+            private Long id;
+            private String username;
+
+            public UserDto(User user) {
+                this.id = user.getId();
+                this.username = user.getUsername();
+            }
         }
 
         @Getter

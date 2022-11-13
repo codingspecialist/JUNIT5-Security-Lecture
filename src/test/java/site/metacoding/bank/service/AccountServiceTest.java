@@ -21,7 +21,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import site.metacoding.bank.beans.DummyMockBeans;
 import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.account.AccountRepository;
-import site.metacoding.bank.domain.transaction.Transaction;
 import site.metacoding.bank.domain.transaction.TransactionRepository;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.dto.account.AccountReqDto.AccountDeleteReqDto;
