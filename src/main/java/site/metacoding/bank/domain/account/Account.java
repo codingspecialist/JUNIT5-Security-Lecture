@@ -136,8 +136,9 @@ public class Account extends AudingTime {
      */
     public Transaction transper(Long amount, Account deposiAccount) {
         checkBalance(amount);
-        withdraw(amount);
-        deposiAccount.deposit(amount);
+        balance = balance - amount;
+        deposiAccount.balance = deposiAccount.balance + amount;
+
         Transaction transaction = Transaction.builder()
                 .withdrawAccount(this)
                 .depositAccount(deposiAccount)
@@ -147,6 +148,7 @@ public class Account extends AudingTime {
                 .gubun(TransactionEnum.TRANSFER)
                 .build();
         addWithdrawTransaction(transaction);
+        deposiAccount.addDepositTransaction(transaction);
         return transaction;
     }
 

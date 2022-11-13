@@ -50,10 +50,11 @@ public class AccountService {
                 () -> new CustomApiException(ResponseEnum.BAD_REQUEST));
 
         // 계좌 입출금이체 내역
-        List<Transaction> transactions = transactionRepository.findByTransactionHistory(accountPS.getId(), null);
+        // List<Transaction> transactions =
+        // transactionRepository.findByTransactionHistory(accountPS.getId(), null);
 
         // DTO
-        return new AccountDetailRespDto(accountPS, transactions);
+        return new AccountDetailRespDto(accountPS);
     }
 
     @Transactional

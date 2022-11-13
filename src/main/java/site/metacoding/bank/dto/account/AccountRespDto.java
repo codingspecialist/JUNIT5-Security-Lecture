@@ -3,8 +3,10 @@ package site.metacoding.bank.dto.account;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,23 +19,35 @@ public class AccountRespDto {
     @Getter
     @Setter
     public static class AccountDetailRespDto {
+
         private Long id;
         private Long number;
         private String ownerName;
         private Long balance;
         private List<TransactionDto> transactions = new ArrayList<>();
 
-        public AccountDetailRespDto(Account account, List<Transaction> transactions) {
+        private List<TransactionDto> reduceTransactionDto(List<Transaction> withdrawTransaction,
+                List<Transaction> depositTransaction) {
+            List<Transaction> transactions = Stream.concat(withdrawTransaction.stream(), depositTransaction.stream())
+                    .sorted(Comparator.comparingLong((transaction) -> transaction.getId()))
+                    .collect(Collectors.toList());
+
+            return transactions.stream().map(TransactionDto::new).collect(Collectors.toList());
+        }
+
+        public AccountDetailRespDto(Account account) {
             this.id = account.getId();
             this.number = account.getNumber();
             this.ownerName = account.getOwnerName();
             this.balance = account.getBalance();
-            this.transactions = transactions.stream().map(TransactionDto::new).collect(Collectors.toList());
+            this.transactions = reduceTransactionDto(account.getWithdrawTransactions(),
+                    account.getDepositTransactions());
         }
 
         @Getter
         @Setter
         public class TransactionDto {
+
             private Long id;
             private Long amount;
             private Long balance;

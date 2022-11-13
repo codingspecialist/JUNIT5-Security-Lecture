@@ -116,17 +116,15 @@ public class AccountServiceTest extends DummyMockBeans {
                 Account ssarAccount1 = newAccount(1L, 1111L, "쌀", ssarUser);
                 Account ssarAccount2 = newAccount(2L, 2222L, "쌀", ssarUser);
                 Account cosAccount1 = newAccount(3L, 3333L, "코스", cosUser);
-                Transaction withdrawTransaction1 = newWithdrawTransaction(1L, 100L, ssarAccount1);
-                Transaction withdrawTransaction2 = newWithdrawTransaction(2L, 100L, ssarAccount1);
-                Transaction depositTransaction1 = newDepositTransaction(3L, 100L, ssarAccount1);
-                Transaction transferTransaction1 = newTransferTransaction(4L, 100L, ssarAccount1, cosAccount1);
-                Transaction transferTransaction2 = newTransferTransaction(5L, 100L, ssarAccount1, ssarAccount2);
-                List<Transaction> transactions = Arrays.asList(withdrawTransaction1, withdrawTransaction2,
-                                depositTransaction1, transferTransaction1, transferTransaction2);
+                newWithdrawTransaction(1L, 100L, ssarAccount1);
+                newWithdrawTransaction(2L, 100L, ssarAccount1);
+                newDepositTransaction(3L, 100L, ssarAccount1);
+                newTransferTransaction(4L, 100L, ssarAccount1, cosAccount1);
+                newTransferTransaction(5L, 100L, ssarAccount1, ssarAccount2);
 
                 when(accountRepository.findById(any())).thenReturn(Optional.of(ssarAccount1));
-                when(transactionRepository.findByTransactionHistory(any(), any()))
-                                .thenReturn(transactions);
+                // when(transactionRepository.findByTransactionHistory(any(), any()))
+                // .thenReturn(transactions);
 
                 // when
                 AccountDetailRespDto accountDetailRespDto = accountService.계좌상세보기(accountId);
