@@ -10,15 +10,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 import site.metacoding.bank.beans.DummyBeans;
+import site.metacoding.bank.config.QueryDSLConfig;
 import site.metacoding.bank.config.enums.ResponseEnum;
 import site.metacoding.bank.config.exceptions.CustomApiException;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.domain.user.UserRepository;
 
 @ActiveProfiles("test")
+@Import(QueryDSLConfig.class)
 @DataJpaTest // 내부에 @Transactional 존재
 public class UserRepositoryTest extends DummyBeans {
     private final Logger log = LoggerFactory.getLogger(getClass());

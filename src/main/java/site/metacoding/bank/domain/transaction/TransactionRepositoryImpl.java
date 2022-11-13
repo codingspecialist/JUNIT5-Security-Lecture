@@ -1,22 +1,31 @@
 package site.metacoding.bank.domain.transaction;
 
+import static site.metacoding.bank.domain.transaction.QTransaction.transaction;
+
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import org.springframework.util.StringUtils;
+
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import lombok.RequiredArgsConstructor;
-import site.metacoding.bank.config.enums.ResponseEnum;
 import site.metacoding.bank.config.enums.TransactionEnum;
-import site.metacoding.bank.config.exceptions.CustomApiException;
 
 interface Dao {
     List<Transaction> findByAccountId(Long accountId, String gubun, Integer page);
+
+    List<Transaction> findByAccountIdQueryDSL(Long accountId, String gubun, Integer page);
 }
 
 @RequiredArgsConstructor
 public class TransactionRepositoryImpl implements Dao {
     private final EntityManager em;
+    private final JPAQueryFactory jpaQueryFactory;
 
     public List<Transaction> findByAccountId(Long accountId, String gubun, Integer page) {
         String sql = "";
@@ -32,8 +41,6 @@ public class TransactionRepositoryImpl implements Dao {
             sql += "where t.depositAccount.id = :depositAccountId";
         } else if (TransactionEnum.valueOf(gubun) == TransactionEnum.WITHDRAW) {
             sql += "where t.withdrawAccount.id = :withdrawAccountId";
-        } else {
-            throw new CustomApiException(ResponseEnum.BAD_REQUEST);
         }
 
         TypedQuery<Transaction> query = em.createQuery(sql, Transaction.class);
@@ -47,9 +54,36 @@ public class TransactionRepositoryImpl implements Dao {
             query = query.setParameter("withdrawAccountId", accountId);
         }
 
-        Integer firstNum = page * 3;
-        query.setFirstResult(firstNum);
+        query.setFirstResult(page * 3);
         query.setMaxResults(3);
         return query.getResultList();
+    }
+
+    public List<Transaction> findByAccountIdQueryDSL(Long accountId, String gubun, Integer page) {
+        // select
+        JPAQuery<Transaction> query = jpaQueryFactory.selectFrom(transaction);
+
+        // join
+        query.leftJoin(transaction.withdrawAccount).leftJoin(transaction.depositAccount);
+
+        // where
+        query.where(gubunCheck(gubun, accountId));
+
+        // paging
+        query.limit(3).offset(page * 3);
+
+        return query.fetch();
+    }
+
+    private BooleanExpression gubunCheck(String gubun, Long accountId) {
+        if (!StringUtils.hasText(gubun)) {
+            return transaction.withdrawAccount.id.eq(accountId).or(transaction.depositAccount.id.eq(accountId));
+        } else if (TransactionEnum.valueOf(gubun) == TransactionEnum.DEPOSIT) {
+            return transaction.depositAccount.id.eq(accountId);
+        } else if (TransactionEnum.valueOf(gubun) == TransactionEnum.WITHDRAW) {
+            return transaction.withdrawAccount.id.eq(accountId);
+        } else {
+            return null;
+        }
     }
 }

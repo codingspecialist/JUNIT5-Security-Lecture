@@ -55,10 +55,12 @@ private final Logger log = LoggerFactory.getLogger(getClass());
 
 ### 이슈13 (해결)
 - 동적쿼리 입출금내역 페이징하기(3건씩)
+- 계좌 상세보기만 연관관계 양방향으로 해결!!, 입출금내역보기는 동적쿼리로 해결!!
 
 ### 남은 일
 - DTO 내부에 List 가지기
 - 서비스쪽 조회 로직 마지막으로 점검하기
+- QueryDSL 적용하기
 - Validation 체크
  
 ### 프로젝트명

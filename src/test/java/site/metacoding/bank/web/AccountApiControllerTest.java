@@ -90,16 +90,17 @@ public class AccountApiControllerTest extends DummyBeans {
         @Test
         public void list_test() throws Exception {
                 // given
+                Long id = 1L;
 
                 // when
                 ResultActions resultActions = mvc
-                                .perform(get("/api/user/1/account"));
+                                .perform(get("/api/user/" + id + "/account"));
                 String responseBody = resultActions.andReturn().getResponse().getContentAsString();
                 log.debug("디버그 : " + responseBody);
 
                 // then
                 resultActions.andExpect(jsonPath("$.code").value(200));
-                resultActions.andExpect(jsonPath("$.data.length()").value(2));
+                resultActions.andExpect(jsonPath("$.data.accounts.length()").value(2));
         }
 
         /**

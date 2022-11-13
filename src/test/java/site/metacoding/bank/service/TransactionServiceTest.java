@@ -179,7 +179,7 @@ public class TransactionServiceTest extends DummyMockBeans {
                                                                                                             // 추가함
 
                 when(accountRepository.findById(any())).thenReturn((Optional.of(ssarAccount1)));
-                when(transactionRepository.findByAccountId(any(), any(), any())).thenReturn(transactions);
+                when(transactionRepository.findByAccountIdQueryDSL(any(), any(), any())).thenReturn(transactions);
 
                 // when
                 TransactionListRespDto transactionListRespDto = transactionService.입출금목록보기(userId, accountId, gubun,
