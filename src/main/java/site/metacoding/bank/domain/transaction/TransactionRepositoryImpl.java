@@ -3,6 +3,7 @@ package site.metacoding.bank.domain.transaction;
 import static site.metacoding.bank.domain.transaction.QTransaction.transaction;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -60,6 +61,7 @@ public class TransactionRepositoryImpl implements Dao {
     }
 
     public List<Transaction> findByAccountIdQueryDSL(Long accountId, String gubun, Integer page) {
+
         // select
         JPAQuery<Transaction> query = jpaQueryFactory.selectFrom(transaction);
 

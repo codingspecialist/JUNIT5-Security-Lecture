@@ -3,6 +3,7 @@ package site.metacoding.bank.dto.account;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -109,7 +110,12 @@ public class AccountRespDto {
         private List<AccountDto> accounts = new ArrayList<>();
 
         public AccountListRespDto(List<Account> accounts) {
-            this.accounts = accounts.stream().map(AccountDto::new).collect(Collectors.toList());
+            this.accounts = accounts.stream()
+                    // .peek((account) -> {
+                    // System.out.println(account.getNumber());
+                    // })
+                    .map(AccountDto::new)
+                    .collect(Collectors.toList());
         }
 
         @Setter

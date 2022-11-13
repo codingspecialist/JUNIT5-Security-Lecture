@@ -7,6 +7,8 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -102,6 +104,13 @@ public class AccountServiceTest extends DummyMockBeans {
                 // then
                 assertThat(accountListRespDto.getAccounts().get(0).getNumber()).isEqualTo(1111L);
                 assertThat(accountListRespDto.getAccounts().get(1).getNumber()).isEqualTo(2222L);
+        }
+
+        @Test
+        public void function_test3() {
+                int sum = IntStream.of(1, 3, 5, 7, 9)
+                                .peek(System.out::println)
+                                .sum();
         }
 
         @Test

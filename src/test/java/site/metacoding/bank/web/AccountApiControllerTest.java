@@ -66,8 +66,8 @@ public class AccountApiControllerTest extends DummyBeans {
         public void save_test() throws Exception {
                 // given
                 AccountSaveReqDto accountSaveReqDto = new AccountSaveReqDto();
-                accountSaveReqDto.setNumber(55556666L);
-                accountSaveReqDto.setOwnerName("홍길동");
+                accountSaveReqDto.setNumber(5555L);
+                accountSaveReqDto.setOwnerName("홍길도");
                 accountSaveReqDto.setPassword("1234");
 
                 String requestBody = om.writeValueAsString(accountSaveReqDto);

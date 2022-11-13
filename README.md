@@ -57,6 +57,15 @@ private final Logger log = LoggerFactory.getLogger(getClass());
 - 동적쿼리 입출금내역 페이징하기(3건씩)
 - 계좌 상세보기만 연관관계 양방향으로 해결!!, 입출금내역보기는 동적쿼리로 해결!!
 
+### 이슈14 (해결)
+- @Size는 문자열에 사용
+- 숫자 null 검증은 @NotNull
+- 숫자 길이 검증은 @Max, @Min
+- 문자 null 검증은 @NotNull
+- 문자 공백 검증은 @NotEmpty
+- 문자 null과 공백 검증은 @NotBlank
+- 문자 길이 검증은 @Size
+
 ### 남은 일
 - DTO 내부에 List 가지기
 - 서비스쪽 조회 로직 마지막으로 점검하기

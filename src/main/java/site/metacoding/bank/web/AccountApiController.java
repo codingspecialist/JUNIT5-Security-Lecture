@@ -1,8 +1,11 @@
 package site.metacoding.bank.web;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +34,8 @@ public class AccountApiController {
         private final AccountService accountService;
 
         @PostMapping("/account")
-        public ResponseEntity<?> save(@RequestBody AccountSaveReqDto accountSaveReqDto,
+        public ResponseEntity<?> save(@RequestBody @Valid AccountSaveReqDto accountSaveReqDto,
+                        BindingResult bindingResult,
                         @AuthenticationPrincipal LoginUser loginUser) {
                 AccountSaveRespDto accountSaveRespDto = accountService.계좌등록하기(accountSaveReqDto, loginUser.getUser());
                 return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.POST_SUCCESS, accountSaveRespDto),
@@ -58,7 +62,7 @@ public class AccountApiController {
         @AuthorizationCheck
         @PutMapping("/user/{userId}/account/{accountId}/delete")
         public ResponseEntity<?> delete(@PathVariable Long userId, @PathVariable Long accountId,
-                        @RequestBody AccountDeleteReqDto accountDeleteReqDto,
+                        @RequestBody @Valid AccountDeleteReqDto accountDeleteReqDto, BindingResult bindingResult,
                         @AuthenticationPrincipal LoginUser loginUser) {
                 AccountDeleteRespDto accountDeleteRespDto = accountService.계좌삭제(accountDeleteReqDto, accountId);
                 return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.DELETE_SUCCESS, accountDeleteRespDto),
