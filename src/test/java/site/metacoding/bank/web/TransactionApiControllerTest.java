@@ -191,7 +191,8 @@ public class TransactionApiControllerTest extends DummyBeans {
 
                 // when
                 ResultActions resultActions = mvc
-                                .perform(get("/api/user/" + userId + "/account/" + accountId + "/transaction"));
+                                .perform(get("/api/user/" + userId + "/account/" + accountId + "/transaction")
+                                                .param("page", "1"));
                 String responseBody = resultActions.andReturn().getResponse().getContentAsString();
                 log.debug("디버그 : " + responseBody);
 
