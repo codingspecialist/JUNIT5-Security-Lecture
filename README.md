@@ -121,33 +121,38 @@ create table transaction (
 User ssarUser = userRepository.save(newUser("ssar"));
 User cosUser = userRepository.save(newUser("cos"));
 User adminUser = userRepository.save(newUser("admin"));
-Account ssarAccount1 = accountRepository.save(newAccount(1000L, 1111L, ssarUser));
-Account ssarAccount2 = accountRepository.save(newAccount(1000L, 2222L, ssarUser));
-Account cosAccount1 = accountRepository.save(newAccount(1000L, 3333L, cosUser));
-Transaction withdrawTransaction1 = transactionRepository.save(newWithdrawTransaction(ssarAccount1));
-Transaction withdrawTransaction2 = transactionRepository.save(newWithdrawTransaction(ssarAccount1));
-Transaction depositTransaction1 = transactionRepository.save(newDepositTransaction(ssarAccount1));
-Transaction transferTransaction1 = transactionRepository.save(newTransferTransaction(ssarAccount1, cosAccount1));
-Transaction transferTransaction1 = transactionRepository.save(newTransferTransaction(ssarAccount1, ssarAcount2));
+Account ssarAccount1 = accountRepository.save(newAccount(1111L, "쌀", ssarUser));
+Account ssarAccount2 = accountRepository.save(newAccount(2222L, "쌀", ssarUser));
+Account cosAccount1 = accountRepository.save(newAccount(3333L, "코스", cosUser));
+Transaction withdrawTransaction1 = transactionRepository
+                .save(newWithdrawTransaction(100L, ssarAccount1));
+Transaction withdrawTransaction2 = transactionRepository
+                .save(newWithdrawTransaction(100L, ssarAccount1));
+Transaction depositTransaction1 = transactionRepository
+                .save(newDepositTransaction(100L, ssarAccount1));
+Transaction transferTransaction1 = transactionRepository
+                .save(newTransferTransaction(100L, ssarAccount1, cosAccount1));
+Transaction transferTransaction2 = transactionRepository
+                .save(newTransferTransaction(100L, ssarAccount1, ssarAccount2));
 ```
 
 ### 테스트 더미 데이터 (Mock 객체 Service 사용 == DummyMockBeans)
 ```java
-User ssarUser = newUser(1L,"ssar");
-User cosUser = newUser(2L,"cos");
-User adminUser = newUser(3L,"admin");
+User ssarUser = newUser(1L, "ssar");
+User cosUser = newUser(2L, "cos");
+User adminUser = newUser(3L, "admin");
 List<User> users = Arrays.asList(ssarUser, cosUser, adminUser);
-Account ssarAccount1 = newAccount(1L,1000L, 1111L, ssarUser);
-Account ssarAccount2 = newAccount(2L,1000L, 2222L, ssarUser);
-Account cosAccount1 = newAccount(3L,1000L, 3333L, cosUser);
+Account ssarAccount1 = newAccount(1L, 1111L, "쌀", ssarUser);
+Account ssarAccount2 = newAccount(2L, 2222L, "쌀", ssarUser);
+Account cosAccount1 = newAccount(3L, 3333L, "코스", cosUser);
 List<Account> accounts = Arrays.asList(ssarAccount1, ssarAccount2, cosAccount1);
-Transaction withdrawTransaction1 = newWithdrawTransaction(1L,ssarAccount1);
-Transaction withdrawTransaction2 = newWithdrawTransaction(2L,ssarAccount1);
-Transaction depositTransaction1 = newDepositTransaction(3L,ssarAccount1);
-Transaction transferTransaction1 = newTransferTransaction(4L,ssarAccount1, cosAccount1);
-Transaction transferTransaction2 = newTransferTransaction(5L,ssarAccount1, ssarAccount2);
+Transaction withdrawTransaction1 = newWithdrawTransaction(1L, 100L, ssarAccount1);
+Transaction withdrawTransaction2 = newWithdrawTransaction(2L, 100L, ssarAccount1);
+Transaction depositTransaction1 = newDepositTransaction(3L, 100L, ssarAccount1);
+Transaction transferTransaction1 = newTransferTransaction(4L, 100L, ssarAccount1, cosAccount1);
+Transaction transferTransaction2 = newTransferTransaction(5L, 100L, ssarAccount1, ssarAccount2);
 List<Transaction> transactions = Arrays.asList(withdrawTransaction1, withdrawTransaction2,
-depositTransaction1, transferTransaction1, transferTransaction2);
+                depositTransaction1, transferTransaction1, transferTransaction2);
 ```
 
 ### 참고

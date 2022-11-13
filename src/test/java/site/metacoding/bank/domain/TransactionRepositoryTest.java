@@ -49,7 +49,7 @@ public class TransactionRepositoryTest extends DummyBeans {
                 Integer page = 0;
 
                 // when
-                List<Transaction> transactions = transactionRepository.findByTransactionHistory(accountId, gubun, page);
+                List<Transaction> transactions = transactionRepository.findByAccountId(accountId, gubun, page);
 
                 // then
                 assertThat(transactions.get(0).getAmount()).isEqualTo(100L);
@@ -64,7 +64,7 @@ public class TransactionRepositoryTest extends DummyBeans {
                 Integer page = 0;
 
                 // when
-                List<Transaction> transactions = transactionRepository.findByTransactionHistory(accountId, gubun, page);
+                List<Transaction> transactions = transactionRepository.findByAccountId(accountId, gubun, page);
 
                 // then
                 assertThat(transactions.get(0).getAmount()).isEqualTo(100L);
@@ -79,7 +79,7 @@ public class TransactionRepositoryTest extends DummyBeans {
                 Integer page = 0;
 
                 // when
-                List<Transaction> transactions = transactionRepository.findByTransactionHistory(accountId, gubun, page);
+                List<Transaction> transactions = transactionRepository.findByAccountId(accountId, gubun, page);
 
                 // then
                 assertThat(transactions.get(0).getAmount()).isEqualTo(100L);

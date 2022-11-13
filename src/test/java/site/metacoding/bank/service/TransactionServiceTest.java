@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,7 @@ import site.metacoding.bank.dto.transaction.TransactionReqDto.DepositReqDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.TransferReqDto;
 import site.metacoding.bank.dto.transaction.TransactionReqDto.WithdrawReqDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.DepositRespDto;
+import site.metacoding.bank.dto.transaction.TransactionRespDto.TransactionListRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.TransferRespDto;
 import site.metacoding.bank.dto.transaction.TransactionRespDto.WithdrawRespDto;
 
@@ -153,4 +156,39 @@ public class TransactionServiceTest extends DummyMockBeans {
         }
 
         // 입출금목록보기
+        @Test
+        public void 입출금목록보기_test() throws Exception {
+                // given
+                Long userId = 1L;
+                Long accountId = 1L;
+                String gubun = null;
+                Integer page = 1;
+
+                // stub
+                User ssarUser = newUser(1L, "ssar");
+                User cosUser = newUser(2L, "cos");
+                Account ssarAccount1 = newAccount(1L, 1111L, "쌀", ssarUser);
+                Account ssarAccount2 = newAccount(2L, 2222L, "쌀", ssarUser);
+                Account cosAccount1 = newAccount(3L, 3333L, "코스", cosUser);
+                Transaction withdrawTransaction1 = newWithdrawTransaction(1L, 100L, ssarAccount1);
+                Transaction withdrawTransaction2 = newWithdrawTransaction(2L, 100L, ssarAccount1);
+                Transaction depositTransaction1 = newDepositTransaction(3L, 100L, ssarAccount1);
+                Transaction transferTransaction1 = newTransferTransaction(4L, 100L, ssarAccount1, cosAccount1);
+                Transaction transferTransaction2 = newTransferTransaction(5L, 100L, ssarAccount1, ssarAccount2);
+                List<Transaction> transactions = Arrays.asList(transferTransaction1, transferTransaction2); // 뒤에 2개만
+                                                                                                            // 추가함
+
+                when(accountRepository.findById(any())).thenReturn((Optional.of(ssarAccount1)));
+                when(transactionRepository.findByAccountId(any(), any(), any())).thenReturn(transactions);
+
+                // when
+                TransactionListRespDto transactionListRespDto = transactionService.입출금목록보기(userId, accountId, gubun,
+                                page);
+                String body = om.writeValueAsString(transactionListRespDto);
+                log.debug("디버그 : " + body);
+
+                // then
+                assertThat(transactionListRespDto.getTransactions().size()).isEqualTo(2);
+                assertThat(transactionListRespDto.getTransactions().get(0).getBalance()).isEqualTo(800L);
+        }
 }

@@ -11,18 +11,14 @@ import site.metacoding.bank.config.enums.TransactionEnum;
 import site.metacoding.bank.config.exceptions.CustomApiException;
 
 interface Dao {
-    // List<Transaction> findByTransactionHistory(@Param("withdrawAccountId") Long
-    // withdrawAccountId,
-    // @Param("depositAccountId") Long depositAccountId);
-
-    List<Transaction> findByTransactionHistory(Long accountId, String gubun, Integer page);
+    List<Transaction> findByAccountId(Long accountId, String gubun, Integer page);
 }
 
 @RequiredArgsConstructor
 public class TransactionRepositoryImpl implements Dao {
     private final EntityManager em;
 
-    public List<Transaction> findByTransactionHistory(Long accountId, String gubun, Integer page) {
+    public List<Transaction> findByAccountId(Long accountId, String gubun, Integer page) {
         String sql = "";
         sql += "select t from Transaction t ";
         sql += "left join t.withdrawAccount wa ";

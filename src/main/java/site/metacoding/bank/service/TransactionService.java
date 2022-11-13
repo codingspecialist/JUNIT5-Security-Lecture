@@ -129,8 +129,7 @@ public class TransactionService {
                 accountPS.ownerCheck(userId);
 
                 // 입출금 내역 조회
-                List<Transaction> transactionListPS = transactionRepository
-                                .findByTransactionHistory(accountId, gubun, page);
+                List<Transaction> transactionListPS = transactionRepository.findByAccountId(accountId, gubun, page);
 
                 // DTO (동적 쿼리)
                 return new TransactionListRespDto(transactionListPS);
