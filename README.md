@@ -48,13 +48,14 @@ private final Logger log = LoggerFactory.getLogger(getClass());
 - DTO에 화면에는 필요 없지만, Test 검증을 위해 데이터를 추가해야 하는가?
 - 하지말자!!!!!!!!!!!!!!!
 
-### 이슈12
+### 이슈12 
 - LocalDateTime 문제 (getter 어떻게 할것인지 -> getter 삭제 DTO에서 format 하기, 이렇게 안하면 역직렬화가 안된다.)
 - 서비스 테스트시에 id값 할당 어떻게 할지 (setData() 메서드로 시간과 ID를 함께 반영하는 것이 어떨까?)
 - 서비스쪽 조회 로직 마지막으로 점검하기
 
-### 이슈13
-- 삭제된 계좌 확인해서 보여주기
+### 이슈13 (해결)
+- 삭제된 계좌 확인해서 보여주기 (본인 계좌목록만 보기 완료)
+- JPQL에서 true 값은 1이 아니라 true로 검증
  
 ### 프로젝트명
 - bank
@@ -93,7 +94,7 @@ create table account (
         owner_name varchar(255) not null,
         password varchar(255) not null,
         user_id bigint,
-        is_use boolean not null,
+        is_active boolean not null,
         primary key (id)
 );
 

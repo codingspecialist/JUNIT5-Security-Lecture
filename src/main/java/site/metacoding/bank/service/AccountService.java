@@ -38,8 +38,7 @@ public class AccountService {
     }
 
     public List<AccountAllRespDto> 계좌목록보기_유저별(Long userId) {
-        // 삭제된 계좌는 보지 않기 (수정해야함)
-        return accountRepository.findByUserId(userId)
+        return accountRepository.findByActiveUserId(userId)
                 .stream()
                 .map(AccountAllRespDto::new)
                 .collect(Collectors.toList());
@@ -49,7 +48,6 @@ public class AccountService {
         // 계좌확인 (삭제된 계좌인지 확인)
         Account accountPS = accountRepository.findById(accountId).orElseThrow(
                 () -> new CustomApiException(ResponseEnum.BAD_REQUEST));
-        log.debug("디버그 : accountPS 1 : " + accountPS.getBalance());
 
         // 계좌 입출금이체 내역
         List<Transaction> transactions = transactionRepository.findByTransactionHistory(accountPS.getId(), null);

@@ -53,12 +53,12 @@ public class AccountRepositoryTest extends DummyBeans {
         }
 
         @Test
-        public void findByUserId_test() throws Exception {
+        public void findByActiveUserId_test() throws Exception {
                 // given
                 Long userId = 1L;
 
                 // when
-                List<Account> accountsPS = accountRepository.findByUserId(userId);
+                List<Account> accountsPS = accountRepository.findByActiveUserId(userId);
 
                 // then
                 assertThat(accountsPS.size()).isEqualTo(2);
@@ -84,6 +84,7 @@ public class AccountRepositoryTest extends DummyBeans {
                 User adminUser = userRepository.save(newUser("admin"));
                 Account ssarAccount1 = accountRepository.save(newAccount(1111L, "쌀", ssarUser));
                 Account ssarAccount2 = accountRepository.save(newAccount(2222L, "쌀", ssarUser));
-                Account cosAccount1 = accountRepository.save(newAccount(3333L, "코스", cosUser));
+                Account ssarAccount3 = accountRepository.save(newAccount(3333L, "쌀", false, ssarUser));
+                Account cosAccount1 = accountRepository.save(newAccount(4444L, "코스", cosUser));
         }
 }

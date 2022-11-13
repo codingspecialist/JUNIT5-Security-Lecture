@@ -93,7 +93,7 @@ public class AccountServiceTest extends DummyMockBeans {
                 Account cosAccount1 = newAccount(3L, 3333L, "코스", cosUser);
                 List<Account> accounts = Arrays.asList(ssarAccount1, ssarAccount2, cosAccount1);
 
-                when(accountRepository.findByUserId(any())).thenReturn(accounts);
+                when(accountRepository.findByActiveUserId(any())).thenReturn(accounts);
 
                 // when
                 List<AccountAllRespDto> accountAllRespDtos = accountService.계좌목록보기_유저별(id);

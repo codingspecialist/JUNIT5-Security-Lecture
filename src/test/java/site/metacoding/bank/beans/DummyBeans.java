@@ -28,7 +28,20 @@ public class DummyBeans {
                 .ownerName(user.getUsername())
                 .balance(1000L)
                 .user(user)
-                .isUse(true)
+                .isActive(true)
+                .build();
+        return account;
+    }
+
+    // 오버로딩
+    protected Account newAccount(Long number, String ownername, Boolean isActive, User user) {
+        Account account = Account.builder()
+                .number(number)
+                .password("1234")
+                .ownerName(user.getUsername())
+                .balance(1000L)
+                .user(user)
+                .isActive(isActive)
                 .build();
         return account;
     }

@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Profile;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import site.metacoding.bank.config.enums.AccountEnum;
 import site.metacoding.bank.config.enums.ResponseEnum;
 import site.metacoding.bank.config.enums.TransactionEnum;
 import site.metacoding.bank.config.exceptions.CustomApiException;
@@ -56,7 +57,7 @@ public class Account extends AudingTime {
     private User user;
 
     @Column(nullable = false)
-    private Boolean isUse;
+    private Boolean isActive;
 
     @OneToMany(mappedBy = "withdrawAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Transaction> withdrawTransactions = new ArrayList<>();
@@ -73,14 +74,14 @@ public class Account extends AudingTime {
     }
 
     @Builder
-    public Account(Long id, Long number, String ownerName, String password, Long balance, User user, Boolean isUse) {
+    public Account(Long id, Long number, String ownerName, String password, Long balance, User user, Boolean isActive) {
         this.id = id;
         this.number = number;
         this.ownerName = ownerName;
         this.password = password;
         this.balance = balance;
         this.user = user;
-        this.isUse = isUse;
+        this.isActive = isActive;
     }
 
     @Profile("test")
@@ -180,8 +181,8 @@ public class Account extends AudingTime {
      * 계좌 삭제하기
      */
     public Boolean delete() {
-        isUse = false;
-        return isUse;
+        isActive = AccountEnum.DISABLED.getValue();
+        return isActive;
     }
 
 }

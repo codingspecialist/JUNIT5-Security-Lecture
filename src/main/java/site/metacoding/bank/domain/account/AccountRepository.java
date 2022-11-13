@@ -9,9 +9,11 @@ import org.springframework.data.repository.query.Param;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
-    @Query("select ac from Account ac join fetch ac.user u WHERE ac.id = :id")
+    @Query("select ac from Account ac join fetch ac.user u where ac.id = :id")
     Optional<Account> findById(@Param("id") Long id);
 
-    List<Account> findByUserId(@Param("userId") Long userId);
+    // 사용중인 계좌만 보기
+    @Query("select ac from Account ac join fetch ac.user u where ac.user.id = :userId and ac.isActive = true")
+    List<Account> findByActiveUserId(@Param("userId") Long userId);
 
 }

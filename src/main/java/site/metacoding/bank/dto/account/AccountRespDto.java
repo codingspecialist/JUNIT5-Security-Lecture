@@ -114,7 +114,7 @@ public class AccountRespDto {
 
         public AccountDeleteRespDto(Account account) {
             this.accountNumber = account.getNumber();
-            this.isUse = account.getIsUse();
+            this.isUse = account.getIsActive();
             // 더티체킹 타이밍 보다 빨라서 DB값 못씀.
             this.deleteDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         }

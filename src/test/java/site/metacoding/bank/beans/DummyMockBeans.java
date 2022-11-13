@@ -67,7 +67,7 @@ public class DummyMockBeans {
                 .ownerName(user.getUsername())
                 .balance(1000L)
                 .user(user)
-                .isUse(true)
+                .isActive(true)
                 .build();
         account.setMockData(id);
         return account;

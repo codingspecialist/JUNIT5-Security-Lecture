@@ -20,7 +20,7 @@ public class AccountReqDto {
                     .ownerName(ownerName)
                     .balance(1000L)
                     .user(user)
-                    .isUse(true)
+                    .isActive(true)
                     .build();
         }
     }

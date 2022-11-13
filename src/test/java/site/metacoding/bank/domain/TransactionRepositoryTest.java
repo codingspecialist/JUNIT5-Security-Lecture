@@ -102,7 +102,8 @@ public class TransactionRepositoryTest extends DummyBeans {
                 User adminUser = userRepository.save(newUser("admin"));
                 Account ssarAccount1 = accountRepository.save(newAccount(1111L, "쌀", ssarUser));
                 Account ssarAccount2 = accountRepository.save(newAccount(2222L, "쌀", ssarUser));
-                Account cosAccount1 = accountRepository.save(newAccount(3333L, "코스", cosUser));
+                Account ssarAccount3 = accountRepository.save(newAccount(3333L, "쌀", false, ssarUser));
+                Account cosAccount1 = accountRepository.save(newAccount(4444L, "코스", cosUser));
                 Transaction withdrawTransaction1 = transactionRepository
                                 .save(newWithdrawTransaction(100L, ssarAccount1));
                 Transaction withdrawTransaction2 = transactionRepository
@@ -111,6 +112,8 @@ public class TransactionRepositoryTest extends DummyBeans {
                                 .save(newDepositTransaction(100L, ssarAccount1));
                 Transaction transferTransaction1 = transactionRepository
                                 .save(newTransferTransaction(100L, ssarAccount1, cosAccount1));
+                Transaction transferTransaction2 = transactionRepository
+                                .save(newTransferTransaction(100L, ssarAccount1, ssarAccount2));
 
         }
 }
