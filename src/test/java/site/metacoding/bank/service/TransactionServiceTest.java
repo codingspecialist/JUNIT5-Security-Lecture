@@ -4,10 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,12 +14,10 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.SerializationUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import site.metacoding.bank.bean.DummyBeans;
-import site.metacoding.bank.bean.DummyMockBeans;
+import site.metacoding.bank.beans.DummyMockBeans;
 import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.account.AccountRepository;
 import site.metacoding.bank.domain.transaction.Transaction;
@@ -53,7 +48,7 @@ public class TransactionServiceTest extends DummyMockBeans {
 
         /*
          * 입금하기
-         * 하나의 stub은 다음 stub에 영향을 주면 안된다.
+         * insert, update, delete에서 하나의 stub은 다음 stub에 영향을 주면 안된다.
          * when에서 정의해둔 객체를 다른 곳에서 사용하게 되면 실행시점에 값이 변경될 수 있기 떄문이다.
          */
         @Test
@@ -67,12 +62,12 @@ public class TransactionServiceTest extends DummyMockBeans {
                 // stub 1
                 User ssarUser = newUser(1L, "ssar");
                 Account ssarAccount = newAccount(1L, 1111L, "쌀", ssarUser);
-                when(accountRepository.findById(any())).thenReturn(Optional.of(ssarAccount));
+                when(accountRepository.findById(any())).thenReturn(Optional.of(ssarAccount)); // 1000원
 
                 // stub 2
                 Account ssarAccountCopy = accountCopy(ssarAccount);
                 Transaction transaction = newDepositTransaction(1L, depositReqDto.getAmount(), ssarAccountCopy);
-                when(transactionRepository.save(any())).thenReturn(transaction);
+                when(transactionRepository.save(any())).thenReturn(transaction); // 1100원
 
                 // when
                 DepositRespDto depositRespDto = transactionService.입금하기(depositReqDto);

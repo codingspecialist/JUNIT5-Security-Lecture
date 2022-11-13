@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import site.metacoding.bank.bean.DummyBeans;
+import site.metacoding.bank.beans.DummyBeans;
 import site.metacoding.bank.config.enums.ResponseEnum;
 import site.metacoding.bank.config.exceptions.CustomApiException;
 import site.metacoding.bank.domain.account.Account;

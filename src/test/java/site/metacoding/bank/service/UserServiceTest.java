@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import site.metacoding.bank.bean.DummyMockBeans;
+import site.metacoding.bank.beans.DummyMockBeans;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.domain.user.UserRepository;
 import site.metacoding.bank.dto.user.UserReqDto.UserJoinReqDto;

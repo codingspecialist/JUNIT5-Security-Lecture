@@ -176,6 +176,9 @@ public class Account extends AudingTime {
         }
     }
 
+    /**
+     * 계좌 삭제하기
+     */
     public Boolean delete() {
         isUse = false;
         return isUse;

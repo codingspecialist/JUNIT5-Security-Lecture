@@ -1,4 +1,4 @@
-package site.metacoding.bank.bean;
+package site.metacoding.bank.beans;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 

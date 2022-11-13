@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import site.metacoding.bank.bean.DummyMockBeans;
+import site.metacoding.bank.beans.DummyMockBeans;
 import site.metacoding.bank.domain.account.Account;
 import site.metacoding.bank.domain.account.AccountRepository;
 import site.metacoding.bank.domain.transaction.Transaction;
@@ -65,9 +65,9 @@ public class AccountServiceTest extends DummyMockBeans {
 
                 // stub
                 User ssarUser = newUser(1L, "ssar");
-                Account ssarAccount1 = newAccount(1L, 1111L, "쌀", ssarUser);
+                Account ssarAccount = newAccount(1L, 1111L, "쌀", ssarUser);
 
-                when(accountRepository.save(any())).thenReturn(ssarAccount1);
+                when(accountRepository.save(any())).thenReturn(ssarAccount);
 
                 // when
                 AccountSaveRespDto accountSaveRespDto = accountService.계좌등록하기(accountSaveReqDto, ssarUser);
@@ -110,25 +110,21 @@ public class AccountServiceTest extends DummyMockBeans {
                 // given
                 Long accountId = 1L;
 
-                // stub 1
+                // stub (select는 stub을 나눌 필요가 없다.)
                 User ssarUser = newUser(1L, "ssar");
                 User cosUser = newUser(2L, "cos");
                 Account ssarAccount1 = newAccount(1L, 1111L, "쌀", ssarUser);
                 Account ssarAccount2 = newAccount(2L, 2222L, "쌀", ssarUser);
                 Account cosAccount1 = newAccount(3L, 3333L, "코스", cosUser);
-                when(accountRepository.findById(any())).thenReturn(Optional.of(ssarAccount1));
-
-                // stub 2
-                Account ssarAccount1Copy = accountCopy(ssarAccount1);
-                Account ssarAccount2Copy = accountCopy(ssarAccount2);
-                Account cosAccount1Copy = accountCopy(cosAccount1);
-                Transaction withdrawTransaction1 = newWithdrawTransaction(1L, 100L, ssarAccount1Copy);
-                Transaction withdrawTransaction2 = newWithdrawTransaction(2L, 100L, ssarAccount1Copy);
-                Transaction depositTransaction1 = newDepositTransaction(3L, 100L, ssarAccount1Copy);
-                Transaction transferTransaction1 = newTransferTransaction(4L, 100L, ssarAccount1Copy, cosAccount1Copy);
-                Transaction transferTransaction2 = newTransferTransaction(5L, 100L, ssarAccount1Copy, ssarAccount2Copy);
+                Transaction withdrawTransaction1 = newWithdrawTransaction(1L, 100L, ssarAccount1);
+                Transaction withdrawTransaction2 = newWithdrawTransaction(2L, 100L, ssarAccount1);
+                Transaction depositTransaction1 = newDepositTransaction(3L, 100L, ssarAccount1);
+                Transaction transferTransaction1 = newTransferTransaction(4L, 100L, ssarAccount1, cosAccount1);
+                Transaction transferTransaction2 = newTransferTransaction(5L, 100L, ssarAccount1, ssarAccount2);
                 List<Transaction> transactions = Arrays.asList(withdrawTransaction1, withdrawTransaction2,
                                 depositTransaction1, transferTransaction1, transferTransaction2);
+
+                when(accountRepository.findById(any())).thenReturn(Optional.of(ssarAccount1));
                 when(transactionRepository.findByTransactionHistory(any(), any()))
                                 .thenReturn(transactions);
 
