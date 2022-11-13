@@ -157,7 +157,10 @@ List<Transaction> transactions = Arrays.asList(withdrawTransaction1, withdrawTra
                 depositTransaction1, transferTransaction1, transferTransaction2);
 ```
 
-### 참고
+### QueryDSL 설정 방법
+- https://github.com/codingspecialist/springboot-vscode-querydsl
+
+### MockUser 주입하는 법
 ```txt
 // @WithMockUser // 기본값 username=user, password=password role=ROLE_USER
 // @WithMockUser(username = "ssar", password = "1234", roles = "CUSTOMER")
