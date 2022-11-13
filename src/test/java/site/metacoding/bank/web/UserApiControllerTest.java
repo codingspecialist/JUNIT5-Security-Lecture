@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import site.metacoding.bank.bean.DummyBeans;
+import site.metacoding.bank.beans.DummyBeans;
 import site.metacoding.bank.domain.user.User;
 import site.metacoding.bank.domain.user.UserRepository;
 import site.metacoding.bank.dto.user.UserReqDto.UserJoinReqDto;

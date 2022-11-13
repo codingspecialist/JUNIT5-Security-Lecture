@@ -7,13 +7,11 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.CodeSignature;
 import org.springframework.stereotype.Component;
 
-import lombok.extern.slf4j.Slf4j;
 import site.metacoding.bank.config.auth.LoginUser;
 import site.metacoding.bank.config.enums.ResponseEnum;
 import site.metacoding.bank.config.enums.UserEnum;
 import site.metacoding.bank.config.exceptions.CustomApiException;
 
-@Slf4j
 @Component
 @Aspect
 public class AuthorizationAdvice {

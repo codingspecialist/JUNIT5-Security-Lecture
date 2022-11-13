@@ -40,18 +40,14 @@ public class TransactionService {
 
                 // 입금계좌 확인
                 Account depositAccountPS = accountRepository.findById(depositReqDto.getDepositAccountId())
-                                .orElseThrow(
-                                                () -> new CustomApiException(ResponseEnum.BAD_REQUEST));
-                log.debug("디버그 : 1 :입금계좌 : " + depositAccountPS.getBalance());
+                                .orElseThrow(() -> new CustomApiException(ResponseEnum.BAD_REQUEST));
 
                 // 0원 체크
                 depositAccountPS.zeroAmountCheck(depositReqDto.getAmount());
 
                 // 입금 하기
-
                 Transaction transaction = depositAccountPS.deposit(depositReqDto.getAmount());
                 Transaction transactionPS = transactionRepository.save(transaction);
-                log.debug("디버그 : transactionPS id : " + transactionPS.getId());
 
                 // DTO
                 return new DepositRespDto(depositAccountPS, transactionPS);
@@ -139,31 +135,4 @@ public class TransactionService {
                                 transactionListPS);
                 return transactionHistoryRespDto;
         }
-
-        // public WithdrawHistoryRespDto 출금목록보기(Long userId, Long accountId) {
-        // // 계좌 확인
-        // Account accountPS = accountRepository.findById(accountId)
-        // .orElseThrow(() -> new CustomApiException(ResponseEnum.BAD_REQUEST));
-
-        // // 계좌 소유자 확인
-        // accountPS.isAccountOwner(userId);
-
-        // // DTO (Collection Lazy Loading)
-        // WithdrawHistoryRespDto withdrawHistoryRespDto = new
-        // WithdrawHistoryRespDto(accountPS);
-        // return withdrawHistoryRespDto;
-        // }
-
-        // public DepositHistoryRespDto 입금목록보기(Long userId, Long accountId) {
-        // // 계좌 확인
-        // Account accountPS = accountRepository.findById(accountId)
-        // .orElseThrow(() -> new CustomApiException(ResponseEnum.BAD_REQUEST));
-
-        // // 계좌 소유자 확인
-        // accountPS.isAccountOwner(userId);
-        // DepositHistoryRespDto depositHistoryRespDto = new
-        // DepositHistoryRespDto(accountPS);
-        // return depositHistoryRespDto;
-        // }
-
 }

@@ -52,6 +52,9 @@ private final Logger log = LoggerFactory.getLogger(getClass());
 - LocalDateTime 문제 (getter 어떻게 할것인지 -> getter 삭제 DTO에서 format 하기, 이렇게 안하면 역직렬화가 안된다.)
 - 서비스 테스트시에 id값 할당 어떻게 할지 (setData() 메서드로 시간과 ID를 함께 반영하는 것이 어떨까?)
 - 서비스쪽 조회 로직 마지막으로 점검하기
+
+### 이슈13
+- 삭제된 계좌 확인해서 보여주기
  
 ### 프로젝트명
 - bank
