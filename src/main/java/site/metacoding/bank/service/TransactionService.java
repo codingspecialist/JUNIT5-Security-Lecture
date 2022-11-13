@@ -121,7 +121,7 @@ public class TransactionService {
 
         // 계좌상세보기할 때 전체 계좌목록 나옴
         // 입금만 보기, 출금만 보기, 전체보기할 때 Account, User 정보 없이 순수 Transaction 내용만 불러올때 동적쿼리 사용
-        public List<TransactionHistoryRespDto> 입출금목록보기(Long userId, Long accountId, String gubun) {
+        public List<TransactionHistoryRespDto> 입출금목록보기(Long userId, Long accountId, String gubun, Integer page) {
                 // 계좌 확인
                 Account accountPS = accountRepository.findById(accountId)
                                 .orElseThrow(() -> new CustomApiException(ResponseEnum.BAD_REQUEST));
@@ -131,7 +131,7 @@ public class TransactionService {
 
                 // 입출금 내역 조회
                 List<Transaction> transactionListPS = transactionRepository
-                                .findByTransactionHistory(accountId, gubun);
+                                .findByTransactionHistory(accountId, gubun, page);
 
                 // DTO (동적 쿼리)
                 return transactionListPS.stream().map(TransactionHistoryRespDto::new).collect(Collectors.toList());

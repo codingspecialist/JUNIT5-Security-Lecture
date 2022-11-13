@@ -184,7 +184,7 @@ public class TransactionApiControllerTest extends DummyBeans {
          */
         @WithUserDetails(value = "ssar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
         @Test
-        public void transactionAllHistory_test() throws Exception {
+        public void transactionHistory_test() throws Exception {
                 // given
                 Long userId = 1L;
                 Long accountId = 1L;

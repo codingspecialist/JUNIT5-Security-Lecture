@@ -15,14 +15,14 @@ interface Dao {
     // withdrawAccountId,
     // @Param("depositAccountId") Long depositAccountId);
 
-    List<Transaction> findByTransactionHistory(Long accountId, String gubun);
+    List<Transaction> findByTransactionHistory(Long accountId, String gubun, Integer page);
 }
 
 @RequiredArgsConstructor
 public class TransactionRepositoryImpl implements Dao {
     private final EntityManager em;
 
-    public List<Transaction> findByTransactionHistory(Long accountId, String gubun) {
+    public List<Transaction> findByTransactionHistory(Long accountId, String gubun, Integer page) {
         String sql = "";
         sql += "select t from Transaction t ";
         sql += "left join t.withdrawAccount wa ";
@@ -51,6 +51,9 @@ public class TransactionRepositoryImpl implements Dao {
             query = query.setParameter("withdrawAccountId", accountId);
         }
 
+        Integer firstNum = page * 3;
+        query.setFirstResult(firstNum);
+        query.setMaxResults(3);
         return query.getResultList();
     }
 }

@@ -2,6 +2,7 @@ package site.metacoding.bank.web;
 
 import java.util.List;
 
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -75,11 +77,15 @@ public class TransactionApiController {
          */
         @AuthorizationCheck
         @GetMapping("/user/{userId}/account/{accountId}/transaction")
-        public ResponseEntity<?> withdrawHistory(String gubun, @PathVariable Long userId, @PathVariable Long accountId,
+        public ResponseEntity<?> transactionHistory(String gubun,
+                        @RequestParam(value = "page", defaultValue = "0") Integer page,
+                        @PathVariable Long userId,
+                        @PathVariable Long accountId,
                         @AuthenticationPrincipal LoginUser loginUser) {
                 List<TransactionHistoryRespDto> transactionHistoryRespDtos = transactionService.입출금목록보기(userId,
                                 accountId,
-                                gubun);
+                                gubun,
+                                page);
                 return new ResponseEntity<>(new ResponseDto<>(ResponseEnum.GET_SUCCESS, transactionHistoryRespDtos),
                                 HttpStatus.OK);
         }
