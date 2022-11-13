@@ -29,7 +29,7 @@ public class AccountReqDto {
         private String password;
 
         @NotBlank(message = "계좌주 이름은 필수입니다")
-        @Pattern(regexp = "^[가-힣]{3,10}", message = "계좌주 이름은 한글, 길이는 최소4, 최대10 입니다")
+        @Pattern(regexp = "[가-힣]{3,10}", message = "계좌주 이름은 한글, 길이는 최소4, 최대10 입니다")
         private String ownerName;
 
         public Account toEntity(User user) {
