@@ -86,47 +86,6 @@ private final Logger log = LoggerFactory.getLogger(getClass());
 - Account
 - Transaction
 
-```sql
-create database metadb;
-use metadb;
-
-create table users (
-        id bigint auto_increment,
-        created_at timestamp not null,
-        updated_at timestamp not null,
-        email varchar(255) not null,
-        password varchar(255) not null,
-        role varchar(255) not null,
-        username varchar(255) not null unique,
-        primary key (id)
-);
-create table account (
-        id bigint auto_increment,
-        created_at timestamp not null,
-        updated_at timestamp not null,
-        balance bigint not null,
-        number bigint not null unique,
-        owner_name varchar(255) not null,
-        password varchar(255) not null,
-        user_id bigint,
-        is_active boolean not null,
-        primary key (id)
-);
-
-create table transaction (
-        id bigint auto_increment,
-        created_at timestamp not null,
-        updated_at timestamp not null,
-        amount bigint not null,
-        deposit_account_balance bigint,
-        gubun varchar(255) not null,
-        withdraw_account_balance bigint,
-        deposit_account_id bigint,
-        withdraw_account_id bigint,
-        primary key (id)
-);
-```
-
 ### 테스트 더미 데이터 (영속화된 객체 Controller, Repository 사용 == DummyBeans)
 ```java
 User ssarUser = userRepository.save(newUser("ssar"));
